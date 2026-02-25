@@ -1,40 +1,94 @@
 ---
 title: Authentication
-description: API Key, Secret, and Bearer token authentication.
+description: API Key (recommended) or JWT Token. All requests use base URL https://agent-layer.up.railway.app/v1
 ---
 
-NexaLayer supports two authentication modes.
+# Authentication
 
-## Option 1: API Key (direct)
+NexaLayer supports two authentication modes. **API Key is recommended for AI Agents** — no token lifecycle to manage.
 
-Send your API key on every request:
+## Mode 1: API Key (recommended)
 
+Send the API key on every request. No token exchange or refresh.
+
+| Header | Value |
+|--------|--------|
+| `X-API-Key` | Your `api_key` (e.g. `ak_a1b2c3d4e5f6g7h8`) |
+
+<CodeGroup>
+
+```bash Example
+curl -X GET "https://agent-layer.up.railway.app/v1/account/info" \
+  -H "X-API-Key: ak_xxxxxxxxxxxxxxxx"
 ```
-X-API-Key: your-api-key
+
+</CodeGroup>
+
+- Use for all server-side and agent workloads.
+- Key is long-lived until you rotate it; no expiry handling needed.
+
+## Mode 2: JWT Token (optional)
+
+Exchange `api_key` + `api_secret` for a short-lived Bearer token. Use when you need token expiry semantics (e.g. web console).
+
+### Obtain token
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/auth/token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "api_key": "ak_xxxxxxxxxxxxxxxx",
+    "api_secret": "sk_xxxxxxxxxxxxxxxx"
+  }'
 ```
 
-No token exchange required. Best for quickstart and server-side scripts.
+```json Response
+{
+  "success": true,
+  "data": {
+    "access_token": "eyJhbGciOiJIUzI1NiIs...",
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "agent": {
+      "id": 1,
+      "name": "My AI Agent",
+      "permissions": ["proxy:read", "proxy:write", "session:manage", "billing:read"]
+    }
+  }
+}
+```
 
-## Option 2: Bearer token (via token exchange)
+</CodeGroup>
 
-1. Obtain a short-lived token:
+### Use token
+
+| Header | Value |
+|--------|--------|
+| `Authorization` | `Bearer <access_token>` |
+
+### Refresh token
+
+Before expiry, call:
 
 ```bash
-curl -X POST https://api.nexalayer.com/v1/auth/token \
-  -H "Content-Type: application/json" \
-  -d '{"api_key": "YOUR_API_KEY", "api_secret": "YOUR_API_SECRET"}'
+curl -X POST "https://agent-layer.up.railway.app/v1/auth/refresh" \
+  -H "Authorization: Bearer <current_token>"
 ```
 
-2. Use the returned `access_token` in the header:
+## Comparison
 
-```
-Authorization: Bearer <access_token>
-```
-
-Use this when you need token expiry and refresh semantics (e.g. OAuth-style flows).
+| | API Key | JWT |
+|--|--------|-----|
+| Setup | One header | Token exchange + refresh |
+| Lifetime | Long-lived | Short (e.g. 1 hour) |
+| Best for | Agents, scripts, backend | Web console, high-security flows |
 
 ## Security
 
-- Do not commit API keys or secrets to source control.
-- Prefer environment variables or a secret manager.
-- Rotate keys periodically; revoke compromised keys in the dashboard.
+- Store `api_key` and `api_secret` in environment variables or a secret manager; do not commit them.
+- Use HTTPS for all requests.
+- Rotate secret via `POST /account/rotate-secret` if compromised; API Key mode is unaffected.
+
+Next: [Accounts](/accounts) (register, info, rotate-secret).

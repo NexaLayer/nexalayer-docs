@@ -1,0 +1,36 @@
+---
+title: Backend integration
+description: How Agent Layer talks to the proxy backend. For operators and integrators.
+---
+
+# Backend integration
+
+Agent Layer integrates with an existing **proxy backend** via HTTP. The backend owns users, orders, proxy allocation, and payments. Agent Layer owns agents, sessions, and telemetry.
+
+## BackendClient design
+
+- **Base URL** — Backend API (e.g. internal Railway URL).
+- **Auth** — Backend uses its own auth (e.g. JWT). Agent Layer obtains and caches a token per backend user (mapped from agent).
+- **Methods** — Create user, create dynamic/static order, query order, renew, release, get balance, create recharge order, etc.
+- **Retry** — Exponential backoff on network/5xx errors.
+- **Timeout** — Per-request timeout to avoid long blocks.
+- **Error mapping** — Backend errors mapped to Agent-facing codes (e.g. `BACKEND_ERROR`, `INSUFFICIENT_BALANCE`).
+
+## Agent ↔ Backend mapping
+
+- One **Agent** (Agent Layer) = one **User** (Backend). On register, Agent Layer creates the backend user and stores `backend_user_id`, `backend_username`, and cached backend token.
+- **Session** (Agent Layer) is tied to a backend **order** (dynamic or static). Fields such as `backend_order_no`, `backend_product_no`, `backend_instance_id` link to the backend.
+- **Balance** — Shown to the agent is the backend user’s balance (or a cached value). Recharge and consumption flow through the backend.
+
+## Data consistency
+
+- **Orders** — Agent Layer creates orders in the backend; session state (creating → active) follows backend order/proxy status.
+- **Billing** — Consumption and recharge are recorded in the backend; Agent Layer may cache balance for performance but critical operations (create session, renew) rely on backend checks.
+- **Testing** — Integration tests (see [Integration tests](/testing/integration-tests)) verify that Agent Layer operations produce the correct backend records (users, orders, transactions).
+
+## Security
+
+- Backend credentials (passwords, tokens) stored encrypted (e.g. AES-256-GCM). API keys and secrets for agents never sent to backend; only backend user identity is used for backend calls.
+- All client-facing API calls use `https://agent-layer.up.railway.app/v1`; backend URL is internal only.
+
+Next: [Architecture](/architecture), [Testing overview](/testing/overview).

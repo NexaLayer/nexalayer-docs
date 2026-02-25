@@ -1,0 +1,88 @@
+---
+title: Products
+description: List products, regions, and get recommendations. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Products
+
+NexaLayer exposes two product types: **dynamic** (rotating IP, pay per traffic) and **static** (fixed IP, pay per duration). Use the product API to list available products and get recommendations before creating sessions.
+
+## Product types
+
+| Type | Description | Billing |
+|------|-------------|---------|
+| Dynamic | Rotating IPs; suitable for scraping, data collection | Per traffic (GB) |
+| Static | Fixed IPs; suitable for account management, SEO monitoring | Per duration (e.g. 30/90 days) |
+
+## List products
+
+<CodeGroup>
+
+```bash All products
+curl -X GET "https://agent-layer.up.railway.app/v1/products" \
+  -H "X-API-Key: <api_key>"
+```
+
+```bash By type
+curl -X GET "https://agent-layer.up.railway.app/v1/products?type=dynamic" \
+  -H "X-API-Key: <api_key>"
+```
+
+```bash By country
+curl -X GET "https://agent-layer.up.railway.app/v1/products?country=US" \
+  -H "X-API-Key: <api_key>"
+```
+
+</CodeGroup>
+
+**Response shape:** `data.items[]` with `product_no`, `name`, `type`, `price`, `unit`, and related fields. Use `product_no` in session `config` when calling `POST /sessions`.
+
+## List regions
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://agent-layer.up.railway.app/v1/products/regions" \
+  -H "X-API-Key: <api_key>"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "items": [
+      { "code": "US", "name": "United States" },
+      { "code": "GB", "name": "United Kingdom" }
+    ]
+  }
+}
+```
+
+</CodeGroup>
+
+## Product recommendation
+
+Get recommended products by use case and constraints.
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/products/recommend" \
+  -H "X-API-Key: <api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "use_case": "web_scraping",
+    "target_region": "US",
+    "budget": 100.00,
+    "session_count": 5,
+    "require_sticky_ip": false
+  }'
+```
+
+</CodeGroup>
+
+**use_case** examples: `web_scraping`, `data_collection`, `account_management`, `ad_verification`, `seo_monitoring`, `market_research`, `general`.
+
+Response contains recommended products; use their `product_no` in `POST /sessions` config.
+
+Next: [Sessions overview](/sessions/overview), [Dynamic session](/sessions/dynamic), [Static session](/sessions/static).

@@ -1,0 +1,42 @@
+---
+title: Testing overview
+description: Test layers, environment, and constraints for NexaLayer. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Testing overview
+
+This section describes the test strategy for the Agent Layer and its integration with the backend: smoke tests, integration tests, and E2E. Tests validate API behaviour and cross-system consistency without relying on real payments where avoidable.
+
+## Test layers
+
+| Layer | Scope | Purpose |
+|-------|--------|---------|
+| **Smoke (TS-1)** | Single API correctness | Each endpoint returns expected shape and status |
+| **Integration (TS-2)** | Agent Layer ↔ Backend | Agent actions create correct backend users, orders, transactions |
+| **Regression (TS-3)** | Response contract | success/error format, pagination, error codes |
+| **Performance (TS-4)** | Latency | P95 within threshold for critical paths |
+| **Security (TS-5)** | Auth and isolation | Invalid/missing auth, rate limit, tenant isolation |
+| **Observability (TS-6)** | Logs and health | Health check, response meta, logs |
+| **E2E (TS-7)** | Full journey | Register → session → use → terminate |
+
+## Environment
+
+- **Agent Layer URL:** `https://agent-layer.up.railway.app/v1` (or env such as `AGENT_BASE_URL`).
+- **Backend URL:** Separate backend API for verification (e.g. staging).
+- **DB:** Agent DB (PostgreSQL) and Backend DB; tests may use direct DB checks for integration assertions.
+- **Production guard:** If base URL contains `production`, tests may require an explicit flag (e.g. `ALLOW_PROD=true`) to run.
+
+## Constraints
+
+- **No real payment** — Recharge orders are created but not paid; test balance is provided via admin/top-up APIs.
+- **Controlled resources** — Dynamic sessions use minimal traffic (e.g. 1 GB); static sessions limited (e.g. 1 IP, 1 month) and cleaned up.
+- **Isolation** — Each run uses a newly registered agent; no shared session state between runs.
+- **Auth** — Both X-API-Key and Bearer JWT paths are covered.
+
+## Tooling
+
+- **Runner:** e.g. Vitest (Node/TS).
+- **HTTP:** Dedicated Agent Layer client and Backend client (for verification).
+- **Cleanup:** Terminate sessions and optionally delete test agents; cleanup report (e.g. JSON) for auditing.
+
+Next: [Smoke tests](/testing/smoke-tests), [Integration tests](/testing/integration-tests), [E2E](/testing/e2e).

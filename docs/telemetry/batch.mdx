@@ -1,0 +1,53 @@
+---
+title: Batch telemetry
+description: Report multiple events in one request. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Batch telemetry
+
+Reduce round-trips by sending multiple events in a single `POST /telemetry/batch` request.
+
+## Request
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/telemetry/batch" \
+  -H "X-API-Key: <api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "events": [
+      {
+        "session_id": "sess_xxx",
+        "event_type": "success",
+        "status_code": 200,
+        "latency_ms": 200
+      },
+      {
+        "session_id": "sess_xxx",
+        "event_type": "http_error",
+        "status_code": 429,
+        "latency_ms": 150
+      }
+    ]
+  }'
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "processed": 2,
+    "results": [
+      { "event_id": "evt_001", "session_health": { ... } },
+      { "event_id": "evt_002", "session_health": { ... } }
+    ]
+  }
+}
+```
+
+</CodeGroup>
+
+Each event must include `session_id` and `event_type`; other fields (e.g. `status_code`, `latency_ms`, `target_host`, `error_message`) follow the same schema as [report-event](/telemetry/overview#single-event-report-event).
+
+Next: [Session health](/telemetry/health).

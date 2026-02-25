@@ -1,34 +1,54 @@
 ---
 title: Introduction
-description: NexaLayer — The Network Execution Layer for AI Agents.
+description: NexaLayer — AI Agent Network Execution Layer. Session-based proxy infrastructure for AI-native workloads.
 ---
 
-NexaLayer provides a **session-based abstraction** over proxy infrastructure (dynamic and static), designed for AI agent and automation workflows.
+# Introduction
 
-## What is NexaLayer?
+NexaLayer is an **API-first network execution layer** that sits between AI Agents and proxy infrastructure. It exposes session-based abstraction over dynamic and static proxies so agents can operate globally without managing raw IP pools.
 
-- **Unified API**: One interface for dynamic and static proxy products.
-- **Session-first**: Create sessions, rotate IPs, and track usage per session.
-- **Agent-oriented**: Authentication and semantics built for programmatic and agent use cases.
+## What NexaLayer provides
+
+- **Session abstraction** — Create, rotate, renew, and terminate proxy sessions via a single API.
+- **Unified interface** — One API for both dynamic (rotating) and static (fixed-IP) proxies.
+- **Agent-first design** — Authentication (API Key or JWT), idempotency, rate-limit headers, and telemetry for autonomous workflows.
+- **Self-service** — Register, recharge, and manage sessions without a human dashboard (dashboard optional).
 
 ## Base URL
 
 All API requests use:
 
 ```
-https://api.nexalayer.com/v1
+https://agent-layer.up.railway.app/v1
 ```
 
-## Authentication
+## Core concepts
 
-You can authenticate in two ways:
+| Concept | Description |
+|--------|-------------|
+| **Agent** | An app registered via `POST /account/register`. Identified by `api_key` (and optionally `api_secret` for JWT). |
+| **Session** | A proxy usage session. Has `session_id`, `type` (dynamic/static), `status`, and `proxy` (host, port, credentials). |
+| **Telemetry** | Event reporting (success, http_error, captcha, timeout, block) to track session health and drive rotation advice. |
 
-1. **API Key** — Send `X-API-Key` on every request (quickstart).
-2. **Bearer token** — Exchange API Key + Secret via `POST /auth/token`, then use `Authorization: Bearer <token>`.
+## Document structure
 
-See [Authentication](/authentication) for details.
+- **Getting started** — Quickstart, authentication, accounts.
+- **Products** — List products, regions, and recommendations.
+- **Sessions** — Create (dynamic/static), rotate, renew, terminate.
+- **Billing** — Balance, recharge, transactions.
+- **Telemetry** — Report events, batch report, session health.
+- **Stats & Errors** — Overview stats, error codes, retry guidance.
+- **Practices** — Best practices for sessions and security.
+- **Architecture** — System design and backend integration.
+- **Testing** — Smoke, integration, and E2E test design.
 
 ## Next steps
 
-- [Quickstart](/quickstart) — Register, create a session, and send traffic.
-- [Sessions](/sessions/overview) — Create, rotate, renew, and terminate sessions.
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Register, create a session, and send traffic in minutes.
+  </Card>
+  <Card title="Authentication" icon="key" href="/authentication">
+    API Key (recommended) or JWT Token.
+  </Card>
+</CardGroup>

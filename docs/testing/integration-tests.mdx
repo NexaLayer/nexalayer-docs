@@ -1,0 +1,53 @@
+---
+title: Integration tests
+description: Cross-system tests: Agent Layer vs Backend data. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Integration tests
+
+Integration tests (TS-2) ensure that operations in the Agent Layer produce the correct records and side effects in the **Backend** (users, orders, transactions). They require access to Backend API and/or DB for verification.
+
+## Prerequisites
+
+- Agent Layer base URL (e.g. `https://agent-layer.up.railway.app/v1`).
+- Backend API URL and a way to authenticate as the backend “agent” user (e.g. openAgent) or as the created test user.
+- Optional: Backend DB or read-only API to verify users, dynamic_orders, static_orders, transactions, usdt_recharge_orders.
+
+## Test cases (conceptual)
+
+### TC-I01 Register → Backend user
+
+1. Register a new agent via `POST /v1/account/register`.
+2. From Agent DB or API, get the agent’s `backend_username` (and `backend_user_id` if available).
+3. Using Backend API (e.g. as openAgent), verify that a user with that username exists, with correct `agent_id` / `agent_name`, status, and balance >= 0.
+
+### TC-I02 Dynamic session → Backend order
+
+1. Create a dynamic session (TS-1 flow) and poll until active.
+2. From Agent Layer, get the session’s `backend_order_no` (or equivalent from session detail).
+3. In Backend, query dynamic orders for that order (or for the backend user). Assert order exists, user_id and agent_id match, status is valid.
+4. Optionally verify Backend user balance decreased and transactions table has a consumption record; openAgent balance change if applicable.
+
+### TC-I03 Static session → Backend order
+
+1. Create a static session and poll until active.
+2. Get `backend_order_no` (or equivalent) from the session.
+3. In Backend, query static orders. Assert order exists, user_id and agent_id correct, transactions/consumption updated.
+
+### TC-I04 Recharge order → Backend
+
+1. Create a recharge order via `POST /v1/billing/recharge` (do not pay).
+2. In Backend, find the recharge order (e.g. usdt_recharge_orders) by order_id or user. Assert status pending, amount matches, user_id correct.
+
+## Assertions
+
+- Backend **users** table: one row per registered agent, correct agent_id/agent_name.
+- Backend **dynamic_orders** / **static_orders**: order exists and is linked to the right user and agent.
+- Backend **transactions**: consumption entries after session create/renew.
+- Backend **usdt_recharge_orders**: recharge order created with correct user and amount.
+
+## Data isolation
+
+- Use a unique agent per run (e.g. name with timestamp). Clean up test sessions (terminate) and optionally test agents to avoid polluting production data.
+
+Next: [E2E](/testing/e2e), [Smoke tests](/testing/smoke-tests).

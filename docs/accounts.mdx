@@ -1,0 +1,109 @@
+---
+title: Accounts
+description: Register, view and update account info, rotate secret. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Accounts
+
+Agent accounts are created via `POST /account/register`. Each agent has a 1:1 mapping to a backend user for billing and orders.
+
+## Register
+
+Creates an agent and returns `api_key` and `api_secret`. New agents receive a trial balance (e.g. ¥5) for testing.
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/account/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "My AI Agent",
+    "contact_email": "agent@example.com",
+    "webhook_url": "https://my-server.com/webhook"
+  }'
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "agent_id": 1,
+    "name": "My AI Agent",
+    "api_key": "ak_a1b2c3d4e5f6g7h8",
+    "api_secret": "sk_x9y8z7w6v5u4t3s2r1q0...",
+    "status": "active",
+    "trial": {
+      "is_trial": true,
+      "trial_balance": 5.00,
+      "trial_expires_at": "2026-03-17T10:00:00Z"
+    },
+    "created_at": "2026-02-15T10:00:00Z"
+  }
+}
+```
+
+</CodeGroup>
+
+| Field | Description |
+|-------|-------------|
+| `api_key` | Use in `X-API-Key` for all authenticated requests. |
+| `api_secret` | Only needed for JWT; returned once — store securely. |
+| `trial` | Trial balance and expiry; no recharge required to try sessions. |
+
+## Get account info
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://agent-layer.up.railway.app/v1/account/info" \
+  -H "X-API-Key: <api_key>"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "agent_id": 1,
+    "name": "My AI Agent",
+    "status": "active",
+    "total_sessions": 0,
+    "active_sessions": 0,
+    "max_active_sessions": 100,
+    "rate_limit": { "per_minute": 60 },
+    "auth_mode": "api_key_only",
+    "contact_email": "agent@example.com",
+    "webhook_url": "https://my-server.com/webhook"
+  }
+}
+```
+
+</CodeGroup>
+
+## Update account info
+
+<CodeGroup>
+
+```bash Request
+curl -X PUT "https://agent-layer.up.railway.app/v1/account/info" \
+  -H "X-API-Key: <api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Updated Agent Name",
+    "webhook_url": "https://new-server.com/webhook"
+  }'
+```
+
+</CodeGroup>
+
+## Rotate secret
+
+Invalidates the current `api_secret` and issues a new one (if your implementation returns it). Does not affect `api_key` or API-Key-only usage.
+
+```bash
+curl -X POST "https://agent-layer.up.railway.app/v1/account/rotate-secret" \
+  -H "X-API-Key: <api_key>"
+```
+
+After rotation, any existing JWT obtained with the old secret will be invalid; use the new secret to obtain a new token.
+
+Next: [Products](/products), [Sessions](/sessions/overview).

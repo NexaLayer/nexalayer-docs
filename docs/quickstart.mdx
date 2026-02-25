@@ -1,27 +1,59 @@
 ---
 title: Quickstart
-description: Get started with NexaLayer in minutes.
+description: Register, create a session, and send traffic in under 5 minutes. Base URL: https://agent-layer.up.railway.app/v1
 ---
 
-## 1. Register
+# Quickstart
 
-Create an account and get an API key:
+Three steps: register → create session → use proxy. New agents get a trial balance (e.g. ¥5) so you can try without recharging.
 
-```bash
-curl -X POST https://api.nexalayer.com/v1/account/register \
+## Step 1: Register
+
+Call the register API once to get credentials. Store `api_key` for all subsequent requests.
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/account/register" \
   -H "Content-Type: application/json" \
-  -d '{"name": "My Agent", "contact_email": "dev@example.com"}'
+  -d '{
+    "name": "My AI Agent",
+    "contact_email": "dev@example.com"
+  }'
 ```
 
-Save the returned `api_key`; it is used for all subsequent requests.
+```json Response
+{
+  "success": true,
+  "data": {
+    "agent_id": 1,
+    "name": "My AI Agent",
+    "api_key": "ak_a1b2c3d4e5f6g7h8",
+    "api_secret": "sk_x9y8z7w6v5u4t3s2r1q0...",
+    "status": "active",
+    "trial": {
+      "is_trial": true,
+      "trial_balance": 5.00,
+      "trial_expires_at": "2026-03-17T10:00:00Z"
+    },
+    "created_at": "2026-02-15T10:00:00Z"
+  }
+}
+```
 
-## 2. Create a session
+</CodeGroup>
 
-Create a dynamic proxy session:
+Use `api_key` in the `X-API-Key` header for all authenticated requests. Keep `api_secret` only if you use JWT; for API-Key-only mode you do not need it.
 
-```bash
-curl -X POST https://api.nexalayer.com/v1/sessions \
-  -H "X-API-Key: YOUR_API_KEY" \
+## Step 2: Create a session (async)
+
+Sessions are created asynchronously. The create call returns immediately with `status: "creating"`. Poll `GET /sessions/{session_id}` until `status` is `active`.
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
+  -H "X-API-Key: ak_a1b2c3d4e5f6g7h8" \
   -H "Content-Type: application/json" \
   -d '{
     "type": "dynamic",
@@ -34,20 +66,108 @@ curl -X POST https://api.nexalayer.com/v1/sessions \
   }'
 ```
 
-Response includes `session_id`, `status`, and `proxy_config` (host, port, credentials).
-
-## 3. Send traffic
-
-Use the session’s proxy configuration (e.g. `http://user:pass@host:port`) in your HTTP client to send requests through the proxy. Rotate when needed:
-
-```bash
-curl -X POST https://api.nexalayer.com/v1/sessions/SESSION_ID/rotate \
-  -H "X-API-Key: YOUR_API_KEY"
+```json Response (initial)
+{
+  "success": true,
+  "data": {
+    "session_id": "sess_a1b2c3d4-e5f6-7890",
+    "type": "dynamic",
+    "status": "creating",
+    "message": "Session 正在创建中，请轮询查询状态",
+    "created_at": "2026-02-15T10:00:00Z"
+  }
+}
 ```
 
-## SDK
+</CodeGroup>
 
-Use the official SDKs for a higher-level client and session abstraction:
+Then poll until active:
 
-- [Python SDK](https://github.com/NexaLayer/nexalayer-sdk#python)
-- [Node SDK](https://github.com/NexaLayer/nexalayer-sdk#node)
+```bash
+curl -X GET "https://agent-layer.up.railway.app/v1/sessions/sess_a1b2c3d4-e5f6-7890" \
+  -H "X-API-Key: ak_a1b2c3d4e5f6g7h8"
+```
+
+When `data.status === "active"`, use `data.proxy.full_url` (e.g. `http://user:pass@host:port`) to send traffic.
+
+## Step 3: Send traffic via proxy
+
+Use the session’s proxy URL in your HTTP client.
+
+<CodeGroup>
+
+```python Python
+import requests
+import time
+
+BASE_URL = "https://agent-layer.up.railway.app/v1"
+headers = {"X-API-Key": "ak_a1b2c3d4e5f6g7h8"}
+
+# Create session (async)
+resp = requests.post(
+    f"{BASE_URL}/sessions",
+    json={
+        "type": "dynamic",
+        "config": {
+            "product_no": "out_dynamic_1",
+            "traffic_gb": 1,
+            "protocol": "http",
+            "country": "US"
+        }
+    },
+    headers=headers
+)
+session_id = resp.json()["data"]["session_id"]
+
+# Poll until active
+while True:
+    r = requests.get(f"{BASE_URL}/sessions/{session_id}", headers=headers)
+    data = r.json()["data"]
+    if data["status"] == "active":
+        proxy_url = data["proxy"]["full_url"]
+        break
+    time.sleep(2)
+
+# Use proxy
+proxies = {"http": proxy_url, "https": proxy_url}
+r = requests.get("https://httpbin.org/ip", proxies=proxies)
+print(r.json())  # origin = proxy IP
+```
+
+```javascript Node.js
+const axios = require('axios');
+const BASE_URL = 'https://agent-layer.up.railway.app/v1';
+
+async function run() {
+  const headers = { 'X-API-Key': process.env.AGENT_API_KEY };
+  const { data } = await axios.post(
+    `${BASE_URL}/sessions`,
+    { type: 'dynamic', config: { product_no: 'out_dynamic_1', traffic_gb: 1, protocol: 'socks5', country: 'US' } },
+    { headers }
+  );
+  const sessionId = data.data.session_id;
+  let proxy;
+  while (true) {
+    const res = await axios.get(`${BASE_URL}/sessions/${sessionId}`, { headers });
+    if (res.data.data.status === 'active') {
+      proxy = res.data.data.proxy;
+      break;
+    }
+    await new Promise(r => setTimeout(r, 2000));
+  }
+  console.log('Proxy:', proxy.full_url);
+}
+run();
+```
+
+</CodeGroup>
+
+## Summary
+
+| Step | Action | Endpoint |
+|------|--------|----------|
+| 1 | Register | `POST /account/register` |
+| 2 | Create session | `POST /sessions` → poll `GET /sessions/{session_id}` |
+| 3 | Use proxy | Configure HTTP client with `proxy.full_url` |
+
+Next: [Authentication](/authentication) (API Key vs JWT), [Sessions](/sessions/overview) (dynamic vs static, rotate, renew, terminate).

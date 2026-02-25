@@ -1,20 +1,34 @@
 ---
 title: Terminate session
-description: End and release a session.
+description: End a session and release resources. Base URL: https://agent-layer.up.railway.app/v1
 ---
 
-When you are done with a session, terminate it to stop billing and release resources.
+# Terminate session
+
+Call `POST /sessions/{session_id}/terminate` to end a session. The session will no longer be usable; remaining traffic or time is forfeited according to product terms.
 
 ## Request
 
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/sessions/sess_a1b2c3d4-e5f6-7890/terminate" \
+  -H "X-API-Key: <api_key>"
 ```
-DELETE /sessions/{session_id}
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "session_id": "sess_a1b2c3d4-e5f6-7890",
+    "status": "terminated",
+    "terminated_at": "2026-02-15T11:00:00Z"
+  }
+}
 ```
 
-**Headers:** `X-API-Key` or `Authorization: Bearer <token>`
+</CodeGroup>
 
-(If the API uses a different method such as `POST /sessions/{session_id}/terminate`, refer to the [API reference](/api-reference/openapi).)
+Subsequent `GET /sessions/{session_id}` will show `status: "terminated"`. Terminate sessions when done to free quota and avoid unnecessary cost.
 
-## Response
-
-Success returns a confirmation; the session is no longer usable. Any remaining traffic or time may be forfeited depending on product terms.
+Next: [Session usage](/sessions/overview#api-summary) (`GET /sessions/{session_id}/usage`), [Best practices](/best-practices).

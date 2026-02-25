@@ -1,11 +1,39 @@
 ---
 title: Renew session
-description: Renew or extend a session.
+description: Extend static session duration. Base URL: https://agent-layer.up.railway.app/v1
 ---
 
-Renewal behavior depends on the product:
+# Renew session
 
-- **Dynamic**: Typically no “renew” — add traffic or create a new session.
-- **Static**: Extend the rental period via billing or a dedicated renew endpoint (if offered).
+**Static** sessions can be extended with `POST /sessions/{session_id}/renew`. Dynamic sessions are traffic-based; add traffic by creating a new session or via product-specific APIs.
 
-Check the [Products](/products/list-products) and [Billing](/billing/balance) docs for how to add traffic or extend duration. If your product supports an explicit renew API, it will be documented in the API reference.
+## Request
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/sessions/sess_x1y2z3w4-a5b6-7890/renew" \
+  -H "X-API-Key: <api_key>" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: renew_001" \
+  -d '{ "duration_days": 30 }'
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "session_id": "sess_x1y2z3w4-a5b6-7890",
+    "old_expires_at": "2026-03-17T10:00:00Z",
+    "new_expires_at": "2026-04-16T10:00:00Z",
+    "cost": 50.00,
+    "renewed_at": "2026-02-15T10:00:00Z"
+  }
+}
+```
+
+</CodeGroup>
+
+Use `Idempotency-Key` to avoid duplicate charges on retries. Cost is deducted from account balance.
+
+Next: [Terminate](/sessions/terminate), [Billing](/billing/balance).

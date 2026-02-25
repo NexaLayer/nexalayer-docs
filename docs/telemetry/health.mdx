@@ -1,0 +1,51 @@
+---
+title: Session health
+description: Query session health metrics. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Session health
+
+After reporting telemetry events, you can query aggregated health for a session. Use this to decide whether to rotate or continue.
+
+## Request
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://agent-layer.up.railway.app/v1/sessions/sess_xxx/health" \
+  -H "X-API-Key: <api_key>"
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "risk_level": "low",
+    "health_score": 95,
+    "success_rate": 0.97,
+    "block_probability": 0.03,
+    "consecutive_failures": 0,
+    "recommendation": "ok",
+    "stats_24h": {
+      "total_requests": 150,
+      "success_count": 146,
+      "error_count": 4,
+      "avg_latency_ms": 320
+    }
+  }
+}
+```
+
+</CodeGroup>
+
+## Fields
+
+| Field | Description |
+|-------|-------------|
+| `risk_level` | `low` \| `medium` \| `high` |
+| `health_score` | 0–100 |
+| `success_rate` | 0.0–1.0 |
+| `block_probability` | Estimated block probability |
+| `recommendation` | `ok` \| `consider_rotate` \| `rotate_now` \| `pause` |
+
+Use `recommendation === "rotate_now"` to trigger [Rotate](/sessions/rotate). See [Telemetry overview](/telemetry/overview) for event reporting.

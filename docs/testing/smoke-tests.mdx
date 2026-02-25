@@ -1,0 +1,37 @@
+---
+title: Smoke tests
+description: Functional smoke tests for each API. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Smoke tests
+
+Smoke tests (TS-1) verify that each API endpoint behaves correctly: status codes, response shape, and key fields. They do not exhaustively test business rules.
+
+## Scope
+
+- **Health** — `GET /v1/health` → `success`, `data.status === "ok"`, `data.version`, `meta.request_id` (e.g. `req_*`).
+- **Register** — `POST /v1/account/register` → 201, `data.api_key` (e.g. `ak_` prefix), `data.api_secret` (e.g. `sk_`), `data.status === "active"`, `data.trial.is_trial === true`.
+- **Auth** — `POST /v1/auth/token` with api_key + api_secret → `data.access_token` (JWT), `data.token_type === "Bearer"`, `data.expires_in`, `data.agent.permissions` includes expected scopes.
+- **Account info** — `GET /v1/account/info` with X-API-Key → `data.agent_id`, `data.status`, `data.rate_limit`, `data.auth_mode`.
+- **Products** — `GET /v1/products` (and `?type=dynamic`) → `data.items` array, each with `product_no`, `name`, `type`, `price`, `unit`.
+- **Regions** — `GET /v1/products/regions` → `data.items` with `code`, `name`.
+- **Session create (dynamic)** — `POST /v1/sessions` with type dynamic, valid product_no → 202 or 201, `data.session_id` (e.g. `sess_`), `data.status === "creating"` or `active`. Poll until `active`; assert `data.proxy` present, `data.health.health_score`, `data.health.risk_level`.
+- **Session create (static)** — Same with type static; assert active or creating and proxy/expires_at when active.
+- **Session list** — `GET /v1/sessions`, `?status=active`, `?type=dynamic` → pagination and items.
+- **Session rotate** — `POST /v1/sessions/{id}/rotate` with reason → `data.new_proxy` or updated proxy, `data.rotated_at`.
+- **Session renew** — `POST /v1/sessions/{id}/renew` (static) → `data.expires_at` extended.
+- **Session terminate** — `POST /v1/sessions/{id}/terminate` → `data.status === "terminated"`; GET same id confirms terminated.
+- **Billing balance** — `GET /v1/billing/balance` → `data.balance`, `data.currency`.
+- **Billing recharge** — `POST /v1/billing/recharge` with amount → 201, `data.order_id`, `data.status` (e.g. pending). Do not perform real payment.
+- **Billing recharge status** — `GET /v1/billing/recharge/{order_id}/status` → order_id, status.
+- **Billing transactions** — `GET /v1/billing/transactions?page=1&page_size=10` → `data.items`, `data.pagination`.
+- **Telemetry report** — `POST /v1/sessions/{id}/report-event` (success, http_error, block) → `data.session_health` with risk_level, recommendation.
+- **Telemetry batch** — `POST /v1/telemetry/batch` with events array → `data.processed`, `data.results`.
+- **Session health** — `GET /v1/sessions/{id}/health` → health_score, success_rate, recommendation, stats.
+- **Stats overview** — `GET /v1/stats/overview` → balance, active_sessions, total_sessions, etc.
+
+## Request shapes
+
+Use real field names from the API: e.g. `type`, `config.product_no`, `config.traffic_gb` for dynamic; `config.quantity`, `config.duration_days` for static. Session create may use `type` + `config` (not `session_type` in request body for some implementations — align with actual API). Idempotency-Key sent on create/renew where supported.
+
+Next: [Integration tests](/testing/integration-tests), [E2E](/testing/e2e).

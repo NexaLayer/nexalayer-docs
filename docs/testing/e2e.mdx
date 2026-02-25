@@ -1,0 +1,51 @@
+---
+title: E2E and security tests
+description: End-to-end journey and security test scope. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# E2E and security tests
+
+## E2E journey (TS-7)
+
+A single flow that covers the main user path without real payment:
+
+1. **Health** — `GET /v1/health` → ok.
+2. **Register** — `POST /v1/account/register` → obtain api_key (and api_secret if testing JWT).
+3. **Auth (optional)** — `POST /v1/auth/token` → obtain Bearer token; use it for subsequent calls.
+4. **Account info** — `GET /v1/account/info` with X-API-Key or Bearer.
+5. **Products** — `GET /v1/products` → choose product_no for dynamic and optionally static.
+6. **Balance** — `GET /v1/billing/balance` (ensure test balance available via admin/top-up if needed).
+7. **Create dynamic session** — `POST /v1/sessions` with Idempotency-Key; poll `GET /v1/sessions/{session_id}` until status active.
+8. **Use proxy** — Optionally send a request through proxy.full_url (e.g. httpbin.org/ip).
+9. **Report telemetry** — `POST /v1/sessions/{session_id}/report-event` (success or http_error).
+10. **Session health** — `GET /v1/sessions/{session_id}/health`.
+11. **Rotate (dynamic)** — `POST /v1/sessions/{session_id}/rotate` with reason.
+12. **Create recharge order (no payment)** — `POST /v1/billing/recharge`; `GET /v1/billing/recharge/{order_id}/status`.
+13. **Stats** — `GET /v1/stats/overview`.
+14. **Terminate session** — `POST /v1/sessions/{session_id}/terminate`; confirm via GET.
+
+Assertions at each step: correct HTTP status and response shape (success, data, error when applicable).
+
+## Security tests (TS-5)
+
+- **Auth guard** — Requests without X-API-Key or Bearer to protected endpoints → 401, error code e.g. `AUTH_INVALID_KEY` or `AUTH_EXPIRED_TOKEN`.
+- **Invalid key** — Wrong or malformed API Key → 401.
+- **Invalid JWT** — Expired or invalid Bearer token → 401.
+- **Isolation** — Agent B cannot access Agent A’s session (GET or rotate/terminate) → 404 SESSION_NOT_FOUND or 403.
+- **Rate limit** — Exceed rate limit → 429, `Retry-After` and rate-limit headers present.
+
+## Regression (TS-3)
+
+- **Response format** — All success responses: `success: true`, `data`, `error: null`, `meta` with request_id (e.g. req_*), timestamp (ISO 8601).
+- **Error format** — All error responses: `success: false`, `data: null`, `error.code`, `error.message`.
+- **Pagination** — List endpoints return `items[]` and `pagination` (page, page_size, total, total_pages).
+- **Error code regression** — No auth → AUTH_INVALID_KEY 401; invalid body → INVALID_REQUEST 400; nonexistent session → SESSION_NOT_FOUND 404; wrong tenant session → 404.
+
+## Performance (TS-4)
+
+- **Latency** — Critical paths (e.g. health, account/info, session get) have P95 below threshold (e.g. 500ms–1000ms); exact values from project config.
+- **Concurrent** — Limited concurrency (e.g. 5–10) for session create; assert no 5xx and session eventually active or error.
+
+Tests use base URL `https://agent-layer.up.railway.app/v1` and real field names from the API. Clean up sessions and test data after the run.
+
+Next: [Testing overview](/testing/overview), [Errors](/errors).

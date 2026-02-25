@@ -1,0 +1,70 @@
+---
+title: Errors
+description: Error format, codes, rate limits, and retry guidance. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Errors
+
+All error responses share a common shape. Use `error.code` for programmatic handling and `error.message` for logging.
+
+## Response format
+
+```json
+{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "INSUFFICIENT_BALANCE",
+    "message": "余额不足，当前余额 50.00，需要 100.00",
+    "details": {
+      "current_balance": 50.00,
+      "required_amount": 100.00
+    }
+  },
+  "meta": {
+    "request_id": "req_xxxx"
+  }
+}
+```
+
+## Error codes
+
+| Code | HTTP | Description | Action |
+|------|:----:|-------------|--------|
+| `AUTH_INVALID_KEY` | 401 | Invalid API Key | Check key |
+| `AUTH_EXPIRED_TOKEN` | 401 | JWT expired | Refresh token |
+| `AUTH_INSUFFICIENT_PERMISSION` | 403 | Permission denied | Check scope |
+| `RATE_LIMIT_EXCEEDED` | 429 | Too many requests | Back off; use `Retry-After` |
+| `ACCOUNT_DISABLED` | 403 | Account disabled | Contact support |
+| `INSUFFICIENT_BALANCE` | 402 | Balance too low | Recharge |
+| `SESSION_NOT_FOUND` | 404 | Session missing | Check session_id |
+| `SESSION_EXPIRED` | 410 | Session expired | Create new session |
+| `SESSION_LIMIT_REACHED` | 429 | Session limit | Terminate old sessions |
+| `PRODUCT_NOT_FOUND` | 404 | Product invalid | List products |
+| `PRODUCT_OUT_OF_STOCK` | 409 | Out of stock | Retry or other product |
+| `INVALID_REQUEST` | 400 | Bad parameters | Fix request body |
+| `IDEMPOTENCY_CONFLICT` | 409 | Duplicate idempotency key | Use new key or reuse cached response |
+| `BACKEND_ERROR` | 502 | Backend failure | Retry with backoff |
+| `BACKEND_TIMEOUT` | 504 | Backend timeout | Retry |
+| `INTERNAL_ERROR` | 500 | Internal error | Contact support |
+
+## Rate limit headers
+
+All responses include:
+
+| Header | Description |
+|--------|-------------|
+| `X-RateLimit-Limit` | Max requests per window |
+| `X-RateLimit-Remaining` | Remaining in window |
+| `X-RateLimit-Reset` | Window reset (Unix timestamp) |
+
+On 429, `Retry-After` (seconds) is also present. Use it before retrying.
+
+## Retry guidance
+
+- **Do not retry:** `AUTH_INVALID_KEY`, `INSUFFICIENT_BALANCE`, `INVALID_REQUEST`, `SESSION_NOT_FOUND` — fix input or state.
+- **Refresh and retry:** `AUTH_EXPIRED_TOKEN` — get new token then retry.
+- **Wait and retry:** `RATE_LIMIT_EXCEEDED` — sleep `Retry-After` then retry.
+- **Exponential backoff:** `BACKEND_ERROR`, `BACKEND_TIMEOUT` — retry with 2^attempt delay.
+
+Next: [Best practices](/best-practices) (idempotency, telemetry, rotation).

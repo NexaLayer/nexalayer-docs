@@ -1,59 +1,27 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "NexaLayer",
-  "logo": {
-    "dark": "/logo.svg",
-    "light": "/logo.svg"
-  },
+  "name": "NexaLayer — AI Agent Network Execution Layer",
+  "logo": { "dark": "/logo.svg", "light": "/logo.svg" },
   "favicon": "/favicon.svg",
-  "colors": {
-    "primary": "#0F172A",
-    "light": "#334155",
-    "dark": "#E2E8F0"
-  },
+  "colors": { "primary": "#6C5CE7", "light": "#A29BFE", "dark": "#0B0F1A" },
   "topbarLinks": [
-    { "name": "Dashboard", "url": "https://app.nexalayer.com" },
-    { "name": "API", "url": "https://api.nexalayer.com" }
+    { "name": "API", "url": "https://agent-layer.up.railway.app/v1" }
   ],
-  "topbarCtaButton": {
-    "name": "Get API Key",
-    "url": "https://app.nexalayer.com/register"
-  },
-  "tabs": [
-    { "name": "API Reference", "url": "api-reference" }
-  ],
+  "topbarCtaButton": { "name": "Get API Key", "url": "#" },
   "anchors": [
     { "name": "GitHub", "url": "https://github.com/NexaLayer" },
-    { "name": "Support", "url": "https://nexalayer.com/support" }
+    { "name": "Support", "url": "mailto:support@nexalayer.net" }
   ],
   "navigation": [
-    { "group": "Getting started", "pages": ["introduction", "quickstart", "authentication"] },
-    {
-      "group": "Sessions",
-      "pages": [
-        "sessions/overview",
-        "sessions/create-session",
-        "sessions/rotate",
-        "sessions/renew",
-        "sessions/terminate"
-      ]
-    },
-    {
-      "group": "Billing",
-      "pages": ["billing/balance", "billing/recharge", "billing/usage-report"]
-    },
-    {
-      "group": "Products",
-      "pages": ["products/list-products", "products/recommend"]
-    },
-    {
-      "group": "Stats",
-      "pages": ["stats/overview", "stats/traffic-cost"]
-    },
-    { "group": "API Reference", "pages": ["api-reference/openapi"] }
+    { "group": "Getting started", "pages": ["introduction", "quickstart", "authentication", "accounts"] },
+    { "group": "Products", "pages": ["products"] },
+    { "group": "Sessions", "pages": ["sessions/overview", "sessions/dynamic", "sessions/static", "sessions/rotate", "sessions/renew", "sessions/terminate"] },
+    { "group": "Billing", "pages": ["billing/balance", "billing/recharge", "billing/transactions"] },
+    { "group": "Telemetry", "pages": ["telemetry/overview", "telemetry/health", "telemetry/batch"] },
+    { "group": "Stats & Errors", "pages": ["stats", "errors"] },
+    { "group": "Practices", "pages": ["best-practices"] },
+    { "group": "Architecture", "pages": ["architecture", "backend-integration"] },
+    { "group": "Testing", "pages": ["testing/overview", "testing/smoke-tests", "testing/integration-tests", "testing/e2e"] }
   ],
-  "footerSocials": {
-    "github": "https://github.com/NexaLayer",
-    "twitter": "https://twitter.com/nexalayer"
-  }
+  "footerSocials": { "github": "https://github.com/NexaLayer" }
 }

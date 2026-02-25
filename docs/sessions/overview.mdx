@@ -1,28 +1,57 @@
 ---
 title: Sessions overview
-description: Session-based proxy abstraction for dynamic and static proxies.
+description: Session lifecycle, types, and API summary. Base URL: https://agent-layer.up.railway.app/v1
 ---
 
-Sessions are the core abstraction in NexaLayer. A **session** represents a proxy configuration (dynamic or static) that you use to send outbound traffic.
+# Sessions overview
 
-## Session types
-
-| Type     | Description                          |
-|----------|--------------------------------------|
-| Dynamic  | On-demand IPs; pay per traffic (GB). |
-| Static   | Reserved IPs; pay per duration.      |
+A **session** is a proxy usage unit. Each session has a `session_id`, `type` (dynamic or static), `status`, and when active, a `proxy` object (host, port, credentials, `full_url`).
 
 ## Lifecycle
 
-1. **Create** — `POST /sessions` with `type` and `config`.
-2. **Use** — Send HTTP requests through the session’s proxy config.
-3. **Rotate** — `POST /sessions/{session_id}/rotate` to get a new IP (dynamic).
-4. **Renew** — Extend or renew as per product (see [Renew](/sessions/renew)).
-5. **Terminate** — Release the session when done (see [Terminate](/sessions/terminate)).
+```
+creating → active → [rotating] → expired
+                  ↘ error
+                  ↘ terminated (manual)
+```
 
-## Endpoints
+- **creating** — Session created; backend is provisioning. Poll `GET /sessions/{session_id}` until `status === "active"`.
+- **active** — Ready; use `proxy.full_url` to send traffic.
+- **rotating** — (Dynamic only) IP rotation in progress.
+- **expired** — Traffic or time exhausted.
+- **error** — Provisioning or runtime error.
+- **terminated** — Manually terminated via `POST /sessions/{session_id}/terminate`.
 
-- `POST /sessions` — Create session
-- `GET /sessions/{session_id}` — Get session details
-- `POST /sessions/{session_id}/rotate` — Rotate IP
-- `GET /sessions/{session_id}/usage` — Usage for the session
+## Session types
+
+| Type | API doc | Description |
+|------|--------|-------------|
+| Dynamic | [Dynamic](/sessions/dynamic) | Rotating IP; pay per traffic (GB). Create with `type: "dynamic"` and `config.product_no`, `config.traffic_gb`, etc. |
+| Static | [Static](/sessions/static) | Fixed IP; pay per duration. Create with `type: "static"` and `config.product_no`, `config.quantity`, `config.duration_days`. |
+
+## API summary
+
+| Action | Method | Path |
+|--------|--------|------|
+| Create | POST | `/sessions` |
+| List | GET | `/sessions?status=active&type=dynamic&page=1&page_size=20` |
+| Get | GET | `/sessions/{session_id}` |
+| Rotate (dynamic) | POST | `/sessions/{session_id}/rotate` |
+| Renew (static) | POST | `/sessions/{session_id}/renew` |
+| Terminate | POST | `/sessions/{session_id}/terminate` |
+| Usage | GET | `/sessions/{session_id}/usage` |
+| Whitelist | POST | `/sessions/{session_id}/whitelist` |
+
+## Idempotency
+
+For create and renew, send `Idempotency-Key` to avoid duplicate orders on retries:
+
+```bash
+curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
+  -H "X-API-Key: <api_key>" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: create_dynamic_001" \
+  -d '{ "type": "dynamic", "config": { ... } }'
+```
+
+Next: [Dynamic](/sessions/dynamic), [Static](/sessions/static), [Rotate](/sessions/rotate), [Renew](/sessions/renew), [Terminate](/sessions/terminate).

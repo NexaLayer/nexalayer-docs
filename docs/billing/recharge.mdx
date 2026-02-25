@@ -1,27 +1,68 @@
 ---
 title: Recharge
-description: Add funds to your account.
+description: Create USDT recharge order and check status. Base URL: https://agent-layer.up.railway.app/v1
 ---
 
-## Request
+# Recharge
 
+Recharge is done via USDT (TRC20). Create an order, send the required USDT amount to the returned wallet address, then poll status until `paid`.
+
+## Step 1: Create recharge order
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/billing/recharge" \
+  -H "X-API-Key: <api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{ "amount": 500.00, "payment_method": "usdt" }'
 ```
-POST /billing/recharge
-```
 
-**Headers:** `X-API-Key` or `Authorization: Bearer <token>`
-
-**Body:**
-
-```json
+```json Response
 {
-  "amount": 20.00,
-  "currency": "USD"
+  "success": true,
+  "data": {
+    "order_id": "PAY20260215100000xxxx",
+    "amount": 500.00,
+    "amount_usdt": 69.44,
+    "usdt_rate": 7.2,
+    "wallet_address": "TXxxxxxxxxxxxxxxxxxxxx",
+    "network": "TRC20",
+    "expire_time": "2026-02-15T11:00:00Z",
+    "status": "pending"
+  }
 }
 ```
 
-## Response
+</CodeGroup>
 
-Returns a payment link or confirmation depending on integration (e.g. redirect URL for payment provider). Balance is updated after payment completes.
+Send `amount_usdt` USDT (TRC20) to `wallet_address` before `expire_time`.
 
-See dashboard or support for supported payment methods and currencies.
+## Step 2: Check status
+
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://agent-layer.up.railway.app/v1/billing/recharge/PAY20260215100000xxxx/status" \
+  -H "X-API-Key: <api_key>"
+```
+
+```json Response (paid)
+{
+  "success": true,
+  "data": {
+    "order_id": "PAY20260215100000xxxx",
+    "status": "paid",
+    "amount": 500.00,
+    "paid_amount_usdt": 69.44,
+    "confirmations": 6,
+    "completed_at": "2026-02-15T10:15:00Z"
+  }
+}
+```
+
+</CodeGroup>
+
+**Status values:** `pending`, `confirming`, `paid`, `expired`, `failed`.
+
+Next: [Transactions](/billing/transactions).

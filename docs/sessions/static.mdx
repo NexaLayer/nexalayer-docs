@@ -1,0 +1,71 @@
+---
+title: Static sessions
+description: Create and use static (fixed-IP) proxy sessions. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Static sessions
+
+Static sessions provide fixed IPs and are billed by duration (e.g. 30 or 90 days). Creation may be synchronous or asynchronous depending on product; check `status` and use `proxy` when `active`.
+
+## Create
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
+  -H "X-API-Key: <api_key>" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: create_static_001" \
+  -d '{
+    "type": "static",
+    "config": {
+      "product_no": "LM_US_LA_01",
+      "quantity": 2,
+      "duration_days": 30,
+      "country": "US",
+      "city": "LA"
+    }
+  }'
+```
+
+```json Response
+{
+  "success": true,
+  "data": {
+    "session_id": "sess_x1y2z3w4-a5b6-7890",
+    "type": "static",
+    "status": "active",
+    "proxy": {
+      "host": "192.168.1.100",
+      "port": 40000,
+      "username": "static_user01",
+      "password": "static_pass01",
+      "protocol": "socks5",
+      "full_url": "socks5://static_user01:static_pass01@192.168.1.100:40000"
+    },
+    "location": { "country": "US", "city": "LA" },
+    "ip_list": ["192.168.1.100", "192.168.1.101"],
+    "expires_at": "2026-03-17T10:00:00Z",
+    "created_at": "2026-02-15T10:00:00Z"
+  }
+}
+```
+
+</CodeGroup>
+
+## Config parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|:--------:|-------------|
+| `product_no` | string | Yes | Product code from `GET /products`. |
+| `quantity` | number | Yes | Number of IPs. |
+| `duration_days` | number | Yes | 30 or 90 (product-dependent). |
+| `country` | string | Yes | Country code. |
+| `city` | string | No | City code. |
+
+## Get session / usage
+
+- `GET /sessions/{session_id}` — full session including `proxy`, `expires_at`, `ip_list`.
+- `GET /sessions/{session_id}/usage` — usage and remaining time/traffic.
+
+To extend: [Renew](/sessions/renew). To release: [Terminate](/sessions/terminate).

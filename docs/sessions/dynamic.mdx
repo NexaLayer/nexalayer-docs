@@ -1,0 +1,110 @@
+---
+title: Dynamic sessions
+description: Create and use dynamic (rotating) proxy sessions. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Dynamic sessions
+
+Dynamic sessions provide rotating IPs and are billed by traffic (GB). Creation is **asynchronous**: the API returns immediately with `status: "creating"`; poll until `active`.
+
+## Create
+
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
+  -H "X-API-Key: <api_key>" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: create_dynamic_001" \
+  -d '{
+    "type": "dynamic",
+    "config": {
+      "product_no": "out_dynamic_1",
+      "traffic_gb": 10,
+      "protocol": "socks5",
+      "country": "US",
+      "city": "LA",
+      "rotation": {
+        "mode": "timed",
+        "interval_seconds": 300
+      }
+    }
+  }'
+```
+
+```json Response (initial)
+{
+  "success": true,
+  "data": {
+    "session_id": "sess_a1b2c3d4-e5f6-7890",
+    "type": "dynamic",
+    "status": "creating",
+    "message": "Session 正在创建中，请轮询查询状态",
+    "created_at": "2026-02-15T10:00:00Z"
+  }
+}
+```
+
+</CodeGroup>
+
+## Config parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|:--------:|-------------|
+| `product_no` | string | Yes | Product code from `GET /products`. |
+| `traffic_gb` | number | Yes | Traffic in GB. |
+| `protocol` | string | No | `socks5` or `http`; default `socks5`. |
+| `country` | string | No | Country code. |
+| `city` | string | No | City code. |
+| `rotation.mode` | string | No | `fixed` \| `timed` \| `on_demand`. |
+| `rotation.interval_seconds` | number | No | For `timed`, interval in seconds. |
+
+**Rotation modes:** `fixed` = no auto-rotate; `timed` = rotate every `interval_seconds`; `on_demand` = rotate only when you call `POST /sessions/{id}/rotate`.
+
+## Poll until active
+
+```bash
+curl -X GET "https://agent-layer.up.railway.app/v1/sessions/sess_a1b2c3d4-e5f6-7890" \
+  -H "X-API-Key: <api_key>"
+```
+
+When `data.status === "active"`, use `data.proxy.full_url`:
+
+<CodeGroup>
+
+```json Active response (excerpt)
+{
+  "success": true,
+  "data": {
+    "session_id": "sess_a1b2c3d4-e5f6-7890",
+    "type": "dynamic",
+    "status": "active",
+    "proxy": {
+      "host": "proxy.example.com",
+      "port": 10001,
+      "username": "user_abc123",
+      "password": "pass_xyz789",
+      "protocol": "socks5",
+      "full_url": "socks5://user_abc123:pass_xyz789@proxy.example.com:10001"
+    },
+    "location": { "country": "US", "city": "LA" },
+    "rotation": {
+      "mode": "timed",
+      "interval_seconds": 300,
+      "next_rotation_at": "2026-02-15T10:05:00Z"
+    },
+    "health": { "risk_level": "low", "health_score": 100, "success_rate": 1.0 },
+    "usage": {
+      "traffic_total_gb": 10,
+      "traffic_used_gb": 0,
+      "traffic_remaining_gb": 10
+    },
+    "expires_at": "2026-03-15T10:00:00Z",
+    "created_at": "2026-02-15T10:00:00Z"
+  }
+}
+```
+
+</CodeGroup>
+
+Next: [Rotate](/sessions/rotate) (change IP), [Terminate](/sessions/terminate).

@@ -1,25 +1,34 @@
 ---
 title: Balance
-description: Check account balance.
+description: Query account balance. Base URL: https://agent-layer.up.railway.app/v1
 ---
+
+# Balance
+
+Query current balance before creating sessions or recharging.
 
 ## Request
 
+<CodeGroup>
+
+```bash Request
+curl -X GET "https://agent-layer.up.railway.app/v1/billing/balance" \
+  -H "X-API-Key: <api_key>"
 ```
-GET /billing/balance
-```
 
-**Headers:** `X-API-Key` or `Authorization: Bearer <token>`
-
-## Response
-
-```json
+```json Response
 {
+  "success": true,
   "data": {
-    "balance": 10.50,
-    "currency": "USD"
+    "balance": 1000.00,
+    "currency": "CNY",
+    "frozen": 0.00,
+    "available": 1000.00,
+    "last_recharge_at": "2026-02-14T08:00:00Z"
   }
 }
 ```
 
-Use balance before creating sessions or recharging to avoid insufficient-funds errors.
+</CodeGroup>
+
+Insufficient balance will result in `INSUFFICIENT_BALANCE` (402) when creating sessions or renewing. Use [Recharge](/billing/recharge) to add funds.

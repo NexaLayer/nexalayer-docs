@@ -1,33 +1,56 @@
 ---
 title: Rotate session
-description: Rotate IP for a dynamic session.
+description: Rotate dynamic session IP. Base URL: https://agent-layer.up.railway.app/v1
 ---
+
+# Rotate session
+
+Only **dynamic** sessions support rotation. Call `POST /sessions/{session_id}/rotate` to get a new exit IP. Sending a `reason` helps telemetry and risk scoring.
 
 ## Request
 
+<CodeGroup>
+
+```bash Request
+curl -X POST "https://agent-layer.up.railway.app/v1/sessions/sess_a1b2c3d4-e5f6-7890/rotate" \
+  -H "X-API-Key: <api_key>" \
+  -H "Content-Type: application/json" \
+  -d '{ "reason": "http_403" }'
 ```
-POST /sessions/{session_id}/rotate
-```
 
-**Headers:** `X-API-Key` or `Authorization: Bearer <token>`
-
-No body required.
-
-## Response
-
-```json
+```json Response
 {
+  "success": true,
   "data": {
-    "session_id": "sess_abc123",
-    "status": "active",
-    "proxy_config": { ... }
+    "session_id": "sess_a1b2c3d4-e5f6-7890",
+    "old_proxy": { "host": "proxy.example.com", "port": 10001 },
+    "new_proxy": {
+      "host": "proxy.example.com",
+      "port": 10002,
+      "username": "user_new123",
+      "password": "pass_new789",
+      "protocol": "socks5",
+      "full_url": "socks5://user_new123:pass_new789@proxy.example.com:10002"
+    },
+    "rotated_at": "2026-02-15T10:05:00Z"
   }
 }
 ```
 
-After rotation, use the updated `proxy_config` for subsequent requests. The session ID stays the same; only the exit IP changes.
+</CodeGroup>
 
-## Notes
+## Reason values
 
-- Only applicable to **dynamic** sessions.
-- Static sessions use fixed IPs; rotation may not apply or may create a new session depending on product.
+| Value | Description |
+|-------|-------------|
+| `http_403` | Target returned 403 |
+| `http_429` | Target rate-limited |
+| `captcha` | Captcha encountered |
+| `timeout` | Connection timeout |
+| `block` | IP blocked |
+| `scheduled` | Timed rotation |
+| `manual` | Manual (default) |
+
+Use the returned `new_proxy.full_url` for subsequent requests. Session ID is unchanged.
+
+Next: [Telemetry](/telemetry/overview) (report events to get rotation recommendations).

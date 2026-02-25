@@ -1,0 +1,82 @@
+---
+title: Architecture
+description: System positioning, layers, and core modules. Base URL: https://agent-layer.up.railway.app/v1
+---
+
+# Architecture
+
+NexaLayer (Agent Layer) is an **intermediate layer** between AI Agents and an existing proxy backend. It provides agent-friendly APIs and session abstraction while delegating user/order/proxy operations to the backend.
+
+## System positioning
+
+```
+┌──────────────────────────────────────────────────────┐
+│                    AI Agent 生态                       │
+│  Agent A    Agent B    Agent C    MCP / 其他          │
+└─────────────────────────┬────────────────────────────┘
+                          │
+                          ▼
+┌──────────────────────────────────────────────────────┐
+│          AI Agent 网络执行层 (Agent Layer)              │
+│  API Gateway → 认证/会话/调度/计费 → Agent DB           │
+│                          │                            │
+│                    内部 HTTP 调用                       │
+└─────────────────────────┬────────────────────────────┘
+                          ▼
+┌──────────────────────────────────────────────────────┐
+│              现有 IP 代理管理系统 (Backend)              │
+│  用户管理 │ 订单管理 │ 代理服务 │ 支付系统              │
+│                    → 底层代理供应商                     │
+└──────────────────────────────────────────────────────┘
+```
+
+## Responsibility split
+
+| Responsibility | Agent Layer | Backend |
+|----------------|:-----------:|:-------:|
+| Agent auth (API Key / JWT) | ✅ | ❌ |
+| Session lifecycle | ✅ | ❌ |
+| Product/session recommendation | ✅ | ❌ |
+| User/account creation | Proxy | ✅ |
+| Order create / renew | Proxy | ✅ |
+| Proxy IP allocation | Proxy | ✅ |
+| Balance / recharge | Proxy | ✅ |
+| Telemetry & health | ✅ | ❌ |
+
+## Layered architecture
+
+```
+┌─────────────────────────────────────────────┐
+│                 API Layer                    │
+│  Routes → Validation (Zod) → Controller     │
+├─────────────────────────────────────────────┤
+│               Service Layer                  │
+│  SessionService │ ProxyService               │
+│  AccountService │ BillingService             │
+├─────────────────────────────────────────────┤
+│              Gateway Layer                   │
+│  BackendClient (HTTP → 代理后端)             │
+├─────────────────────────────────────────────┤
+│             Data Access Layer                │
+│  Prisma ORM → PostgreSQL (Agent DB)         │
+└─────────────────────────────────────────────┘
+```
+
+## Core modules
+
+- **Auth** — API Key (X-API-Key) or JWT (Bearer). Per-key rate limit.
+- **Account** — Register agent; 1:1 mapping to backend user; backend_user_id, backend_username, backend_token cache.
+- **Session** — session_id, type (dynamic/static), status, proxy_config, rotation_policy, health (risk_level, health_score, success_rate), usage, expires_at.
+- **ProxyService** — StaticProxyManager, DynamicProxyManager, SmartRouter; calls backend to create/renew/rotate/release proxies.
+- **Billing** — getBalance, recharge, usage report; delegates to backend.
+- **Telemetry** — reportEvent, batch, updateSessionHealth; stores events and drives health/recommendations.
+
+## Data flow (session create)
+
+1. Agent calls `POST /sessions` with type and config.
+2. Agent Layer validates, checks balance (via backend or cache), creates session row (status `creating`).
+3. Agent Layer calls backend to create order / allocate proxy (async where applicable).
+4. Backend returns order/proxy details; Agent Layer updates session (proxy_config, status `active`).
+5. Agent polls `GET /sessions/{session_id}` or receives webhook until active, then uses `proxy.full_url`.
+
+Next: [Backend integration](/backend-integration).
