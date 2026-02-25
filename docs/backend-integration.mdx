@@ -26,11 +26,11 @@ Agent Layer integrates with an existing **proxy backend** via HTTP. The backend 
 
 - **Orders** — Agent Layer creates orders in the backend; session state (creating → active) follows backend order/proxy status.
 - **Billing** — Consumption and recharge are recorded in the backend; Agent Layer may cache balance for performance but critical operations (create session, renew) rely on backend checks.
-- **Testing** — Integration tests (see [Integration tests](/docs/docs/testing/integration-tests)) verify that Agent Layer operations produce the correct backend records (users, orders, transactions).
+- **Testing** — Integration tests (see [Integration tests](/testing/integration-tests)) verify that Agent Layer operations produce the correct backend records (users, orders, transactions).
 
 ## Security
 
 - Backend credentials (passwords, tokens) stored encrypted (e.g. AES-256-GCM). API keys and secrets for agents never sent to backend; only backend user identity is used for backend calls.
 - All client-facing API calls use `https://agent-layer.up.railway.app/v1`; backend URL is internal only.
 
-Next: [Architecture](/docs/docs/architecture), [Testing overview](/docs/docs/testing/overview).
+Next: [Architecture](/architecture), [Testing overview](/testing/overview).

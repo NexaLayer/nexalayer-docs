@@ -26,8 +26,8 @@ creating → active → [rotating] → expired
 
 | Type | API doc | Description |
 |------|--------|-------------|
-| Dynamic | [Dynamic](/docs/docs/sessions/dynamic) | Rotating IP; pay per traffic (GB). Create with `type: "dynamic"` and `config.product_no`, `config.traffic_gb`, etc. |
-| Static | [Static](/docs/docs/sessions/static) | Fixed IP; pay per duration. Create with `type: "static"` and `config.product_no`, `config.quantity`, `config.duration_days`. |
+| Dynamic | [Dynamic](/sessions/dynamic) | Rotating IP; pay per traffic (GB). Create with `type: "dynamic"` and `config.product_no`, `config.traffic_gb`, etc. |
+| Static | [Static](/sessions/static) | Fixed IP; pay per duration. Create with `type: "static"` and `config.product_no`, `config.quantity`, `config.duration_days`. |
 
 ## API summary
 
@@ -54,4 +54,4 @@ curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
   -d '{ "type": "dynamic", "config": { ... } }'
 ```
 
-Next: [Dynamic](/docs/docs/sessions/dynamic), [Static](/docs/docs/sessions/static), [Rotate](/docs/docs/sessions/rotate), [Renew](/docs/docs/sessions/renew), [Terminate](/docs/docs/sessions/terminate).
+Next: [Dynamic](/sessions/dynamic), [Static](/sessions/static), [Rotate](/sessions/rotate), [Renew](/sessions/renew), [Terminate](/sessions/terminate).
