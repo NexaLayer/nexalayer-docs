@@ -1,6 +1,6 @@
 {
     "$schema": "https://mintlify.com/schema.json",
-    "theme": "mint",
+    "theme": 'mint',
     "name": "NexaLayer — AI Agent Network Execution Layer",
     "docs": {
         "root": "docs"
