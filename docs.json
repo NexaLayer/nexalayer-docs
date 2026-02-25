@@ -8,7 +8,7 @@
   "colors": { "primary": "#6C5CE7" },
   "redirects": [{ "source": "/", "destination": "/introduction" }],
   "navigation": {
-    "sidebar": [
+    "groups": [
       { "group": "Getting Started", "pages": ["introduction", "quickstart", "authentication", "accounts"] },
       { "group": "Products", "pages": ["products"] },
       { "group": "Sessions", "pages": ["sessions/overview", "sessions/dynamic", "sessions/static", "sessions/rotate", "sessions/renew", "sessions/terminate"] },
