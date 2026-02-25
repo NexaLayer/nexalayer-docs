@@ -2,14 +2,14 @@
   "$schema": "https://mintlify.com/schema.json",
   "theme": "mint",
   "name": "NexaLayer — AI Agent Network Execution Layer",
-  "docs": { "root": "docs" },
+  "docs": { "root": "docs", "basePath": "/docs" },
   "logo": { "dark": "/logo.svg", "light": "/logo.svg" },
   "favicon": "/favicon.svg",
   "colors": { "primary": "#6C5CE7" },
   "redirects": [
-    { "source": "/", "destination": "/introduction" },
-    { "source": "/docs", "destination": "/introduction" },
-    { "source": "/docs/", "destination": "/introduction" }
+    { "source": "/", "destination": "/docs/introduction" },
+    { "source": "/docs", "destination": "/docs/introduction" },
+    { "source": "/docs/", "destination": "/docs/introduction" }
   ],
   "navigation": {
     "groups": [
