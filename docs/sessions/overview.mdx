@@ -1,0 +1,28 @@
+---
+title: Sessions overview
+description: Session-based proxy abstraction for dynamic and static proxies.
+---
+
+Sessions are the core abstraction in NexaLayer. A **session** represents a proxy configuration (dynamic or static) that you use to send outbound traffic.
+
+## Session types
+
+| Type     | Description                          |
+|----------|--------------------------------------|
+| Dynamic  | On-demand IPs; pay per traffic (GB). |
+| Static   | Reserved IPs; pay per duration.      |
+
+## Lifecycle
+
+1. **Create** — `POST /sessions` with `type` and `config`.
+2. **Use** — Send HTTP requests through the session’s proxy config.
+3. **Rotate** — `POST /sessions/{session_id}/rotate` to get a new IP (dynamic).
+4. **Renew** — Extend or renew as per product (see [Renew](/sessions/renew)).
+5. **Terminate** — Release the session when done (see [Terminate](/sessions/terminate)).
+
+## Endpoints
+
+- `POST /sessions` — Create session
+- `GET /sessions/{session_id}` — Get session details
+- `POST /sessions/{session_id}/rotate` — Rotate IP
+- `GET /sessions/{session_id}/usage` — Usage for the session

@@ -1,0 +1,34 @@
+---
+title: Introduction
+description: NexaLayer — The Network Execution Layer for AI Agents.
+---
+
+NexaLayer provides a **session-based abstraction** over proxy infrastructure (dynamic and static), designed for AI agent and automation workflows.
+
+## What is NexaLayer?
+
+- **Unified API**: One interface for dynamic and static proxy products.
+- **Session-first**: Create sessions, rotate IPs, and track usage per session.
+- **Agent-oriented**: Authentication and semantics built for programmatic and agent use cases.
+
+## Base URL
+
+All API requests use:
+
+```
+https://api.nexalayer.com/v1
+```
+
+## Authentication
+
+You can authenticate in two ways:
+
+1. **API Key** — Send `X-API-Key` on every request (quickstart).
+2. **Bearer token** — Exchange API Key + Secret via `POST /auth/token`, then use `Authorization: Bearer <token>`.
+
+See [Authentication](/authentication) for details.
+
+## Next steps
+
+- [Quickstart](/quickstart) — Register, create a session, and send traffic.
+- [Sessions](/sessions/overview) — Create, rotate, renew, and terminate sessions.

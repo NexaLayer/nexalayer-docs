@@ -1,0 +1,53 @@
+---
+title: Quickstart
+description: Get started with NexaLayer in minutes.
+---
+
+## 1. Register
+
+Create an account and get an API key:
+
+```bash
+curl -X POST https://api.nexalayer.com/v1/account/register \
+  -H "Content-Type: application/json" \
+  -d '{"name": "My Agent", "contact_email": "dev@example.com"}'
+```
+
+Save the returned `api_key`; it is used for all subsequent requests.
+
+## 2. Create a session
+
+Create a dynamic proxy session:
+
+```bash
+curl -X POST https://api.nexalayer.com/v1/sessions \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "dynamic",
+    "config": {
+      "product_no": "out_dynamic_1",
+      "traffic_gb": 1,
+      "protocol": "http",
+      "country": "US"
+    }
+  }'
+```
+
+Response includes `session_id`, `status`, and `proxy_config` (host, port, credentials).
+
+## 3. Send traffic
+
+Use the session’s proxy configuration (e.g. `http://user:pass@host:port`) in your HTTP client to send requests through the proxy. Rotate when needed:
+
+```bash
+curl -X POST https://api.nexalayer.com/v1/sessions/SESSION_ID/rotate \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+## SDK
+
+Use the official SDKs for a higher-level client and session abstraction:
+
+- [Python SDK](https://github.com/NexaLayer/nexalayer-sdk#python)
+- [Node SDK](https://github.com/NexaLayer/nexalayer-sdk#node)

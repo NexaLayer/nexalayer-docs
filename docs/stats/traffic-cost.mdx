@@ -1,0 +1,14 @@
+---
+title: Traffic cost
+description: Understanding traffic and cost.
+---
+
+- **Dynamic sessions**: Billed per GB (or MB) of traffic; see product pricing and session usage.
+- **Static sessions**: Billed by duration (e.g. per month) and possibly bandwidth caps.
+
+Cost per session is available from:
+
+- `GET /sessions/{session_id}/usage` — per-session usage and cost (if returned).
+- `GET /stats/overview` — account-level totals.
+
+Traffic is measured at the proxy egress. Check product and billing docs for exact units and currency.

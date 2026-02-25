@@ -1,0 +1,25 @@
+---
+title: Balance
+description: Check account balance.
+---
+
+## Request
+
+```
+GET /billing/balance
+```
+
+**Headers:** `X-API-Key` or `Authorization: Bearer <token>`
+
+## Response
+
+```json
+{
+  "data": {
+    "balance": 10.50,
+    "currency": "USD"
+  }
+}
+```
+
+Use balance before creating sessions or recharging to avoid insufficient-funds errors.

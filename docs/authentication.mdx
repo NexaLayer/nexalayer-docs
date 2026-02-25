@@ -1,0 +1,40 @@
+---
+title: Authentication
+description: API Key, Secret, and Bearer token authentication.
+---
+
+NexaLayer supports two authentication modes.
+
+## Option 1: API Key (direct)
+
+Send your API key on every request:
+
+```
+X-API-Key: your-api-key
+```
+
+No token exchange required. Best for quickstart and server-side scripts.
+
+## Option 2: Bearer token (via token exchange)
+
+1. Obtain a short-lived token:
+
+```bash
+curl -X POST https://api.nexalayer.com/v1/auth/token \
+  -H "Content-Type: application/json" \
+  -d '{"api_key": "YOUR_API_KEY", "api_secret": "YOUR_API_SECRET"}'
+```
+
+2. Use the returned `access_token` in the header:
+
+```
+Authorization: Bearer <access_token>
+```
+
+Use this when you need token expiry and refresh semantics (e.g. OAuth-style flows).
+
+## Security
+
+- Do not commit API keys or secrets to source control.
+- Prefer environment variables or a secret manager.
+- Rotate keys periodically; revoke compromised keys in the dashboard.

@@ -1,0 +1,30 @@
+---
+title: OpenAPI
+description: NexaLayer API OpenAPI 3.0 specification.
+---
+
+The API is described by an OpenAPI 3.0 spec. Use it for code generation, docs, or client stubs.
+
+**Spec location (placeholder):**
+
+- [openapi.yaml](https://github.com/NexaLayer/nexalayer-api/blob/main/openapi/openapi.yaml) in the `nexalayer-api` repository.
+
+**Base URL:** `https://api.nexalayer.com/v1`
+
+**Key endpoints:**
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | /auth/token | Exchange API Key/Secret for Bearer token |
+| POST | /account/register | Register and get API key |
+| GET | /billing/balance | Get account balance |
+| POST | /billing/recharge | Recharge account |
+| GET | /products | List products |
+| POST | /products/recommend | Get product recommendations |
+| POST | /sessions | Create session |
+| GET | /sessions/{session_id} | Get session |
+| POST | /sessions/{session_id}/rotate | Rotate session IP |
+| GET | /sessions/{session_id}/usage | Session usage |
+| GET | /stats/overview | Stats overview |
+
+For full request/response schemas, open the `openapi.yaml` file or import it into Swagger UI / Postman.

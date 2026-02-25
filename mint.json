@@ -1,0 +1,59 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "NexaLayer",
+  "logo": {
+    "dark": "/logo.svg",
+    "light": "/logo.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#0F172A",
+    "light": "#334155",
+    "dark": "#E2E8F0"
+  },
+  "topbarLinks": [
+    { "name": "Dashboard", "url": "https://app.nexalayer.com" },
+    { "name": "API", "url": "https://api.nexalayer.com" }
+  ],
+  "topbarCtaButton": {
+    "name": "Get API Key",
+    "url": "https://app.nexalayer.com/register"
+  },
+  "tabs": [
+    { "name": "API Reference", "url": "api-reference" }
+  ],
+  "anchors": [
+    { "name": "GitHub", "url": "https://github.com/NexaLayer" },
+    { "name": "Support", "url": "https://nexalayer.com/support" }
+  ],
+  "navigation": [
+    { "group": "Getting started", "pages": ["introduction", "quickstart", "authentication"] },
+    {
+      "group": "Sessions",
+      "pages": [
+        "sessions/overview",
+        "sessions/create-session",
+        "sessions/rotate",
+        "sessions/renew",
+        "sessions/terminate"
+      ]
+    },
+    {
+      "group": "Billing",
+      "pages": ["billing/balance", "billing/recharge", "billing/usage-report"]
+    },
+    {
+      "group": "Products",
+      "pages": ["products/list-products", "products/recommend"]
+    },
+    {
+      "group": "Stats",
+      "pages": ["stats/overview", "stats/traffic-cost"]
+    },
+    { "group": "API Reference", "pages": ["api-reference/openapi"] }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/NexaLayer",
+    "twitter": "https://twitter.com/nexalayer"
+  }
+}

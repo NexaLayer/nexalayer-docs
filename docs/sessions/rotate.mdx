@@ -1,0 +1,33 @@
+---
+title: Rotate session
+description: Rotate IP for a dynamic session.
+---
+
+## Request
+
+```
+POST /sessions/{session_id}/rotate
+```
+
+**Headers:** `X-API-Key` or `Authorization: Bearer <token>`
+
+No body required.
+
+## Response
+
+```json
+{
+  "data": {
+    "session_id": "sess_abc123",
+    "status": "active",
+    "proxy_config": { ... }
+  }
+}
+```
+
+After rotation, use the updated `proxy_config` for subsequent requests. The session ID stays the same; only the exit IP changes.
+
+## Notes
+
+- Only applicable to **dynamic** sessions.
+- Static sessions use fixed IPs; rotation may not apply or may create a new session depending on product.

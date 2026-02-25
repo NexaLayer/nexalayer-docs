@@ -1,0 +1,20 @@
+---
+title: Terminate session
+description: End and release a session.
+---
+
+When you are done with a session, terminate it to stop billing and release resources.
+
+## Request
+
+```
+DELETE /sessions/{session_id}
+```
+
+**Headers:** `X-API-Key` or `Authorization: Bearer <token>`
+
+(If the API uses a different method such as `POST /sessions/{session_id}/terminate`, refer to the [API reference](/api-reference/openapi).)
+
+## Response
+
+Success returns a confirmation; the session is no longer usable. Any remaining traffic or time may be forfeited depending on product terms.

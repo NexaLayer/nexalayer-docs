@@ -1,0 +1,27 @@
+---
+title: Recharge
+description: Add funds to your account.
+---
+
+## Request
+
+```
+POST /billing/recharge
+```
+
+**Headers:** `X-API-Key` or `Authorization: Bearer <token>`
+
+**Body:**
+
+```json
+{
+  "amount": 20.00,
+  "currency": "USD"
+}
+```
+
+## Response
+
+Returns a payment link or confirmation depending on integration (e.g. redirect URL for payment provider). Balance is updated after payment completes.
+
+See dashboard or support for supported payment methods and currencies.
