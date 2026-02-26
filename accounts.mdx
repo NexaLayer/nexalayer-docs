@@ -11,6 +11,16 @@ Agent accounts are created via `POST /account/register`. Each agent has a 1:1 ma
 
 Creates an agent and returns `api_key` and `api_secret`. New agents receive a trial balance (e.g. ¥5) for testing.
 
+**用户注册**：注册时可填写**推荐码**（可选）。若提供有效推荐码，账号将归属至该推荐代理商；若不填或推荐码无效，将归属默认代理商。无效推荐码会返回 400 错误。
+
+**示例 curl（推荐码可选）**：注册接口为 `POST /v1/account/register`（部分环境路径为 `/v1/auth/register`，以实际为准）。
+
+```bash
+curl -X POST https://api.nexalayer.net/v1/account/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"My Agent","contact_email":"dev@example.com","referral_code":"0345"}'
+```
+
 <CodeGroup>
 
 ```bash Request (without referral code)

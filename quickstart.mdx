@@ -9,16 +9,26 @@ Three steps: register → create session → use proxy. New agents get a trial b
 
 ## Step 1: Register
 
-Call the register API once to get credentials. Store `api_key` for all subsequent requests.
+Call the register API once to get credentials. Store `api_key` for all subsequent requests. 注册时可选填**推荐码**（`referral_code`），用于归属到指定代理商。
 
 <CodeGroup>
 
-```bash Request
+```bash Request (no referral code)
 curl -X POST "https://api.nexalayer.net/v1/account/register" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "My AI Agent",
     "contact_email": "dev@example.com"
+  }'
+```
+
+```bash Request (with referral code)
+curl -X POST "https://api.nexalayer.net/v1/account/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "My AI Agent",
+    "contact_email": "dev@example.com",
+    "referral_code": "0345"
   }'
 ```
 
