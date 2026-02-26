@@ -1,6 +1,6 @@
 ---
 title: Authentication
-description: "API Key (recommended) or JWT Token. All requests use base URL https://agent-layer.up.railway.app/v1"
+description: "API Key (recommended) or JWT Token. All requests use base URL https://api.nexalayer.net/v1"
 ---
 
 # Authentication
@@ -18,7 +18,7 @@ Send the API key on every request. No token exchange or refresh.
 <CodeGroup>
 
 ```bash Example
-curl -X GET "https://agent-layer.up.railway.app/v1/account/info" \
+curl -X GET "https://api.nexalayer.net/v1/account/info" \
   -H "X-API-Key: ak_xxxxxxxxxxxxxxxx"
 ```
 
@@ -36,7 +36,7 @@ Exchange `api_key` + `api_secret` for a short-lived Bearer token. Use when you n
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/auth/token" \
+curl -X POST "https://api.nexalayer.net/v1/auth/token" \
   -H "Content-Type: application/json" \
   -d '{
     "api_key": "ak_xxxxxxxxxxxxxxxx",
@@ -73,7 +73,7 @@ curl -X POST "https://agent-layer.up.railway.app/v1/auth/token" \
 Before expiry, call:
 
 ```bash
-curl -X POST "https://agent-layer.up.railway.app/v1/auth/refresh" \
+curl -X POST "https://api.nexalayer.net/v1/auth/refresh" \
   -H "Authorization: Bearer <current_token>"
 ```
 

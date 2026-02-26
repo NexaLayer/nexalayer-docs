@@ -1,6 +1,6 @@
 ---
 title: Rotate session
-description: "Rotate dynamic session IP. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Rotate dynamic session IP. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Rotate session
@@ -12,7 +12,7 @@ Only **dynamic** sessions support rotation. Call `POST /sessions/{session_id}/ro
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/sessions/sess_a1b2c3d4-e5f6-7890/rotate" \
+curl -X POST "https://api.nexalayer.net/v1/sessions/sess_a1b2c3d4-e5f6-7890/rotate" \
   -H "X-API-Key: <api_key>" \
   -H "Content-Type: application/json" \
   -d '{ "reason": "http_403" }'

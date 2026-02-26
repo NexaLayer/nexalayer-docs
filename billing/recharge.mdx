@@ -1,6 +1,6 @@
 ---
 title: Recharge
-description: "Create USDT recharge order and check status. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Create USDT recharge order and check status. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Recharge
@@ -12,7 +12,7 @@ Recharge is done via USDT (TRC20). Create an order, send the required USDT amoun
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/billing/recharge" \
+curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
   -H "X-API-Key: <api_key>" \
   -H "Content-Type: application/json" \
   -d '{ "amount": 500.00, "payment_method": "usdt" }'
@@ -43,7 +43,7 @@ Send `amount_usdt` USDT (TRC20) to `wallet_address` before `expire_time`.
 <CodeGroup>
 
 ```bash Request
-curl -X GET "https://agent-layer.up.railway.app/v1/billing/recharge/PAY20260215100000xxxx/status" \
+curl -X GET "https://api.nexalayer.net/v1/billing/recharge/PAY20260215100000xxxx/status" \
   -H "X-API-Key: <api_key>"
 ```
 

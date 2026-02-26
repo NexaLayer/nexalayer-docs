@@ -1,6 +1,6 @@
 ---
 title: Dynamic sessions
-description: "Create and use dynamic (rotating) proxy sessions. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Create and use dynamic (rotating) proxy sessions. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Dynamic sessions
@@ -12,7 +12,7 @@ Dynamic sessions provide rotating IPs and are billed by traffic (GB). Creation i
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
+curl -X POST "https://api.nexalayer.net/v1/sessions" \
   -H "X-API-Key: <api_key>" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: create_dynamic_001" \
@@ -64,7 +64,7 @@ curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
 ## Poll until active
 
 ```bash
-curl -X GET "https://agent-layer.up.railway.app/v1/sessions/sess_a1b2c3d4-e5f6-7890" \
+curl -X GET "https://api.nexalayer.net/v1/sessions/sess_a1b2c3d4-e5f6-7890" \
   -H "X-API-Key: <api_key>"
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: Terminate session
-description: "End a session and release resources. Base URL: https://agent-layer.up.railway.app/v1"
+description: "End a session and release resources. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Terminate session
@@ -12,7 +12,7 @@ Call `POST /sessions/{session_id}/terminate` to end a session. The session will 
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/sessions/sess_a1b2c3d4-e5f6-7890/terminate" \
+curl -X POST "https://api.nexalayer.net/v1/sessions/sess_a1b2c3d4-e5f6-7890/terminate" \
   -H "X-API-Key: <api_key>"
 ```
 

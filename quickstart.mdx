@@ -1,6 +1,6 @@
 ---
 title: Quickstart
-description: "Register, create a session, and send traffic in under 5 minutes. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Register, create a session, and send traffic in under 5 minutes. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Quickstart
@@ -14,7 +14,7 @@ Call the register API once to get credentials. Store `api_key` for all subsequen
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/account/register" \
+curl -X POST "https://api.nexalayer.net/v1/account/register" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "My AI Agent",
@@ -52,7 +52,7 @@ Sessions are created asynchronously. The create call returns immediately with `s
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
+curl -X POST "https://api.nexalayer.net/v1/sessions" \
   -H "X-API-Key: ak_a1b2c3d4e5f6g7h8" \
   -H "Content-Type: application/json" \
   -d '{
@@ -84,7 +84,7 @@ curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
 Then poll until active:
 
 ```bash
-curl -X GET "https://agent-layer.up.railway.app/v1/sessions/sess_a1b2c3d4-e5f6-7890" \
+curl -X GET "https://api.nexalayer.net/v1/sessions/sess_a1b2c3d4-e5f6-7890" \
   -H "X-API-Key: ak_a1b2c3d4e5f6g7h8"
 ```
 
@@ -100,7 +100,7 @@ Use the session’s proxy URL in your HTTP client.
 import requests
 import time
 
-BASE_URL = "https://agent-layer.up.railway.app/v1"
+BASE_URL = "https://api.nexalayer.net/v1"
 headers = {"X-API-Key": "ak_a1b2c3d4e5f6g7h8"}
 
 # Create session (async)
@@ -136,7 +136,7 @@ print(r.json())  # origin = proxy IP
 
 ```javascript Node.js
 const axios = require('axios');
-const BASE_URL = 'https://agent-layer.up.railway.app/v1';
+const BASE_URL = 'https://api.nexalayer.net/v1';
 
 async function run() {
   const headers = { 'X-API-Key': process.env.AGENT_API_KEY };

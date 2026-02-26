@@ -1,6 +1,6 @@
 ---
 title: Static sessions
-description: "Create and use static (fixed-IP) proxy sessions. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Create and use static (fixed-IP) proxy sessions. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Static sessions
@@ -12,7 +12,7 @@ Static sessions provide fixed IPs and are billed by duration (e.g. 30 or 90 days
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
+curl -X POST "https://api.nexalayer.net/v1/sessions" \
   -H "X-API-Key: <api_key>" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: create_static_001" \

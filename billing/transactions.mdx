@@ -1,6 +1,6 @@
 ---
 title: Transactions
-description: "List billing transactions. Base URL: https://agent-layer.up.railway.app/v1"
+description: "List billing transactions. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Transactions
@@ -12,7 +12,7 @@ List account transactions (recharges, consumption, etc.) with pagination.
 <CodeGroup>
 
 ```bash Request
-curl -X GET "https://agent-layer.up.railway.app/v1/billing/transactions?page=1&page_size=20&type=all" \
+curl -X GET "https://api.nexalayer.net/v1/billing/transactions?page=1&page_size=20&type=all" \
   -H "X-API-Key: <api_key>"
 ```
 

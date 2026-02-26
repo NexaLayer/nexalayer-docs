@@ -1,6 +1,6 @@
 ---
 title: Sessions overview
-description: "Session lifecycle, types, and API summary. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Session lifecycle, types, and API summary. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Sessions overview
@@ -47,7 +47,7 @@ creating → active → [rotating] → expired
 For create and renew, send `Idempotency-Key` to avoid duplicate orders on retries:
 
 ```bash
-curl -X POST "https://agent-layer.up.railway.app/v1/sessions" \
+curl -X POST "https://api.nexalayer.net/v1/sessions" \
   -H "X-API-Key: <api_key>" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: create_dynamic_001" \

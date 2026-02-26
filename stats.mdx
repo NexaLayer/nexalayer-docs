@@ -1,6 +1,6 @@
 ---
 title: Stats
-description: "Overview and usage statistics. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Overview and usage statistics. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Stats
@@ -12,7 +12,7 @@ Aggregate statistics for balance, sessions, traffic, and cost.
 <CodeGroup>
 
 ```bash Request
-curl -X GET "https://agent-layer.up.railway.app/v1/stats/overview" \
+curl -X GET "https://api.nexalayer.net/v1/stats/overview" \
   -H "X-API-Key: <api_key>"
 ```
 
@@ -36,21 +36,21 @@ curl -X GET "https://agent-layer.up.railway.app/v1/stats/overview" \
 ## Traffic stats
 
 ```bash
-curl -X GET "https://agent-layer.up.railway.app/v1/stats/traffic?granularity=day&start_date=2026-02-01&end_date=2026-02-15" \
+curl -X GET "https://api.nexalayer.net/v1/stats/traffic?granularity=day&start_date=2026-02-01&end_date=2026-02-15" \
   -H "X-API-Key: <api_key>"
 ```
 
 ## Cost stats
 
 ```bash
-curl -X GET "https://agent-layer.up.railway.app/v1/stats/cost?period=month" \
+curl -X GET "https://api.nexalayer.net/v1/stats/cost?period=month" \
   -H "X-API-Key: <api_key>"
 ```
 
 ## Usage report
 
 ```bash
-curl -X GET "https://agent-layer.up.railway.app/v1/billing/usage-report?period=week" \
+curl -X GET "https://api.nexalayer.net/v1/billing/usage-report?period=week" \
   -H "X-API-Key: <api_key>"
 ```
 

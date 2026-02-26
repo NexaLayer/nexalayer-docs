@@ -1,6 +1,6 @@
 ---
 title: Testing overview
-description: "Test layers, environment, and constraints for NexaLayer. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Test layers, environment, and constraints for NexaLayer. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Testing overview
@@ -21,7 +21,7 @@ This section describes the test strategy for the Agent Layer and its integration
 
 ## Environment
 
-- **Agent Layer URL:** `https://agent-layer.up.railway.app/v1` (or env such as `AGENT_BASE_URL`).
+- **Agent Layer URL:** `https://api.nexalayer.net/v1` (or env such as `AGENT_BASE_URL`).
 - **Backend URL:** Separate backend API for verification (e.g. staging).
 - **DB:** Agent DB (PostgreSQL) and Backend DB; tests may use direct DB checks for integration assertions.
 - **Production guard:** If base URL contains `production`, tests may require an explicit flag (e.g. `ALLOW_PROD=true`) to run.

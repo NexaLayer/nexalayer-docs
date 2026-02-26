@@ -1,6 +1,6 @@
 ---
 title: Batch telemetry
-description: "Report multiple events in one request. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Report multiple events in one request. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Batch telemetry
@@ -12,7 +12,7 @@ Reduce round-trips by sending multiple events in a single `POST /telemetry/batch
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/telemetry/batch" \
+curl -X POST "https://api.nexalayer.net/v1/telemetry/batch" \
   -H "X-API-Key: <api_key>" \
   -H "Content-Type: application/json" \
   -d '{

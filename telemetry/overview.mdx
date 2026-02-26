@@ -1,6 +1,6 @@
 ---
 title: Telemetry overview
-description: "Report session events to drive health and rotation recommendations. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Report session events to drive health and rotation recommendations. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Telemetry overview
@@ -24,7 +24,7 @@ Telemetry lets agents report proxy usage outcomes (success, errors, captcha, tim
 <CodeGroup>
 
 ```bash Success
-curl -X POST "https://agent-layer.up.railway.app/v1/sessions/sess_xxx/report-event" \
+curl -X POST "https://api.nexalayer.net/v1/sessions/sess_xxx/report-event" \
   -H "X-API-Key: <api_key>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -36,7 +36,7 @@ curl -X POST "https://agent-layer.up.railway.app/v1/sessions/sess_xxx/report-eve
 ```
 
 ```bash HTTP error
-curl -X POST "https://agent-layer.up.railway.app/v1/sessions/sess_xxx/report-event" \
+curl -X POST "https://api.nexalayer.net/v1/sessions/sess_xxx/report-event" \
   -H "X-API-Key: <api_key>" \
   -H "Content-Type: application/json" \
   -d '{

@@ -1,6 +1,6 @@
 ---
 title: Products
-description: "List products, regions, and get recommendations. Base URL: https://agent-layer.up.railway.app/v1"
+description: "List products, regions, and get recommendations. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Products
@@ -19,17 +19,17 @@ NexaLayer exposes two product types: **dynamic** (rotating IP, pay per traffic) 
 <CodeGroup>
 
 ```bash All products
-curl -X GET "https://agent-layer.up.railway.app/v1/products" \
+curl -X GET "https://api.nexalayer.net/v1/products" \
   -H "X-API-Key: <api_key>"
 ```
 
 ```bash By type
-curl -X GET "https://agent-layer.up.railway.app/v1/products?type=dynamic" \
+curl -X GET "https://api.nexalayer.net/v1/products?type=dynamic" \
   -H "X-API-Key: <api_key>"
 ```
 
 ```bash By country
-curl -X GET "https://agent-layer.up.railway.app/v1/products?country=US" \
+curl -X GET "https://api.nexalayer.net/v1/products?country=US" \
   -H "X-API-Key: <api_key>"
 ```
 
@@ -42,7 +42,7 @@ curl -X GET "https://agent-layer.up.railway.app/v1/products?country=US" \
 <CodeGroup>
 
 ```bash Request
-curl -X GET "https://agent-layer.up.railway.app/v1/products/regions" \
+curl -X GET "https://api.nexalayer.net/v1/products/regions" \
   -H "X-API-Key: <api_key>"
 ```
 
@@ -67,7 +67,7 @@ Get recommended products by use case and constraints.
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/products/recommend" \
+curl -X POST "https://api.nexalayer.net/v1/products/recommend" \
   -H "X-API-Key: <api_key>" \
   -H "Content-Type: application/json" \
   -d '{

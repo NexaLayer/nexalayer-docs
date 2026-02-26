@@ -1,6 +1,6 @@
 ---
 title: E2E and security tests
-description: "End-to-end journey and security test scope. Base URL: https://agent-layer.up.railway.app/v1"
+description: "End-to-end journey and security test scope. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # E2E and security tests
@@ -46,6 +46,6 @@ Assertions at each step: correct HTTP status and response shape (success, data, 
 - **Latency** — Critical paths (e.g. health, account/info, session get) have P95 below threshold (e.g. 500ms–1000ms); exact values from project config.
 - **Concurrent** — Limited concurrency (e.g. 5–10) for session create; assert no 5xx and session eventually active or error.
 
-Tests use base URL `https://agent-layer.up.railway.app/v1` and real field names from the API. Clean up sessions and test data after the run.
+Tests use base URL `https://api.nexalayer.net/v1` and real field names from the API. Clean up sessions and test data after the run.
 
 Next: [Testing overview](/testing/overview), [Errors](/errors).

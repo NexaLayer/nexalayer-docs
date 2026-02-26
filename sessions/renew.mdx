@@ -1,6 +1,6 @@
 ---
 title: Renew session
-description: "Extend static session duration. Base URL: https://agent-layer.up.railway.app/v1"
+description: "Extend static session duration. Base URL: https://api.nexalayer.net/v1"
 ---
 
 # Renew session
@@ -12,7 +12,7 @@ description: "Extend static session duration. Base URL: https://agent-layer.up.r
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://agent-layer.up.railway.app/v1/sessions/sess_x1y2z3w4-a5b6-7890/renew" \
+curl -X POST "https://api.nexalayer.net/v1/sessions/sess_x1y2z3w4-a5b6-7890/renew" \
   -H "X-API-Key: <api_key>" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: renew_001" \
