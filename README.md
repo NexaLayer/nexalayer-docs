@@ -16,5 +16,5 @@ mintlify dev
 
 ## Links
 
-- Production: [docs.nexalayer.com](https://docs.nexalayer.com) (configure in Mintlify dashboard).
-- API base: `https://api.nexalayer.com/v1`.
+- Production: [docs.nexalayer.com](https://docs.nexalayer.net) (configure in Mintlify dashboard).
+- API base: `https://api.nexalayer.net/v1`.
