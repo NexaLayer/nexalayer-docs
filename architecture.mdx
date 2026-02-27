@@ -11,22 +11,22 @@ NexaLayer (Agent Layer) is an **intermediate layer** between AI Agents and an ex
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│                    AI Agent 生态                       │
-│  Agent A    Agent B    Agent C    MCP / 其他          │
+│                    AI Agent Ecosystem                │
+│  Agent A    Agent B    Agent C    MCP / Others       │
 └─────────────────────────┬────────────────────────────┘
                           │
                           ▼
 ┌──────────────────────────────────────────────────────┐
-│          AI Agent 网络执行层 (Agent Layer)              │
-│  API Gateway → 认证/会话/调度/计费 → Agent DB           │
-│                          │                            │
-│                    内部 HTTP 调用                       │
+│  AI Agent Network Execution Layer (Agent Layer)      │
+│API Gateway→Auth/Session/Scheduling/Billing → Agent DB│
+│                          │                           │
+│               Internal HTTP Calls                    │
 └─────────────────────────┬────────────────────────────┘
                           ▼
 ┌──────────────────────────────────────────────────────┐
-│              现有 IP 代理管理系统 (Backend)              │
-│  用户管理 │ 订单管理 │ 代理服务 │ 支付系统              │
-│                    → 底层代理供应商                     │
+│    Existing IP Proxy Management System (Backend)     │
+│User Management│Order Management│Proxy Service│Payment│
+│         → Underlying Proxy Providers                 │
 └──────────────────────────────────────────────────────┘
 ```
 
