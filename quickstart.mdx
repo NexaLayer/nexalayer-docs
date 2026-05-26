@@ -95,7 +95,7 @@ curl -X POST "$ZTPROXY_BASE/open/app/order/create/v2" \
   -H "Content-Type: application/json" \
   -d '{
     "orderType": "dynamic_proxy",
-    "poolId": "dynamic_ipweb",
+    "poolId": "<dynamic_product_no>",
     "trafficAmount": 1,
     "userId": 1001,
     "unitPrice": 5,
@@ -114,7 +114,7 @@ curl -X POST "$ZTPROXY_BASE/open/app/order/create/v2" \
 | 创建下级用户 | `POST /open/app/user/v2` |
 | 查询当前余额 | `GET /open/app/user/balance/current` |
 | 查询地区 | `GET /open/app/product/area/v2` |
-| 动态子账户 | `GET /ipweb-sub-users/list` |
+| 动态子账户 | 联系 ZTProxy 支持开通对外路径 |
 | 动态代理提取 | `POST /business/dynamic-proxy/extract` |
 | 查询动态流量 | `GET /user/{user_id}/products-flow` |
 | 静态订单续费 | `POST /open/app/static/order/renew` |

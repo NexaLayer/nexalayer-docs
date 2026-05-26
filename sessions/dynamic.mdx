@@ -15,7 +15,7 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/order/create/v2" \
   -H "Content-Type: application/json" \
   -d '{
     "orderType": "dynamic_proxy",
-    "poolId": "dynamic_ipweb",
+    "poolId": "<dynamic_product_no>",
     "trafficAmount": 1,
     "unitPrice": 5,
     "totalAmount": 5,
@@ -51,16 +51,16 @@ curl -X GET "https://api.wanyuagent.com/api/user/1001/products-flow" \
 查询指定产品剩余流量：
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/user/1001/remaining-flow/dynamic_ipweb" \
+curl -X GET "https://api.wanyuagent.com/api/user/1001/remaining-flow/<dynamic_product_no>" \
   -H "Authorization: Bearer <token>"
 ```
 
-更完整的动态代理提取、IPWEB 流量明细和子账户流量查询见 [动态流量与提取](/sessions/dynamic-flow)。
+更完整的动态代理提取、流量明细和子账户流量查询见 [动态流量与提取](/sessions/dynamic-flow)。
 
 ## 查询动态订单列表
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/dynamic?page=1&page_size=10&pool_type=dynamic_ipweb" \
+curl -X GET "https://api.wanyuagent.com/api/dynamic?page=1&page_size=10&pool_type=<dynamic_product_no>" \
   -H "Authorization: Bearer <token>"
 ```
 

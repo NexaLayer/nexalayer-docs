@@ -1,11 +1,11 @@
 ---
 title: 动态流量与提取
-description: 动态代理提取、剩余流量和 IPWEB 流量查询接口。基础地址：https://api.wanyuagent.com/api
+description: 动态代理提取、剩余流量和流量查询接口。基础地址：https://api.wanyuagent.com/api
 ---
 
 # 动态流量与提取
 
-本页说明动态代理提取、剩余流量查询和动态 IP 池 3（IPWEB）流量明细接口。
+本页说明动态代理提取、剩余流量查询和动态代理流量明细接口。
 
 ## 提取动态代理
 
@@ -14,7 +14,7 @@ curl -X POST "https://api.wanyuagent.com/api/business/dynamic-proxy/extract" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
-    "productNo": "dynamic_ipweb",
+    "productNo": "<dynamic_product_no>",
     "proxyType": 104,
     "username": "target_user",
     "extractConfig": {
@@ -48,20 +48,20 @@ curl -X GET "https://api.wanyuagent.com/api/user/1001/products-flow" \
 ## 查询指定产品剩余流量
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/user/1001/remaining-flow/dynamic_ipweb" \
+curl -X GET "https://api.wanyuagent.com/api/user/1001/remaining-flow/<dynamic_product_no>" \
   -H "Authorization: Bearer <token>"
 ```
 
-`product_no` 使用产品编号，例如 `dynamic_ipweb`。
+`product_no` 使用动态代理产品编号。
 
-## 查询 IPWEB 子账户流量信息
+## 查询动态子账户流量信息
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/agent/childAccount/user/sub001" \
   -H "Authorization: Bearer <token>"
 ```
 
-响应会将 IPWEB 返回的 MB 流量换算为 GB，并返回：
+响应会将流量换算为 GB，并返回：
 
 | 字段 | 说明 |
 | --- | --- |
@@ -88,18 +88,8 @@ curl -X GET "https://api.wanyuagent.com/api/agent/getFlowTotalFull" \
   -H "Authorization: Bearer <token>"
 ```
 
-该接口调用 IPWEB 查询账户多类型流量总计。
+该接口查询账户多类型流量总计。
 
-## 修改 IPWEB 子账号密码
+## 修改动态子账号密码
 
-```bash
-curl -X POST "https://api.wanyuagent.com/api/agent/ipweb/update-password" \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "sub001",
-    "newPassword": "newpass1"
-  }'
-```
-
-新密码需要为 4-12 位字母和数字。
+子账号密码修改请使用动态子账户管理能力。对外路径请以 ZTProxy 支持团队提供的中性路径为准。

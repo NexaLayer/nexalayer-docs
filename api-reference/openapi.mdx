@@ -128,7 +128,7 @@ curl "$ZTPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%2
 ```json 动态代理请求
 {
   "orderType": "dynamic_proxy",
-  "poolId": "dynamic_ipweb",
+  "poolId": "<dynamic_product_no>",
   "trafficAmount": 1,
   "unitPrice": 5,
   "totalAmount": 5,
@@ -164,16 +164,18 @@ curl "$ZTPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%2
 
 查询用户指定动态产品的剩余流量。
 
-### IPWEB 动态子账户
+### 动态子账户
 
 | 方法 | 接口 | 说明 |
 | --- | --- | --- |
-| `POST` | `/ipweb-sub-users/create` | 创建 IPWEB 子账户。 |
-| `GET` | `/ipweb-sub-users/list` | 查询用户 IPWEB 子账户列表。 |
-| `POST` | `/ipweb-sub-users/adjust-flow` | 调整子账户流量。 |
-| `POST` | `/ipweb-sub-users/update-status` | 修改子账户状态。 |
-| `POST` | `/ipweb-sub-users/update-password` | 修改子账户密码。 |
-| `POST` | `/ipweb-sub-users/delete` | 删除子账户。 |
+| 能力 | 说明 |
+| --- | --- |
+| 创建子账户 | 为动态代理主账户创建子账户。 |
+| 查询子账户 | 查询可见子账户及实时流量。 |
+| 调整流量 | 在主账户和子账户之间分配或回收流量。 |
+| 修改状态 | 启用或停用子账户。 |
+| 修改密码 | 修改子账户代理密码。 |
+| 删除子账户 | 停用并删除子账户记录。 |
 
 详见 [动态子账户](/sessions/dynamic-sub-users)。
 
