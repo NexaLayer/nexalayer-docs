@@ -1,0 +1,106 @@
+---
+title: USDT 充值
+description: ZTProxy USDT TRC20 充值订单接口。基础地址：https://api.wanyuagent.com/api
+---
+
+# USDT 充值
+
+ZTProxy 支持通过 USDT TRC20 创建充值订单、查询链上支付状态、查看钱包信息和查询充值订单列表。所有接口都需要 Bearer Token。
+
+## 获取收款钱包
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/usdt/wallet-info" \
+  -H "Authorization: Bearer <token>"
+```
+
+响应包含收款地址、网络、币种、当前汇率和最低充值金额。
+
+## 创建充值订单
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/usdt/create-order" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount_cny": 1000
+  }'
+```
+
+字段说明：
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | :---: | --- |
+| `amount_cny` | number | 是 | 充值人民币金额，必须大于 0，单笔不超过 50000。 |
+
+成功响应：
+
+```json
+{
+  "code": 0,
+  "msg": "充值订单创建成功",
+  "data": {
+    "order_id": "USDT202605260001",
+    "wallet_address": "Txxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "network": "TRC20",
+    "currency": "USDT",
+    "amount_usdt": "138.123456",
+    "amount_cny": 1000,
+    "usdt_rate": 7.24,
+    "min_amount_usdt": 1,
+    "wallet_explorer_url": "https://tronscan.org/#/address/...",
+    "created_at": "2026-05-26 10:00:00"
+  }
+}
+```
+
+系统会生成唯一的 USDT 金额，避免多个待支付订单金额相同导致无法匹配。
+
+## 查询充值状态
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/usdt/check-status?order_id=USDT202605260001" \
+  -H "Authorization: Bearer <token>"
+```
+
+状态说明：
+
+| 状态 | 说明 |
+| --- | --- |
+| `pending` | 等待支付确认。 |
+| `confirmed` | 已确认，系统已增加用户余额。 |
+| `cancelled` | 已取消。 |
+
+查询状态时，系统会检查链上是否存在匹配转账；如果匹配成功，会确认订单并更新用户余额。
+
+## 查询充值订单列表
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/usdt/orders?page=1&page_size=10&status=pending" \
+  -H "Authorization: Bearer <token>"
+```
+
+查询参数：
+
+| 参数 | 说明 |
+| --- | --- |
+| `page` | 页码，默认 `1`。 |
+| `page_size` | 每页数量，最大 `500`。 |
+| `status` | 订单状态筛选。 |
+| `start_date` | 开始日期，格式 `YYYY-MM-DD`。 |
+| `end_date` | 结束日期，格式 `YYYY-MM-DD`。 |
+
+管理员可查看所有用户订单；普通用户只能查看自己的订单。
+
+## 取消充值订单
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/usdt/cancel-order" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "order_id": "USDT202605260001"
+  }'
+```
+
+只有 `pending` 状态的订单可以取消。

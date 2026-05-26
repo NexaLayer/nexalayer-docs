@@ -1,0 +1,133 @@
+---
+title: 动态子账户
+description: 管理动态 IP 池 3（IPWEB）子账户。基础地址：https://api.wanyuagent.com/api
+---
+
+# 动态子账户
+
+动态 IP 池 3 支持为用户创建子账户，并对每个子账户单独设置流量、状态和密码。所有接口都需要 Bearer Token。
+
+管理员可通过 `user_id` 查询参数指定目标用户；代理商只能操作自己和下级用户；普通用户只能操作自己的子账户。
+
+## 创建子账户
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/ipweb-sub-users/create?user_id=1001" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "sub001",
+    "password": "pass1234",
+    "flow_limit_gb": 10,
+    "remark": "测试子账户"
+  }'
+```
+
+字段说明：
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | :---: | --- |
+| `username` | string | 是 | 子账户用户名，2-12 位字母和数字。 |
+| `password` | string | 是 | 子账户密码，4-12 位字母和数字。 |
+| `flow_limit_gb` | number | 否 | 子账户流量上限，单位 GB。大于 0 时会从主账户可用流量中分配。 |
+| `remark` | string | 否 | 备注。 |
+
+成功响应：
+
+```json
+{
+  "code": 0,
+  "msg": "子账户创建成功",
+  "data": {
+    "id": 12,
+    "user_id": 1001,
+    "ipweb_username": "sub001",
+    "flow_limit_mb": 10000,
+    "status": 1
+  }
+}
+```
+
+## 查询子账户列表
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/ipweb-sub-users/list?user_id=1001" \
+  -H "Authorization: Bearer <token>"
+```
+
+响应会合并本地子账户记录和 IPWEB 实时流量数据，常见字段包括：
+
+| 字段 | 说明 |
+| --- | --- |
+| `ipweb_username` | 子账户用户名。 |
+| `download_flow_gb` | 下载流量，单位 GB。 |
+| `upload_flow_gb` | 上传流量，单位 GB。 |
+| `flow_limit_gb` | 流量上限，单位 GB。 |
+| `ipweb_status_text` | IPWEB 侧状态文案。 |
+| `main_ipweb_username` | 主账户 IPWEB 用户名。 |
+
+## 调整子账户流量
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/ipweb-sub-users/adjust-flow?user_id=1001" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sub_user_id": 12,
+    "flow_change_gb": 5
+  }'
+```
+
+`flow_change_gb` 为正数表示给子账户增加流量，同时减少主账户流量；为负数表示从子账户回收流量，同时增加主账户流量。
+
+## 修改子账户状态
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/ipweb-sub-users/update-status?user_id=1001" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sub_user_id": 12,
+    "status": 1
+  }'
+```
+
+`status: 1` 表示启用，`status: 0` 表示停用。
+
+## 修改子账户密码
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/ipweb-sub-users/update-password?user_id=1001" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sub_user_id": 12,
+    "new_password": "newpass1"
+  }'
+```
+
+新密码需要为 4-12 位字母和数字。
+
+## 删除子账户
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/ipweb-sub-users/delete?user_id=1001" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sub_user_id": 12
+  }'
+```
+
+删除时会先尝试停用 IPWEB 侧账号，再删除本地记录。
+
+## Dashboard 子账户视图
+
+如果只需要读取动态 IP 池 3 子账户概览，也可以使用：
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/child-accounts" \
+  -H "Authorization: Bearer <token>"
+```
+
+该接口会按管理员、代理商、普通用户权限返回可见子账户。

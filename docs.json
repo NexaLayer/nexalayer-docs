@@ -32,6 +32,8 @@
         "pages": [
           "sessions/overview",
           "sessions/dynamic",
+          "sessions/dynamic-sub-users",
+          "sessions/dynamic-flow",
           "sessions/static",
           "sessions/renew",
           "sessions/terminate"
@@ -42,6 +44,7 @@
         "pages": [
           "billing/balance",
           "billing/transactions",
+          "billing/usdt",
           "billing/recharge"
         ]
       },

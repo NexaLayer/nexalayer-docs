@@ -1,0 +1,105 @@
+---
+title: 动态流量与提取
+description: 动态代理提取、剩余流量和 IPWEB 流量查询接口。基础地址：https://api.wanyuagent.com/api
+---
+
+# 动态流量与提取
+
+本页说明动态代理提取、剩余流量查询和动态 IP 池 3（IPWEB）流量明细接口。
+
+## 提取动态代理
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/business/dynamic-proxy/extract" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "productNo": "dynamic_ipweb",
+    "proxyType": 104,
+    "username": "target_user",
+    "extractConfig": {
+      "method": "api"
+    }
+  }'
+```
+
+字段说明：
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | :---: | --- |
+| `productNo` | string | 是 | 动态代理产品编号。 |
+| `proxyType` | number | 是 | 动态代理通常为 `104`。 |
+| `username` | string | 否 | 指定目标用户；不传则使用当前登录用户。 |
+| `extractConfig.method` | string | 否 | 提取方式，默认 `api`。 |
+
+## 查询用户所有产品剩余流量
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/user/1001/products-flow" \
+  -H "Authorization: Bearer <token>"
+```
+
+权限规则：
+
+- 管理员可查询所有用户。
+- 代理商可查询自己和下级用户。
+- 普通用户只能查询自己。
+
+## 查询指定产品剩余流量
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/user/1001/remaining-flow/dynamic_ipweb" \
+  -H "Authorization: Bearer <token>"
+```
+
+`product_no` 使用产品编号，例如 `dynamic_ipweb`。
+
+## 查询 IPWEB 子账户流量信息
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/agent/childAccount/user/sub001" \
+  -H "Authorization: Bearer <token>"
+```
+
+响应会将 IPWEB 返回的 MB 流量换算为 GB，并返回：
+
+| 字段 | 说明 |
+| --- | --- |
+| `limit_flow` | 总流量，单位 GB。 |
+| `download_flow` | 下载流量，单位 GB。 |
+| `upload_flow` | 上传流量，单位 GB。 |
+| `used_flow` | 已用流量，单位 GB。 |
+| `remaining_flow` | 剩余流量，单位 GB。 |
+| `usage_percentage` | 使用百分比。 |
+
+## 按日期查询流量消费明细
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/agent/getFlowConsumeDetail?startDate=2026-05-01&endDate=2026-05-26" \
+  -H "Authorization: Bearer <token>"
+```
+
+日期格式为 `YYYY-MM-DD`，开始日期不能大于结束日期。
+
+## 查询账户总流量
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/agent/getFlowTotalFull" \
+  -H "Authorization: Bearer <token>"
+```
+
+该接口调用 IPWEB 查询账户多类型流量总计。
+
+## 修改 IPWEB 子账号密码
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/agent/ipweb/update-password" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "sub001",
+    "newPassword": "newpass1"
+  }'
+```
+
+新密码需要为 4-12 位字母和数字。

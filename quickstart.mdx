@@ -114,7 +114,10 @@ curl -X POST "$ZTPROXY_BASE/open/app/order/create/v2" \
 | 创建下级用户 | `POST /open/app/user/v2` |
 | 查询当前余额 | `GET /open/app/user/balance/current` |
 | 查询地区 | `GET /open/app/product/area/v2` |
+| 动态子账户 | `GET /ipweb-sub-users/list` |
+| 动态代理提取 | `POST /business/dynamic-proxy/extract` |
+| 查询动态流量 | `GET /user/{user_id}/products-flow` |
 | 静态订单续费 | `POST /open/app/static/order/renew` |
 | 释放静态订单 | `POST /open/app/static/order/{order_no}/cancel` |
-| 添加 IP 白名单 | `POST /open/app/proxy/addIpWhiteList/v2` |
+| USDT 充值 | `POST /usdt/create-order` |
 | 查询交易记录 | `GET /open/app/user/transactions` |

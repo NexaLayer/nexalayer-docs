@@ -140,6 +140,43 @@ curl "$ZTPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%2
 }
 ```
 
+### GET `/dynamic`
+
+查询动态订单列表。支持 `page`、`page_size`、`user_id`、`agent_id`、`order_no`、`pool_type` 等参数。
+
+### GET `/dynamic/{order_id}`
+
+按订单 ID 查询动态订单详情。
+
+### GET `/dynamic/order-info/{order_no}`
+
+按订单号或应用订单号查询动态订单详情。
+
+### POST `/business/dynamic-proxy/extract`
+
+提取动态代理。必填 `productNo` 和 `proxyType`，可通过 `extractConfig.method` 指定提取方式。
+
+### GET `/user/{user_id}/products-flow`
+
+查询用户所有产品的剩余流量。
+
+### GET `/user/{user_id}/remaining-flow/{product_no}`
+
+查询用户指定动态产品的剩余流量。
+
+### IPWEB 动态子账户
+
+| 方法 | 接口 | 说明 |
+| --- | --- | --- |
+| `POST` | `/ipweb-sub-users/create` | 创建 IPWEB 子账户。 |
+| `GET` | `/ipweb-sub-users/list` | 查询用户 IPWEB 子账户列表。 |
+| `POST` | `/ipweb-sub-users/adjust-flow` | 调整子账户流量。 |
+| `POST` | `/ipweb-sub-users/update-status` | 修改子账户状态。 |
+| `POST` | `/ipweb-sub-users/update-password` | 修改子账户密码。 |
+| `POST` | `/ipweb-sub-users/delete` | 删除子账户。 |
+
+详见 [动态子账户](/sessions/dynamic-sub-users)。
+
 ### POST `/open/app/static/order/create/v2`
 
 创建静态代理订单。
@@ -223,30 +260,6 @@ curl "$ZTPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10&status=acti
 
 释放或取消静态订单。
 
-## 代理白名单
-
-### POST `/open/app/proxy/addIpWhiteList/v2`
-
-添加 IP 白名单。
-
-```json 请求
-{
-  "ip": "203.0.113.10"
-}
-```
-
-### POST `/open/app/proxy/delIpWhiteList/v2`
-
-删除 IP 白名单。
-
-```json 请求
-{
-  "ip": "203.0.113.10"
-}
-```
-
-部分部署中这两个白名单接口被放入免登录路径，但建议调用时仍携带 Bearer Token。
-
 ## 仪表盘和记录
 
 ### GET `/open/app/dashboard/info/v2`
@@ -274,12 +287,14 @@ curl "$ZTPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10&status=acti
 
 查询当前用户、代理商或管理员权限范围内的充值和余额调整记录。
 
-## 指纹浏览器 API 域名
+## USDT 充值
 
-通过指纹浏览器调用 ZTProxy API 时，使用同一个后端域名：
+| 方法 | 接口 | 说明 |
+| --- | --- | --- |
+| `GET` | `/usdt/wallet-info` | 获取 USDT TRC20 收款钱包和汇率。 |
+| `POST` | `/usdt/create-order` | 创建 USDT TRC20 充值订单。 |
+| `GET` | `/usdt/check-status` | 查询充值订单状态并自动检测链上转账。 |
+| `GET` | `/usdt/orders` | 查询充值订单列表。 |
+| `POST` | `/usdt/cancel-order` | 取消待支付充值订单。 |
 
-```text
-https://api.wanyuagent.com/api
-```
-
-指纹浏览器环境相关 API 位于同一后端的 `/api/browser` 下，与代理下单 API 分开说明。
+详见 [USDT 充值](/billing/usdt)。

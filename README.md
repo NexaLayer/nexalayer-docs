@@ -20,4 +20,3 @@ mintlify dev
 
 - API 基础地址：`https://api.wanyuagent.com/api`
 - 健康检查：`https://api.wanyuagent.com/health`
-- 指纹浏览器 API 域名：`api.wanyuagent.com`

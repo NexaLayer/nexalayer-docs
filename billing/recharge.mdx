@@ -12,6 +12,9 @@ description: ZTProxy 账户充值和支付相关接口说明。基础地址：ht
 | 方法 | 接口 | 说明 |
 | --- | --- | --- |
 | `GET` | `/transaction/agent/transactions` | 充值和余额调整记录。 |
+| `POST` | `/usdt/create-order` | 创建 USDT TRC20 充值订单。 |
+| `GET` | `/usdt/check-status` | 查询 USDT 充值订单状态。 |
+| `GET` | `/usdt/orders` | 查询 USDT 充值订单列表。 |
 | `GET` | `/open/app/user/transactions` | 消费记录。 |
 | `GET` | `/open/app/dashboard/info/v2` | 当前余额和仪表盘概览。 |
 | `GET` | `/open/app/user/balance/current` | 当前登录用户余额。 |
@@ -23,4 +26,4 @@ description: ZTProxy 账户充值和支付相关接口说明。基础地址：ht
 3. 查询 `/transaction/agent/transactions` 确认记录。
 4. 再次查询余额，确认金额已更新。
 
-如果需要在线支付集成，请先联系 ZTProxy 支持确认当前账号和环境启用的支付接口。
+USDT TRC20 充值接口详见 [USDT 充值](/billing/usdt)。

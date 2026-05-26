@@ -22,12 +22,4 @@ https://api.wanyuagent.com/api
 5. 持久化 `order_no`、`app_order_no`、`product_no`、目标 `userId`、请求参数和响应体。
 6. 使用静态订单列表和交易记录接口做对账。
 
-## 指纹浏览器集成
-
-通过指纹浏览器访问 ZTProxy API 时，使用同一域名：
-
-```text
-api.wanyuagent.com
-```
-
-建议将带权限的 API 调用放在你的后端完成，不要把账号密码或 token 暴露在浏览器脚本中。
+建议将带权限的 API 调用放在你的后端完成，不要把账号密码或 token 暴露给终端用户。
