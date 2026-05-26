@@ -1,6 +1,6 @@
 ---
 title: 快速开始
-description: 登录、查询产品、创建 IPProxy 订单并获取代理信息。基础地址：https://api.wanyuagent.com/api
+description: 登录、查询产品、创建 ZTProxy 订单并获取代理信息。基础地址：https://api.wanyuagent.com/api
 ---
 
 # 快速开始
@@ -21,15 +21,15 @@ curl -X POST "https://api.wanyuagent.com/api/auth/login" \
 保存响应中的 `data.token`。
 
 ```bash
-export IPPROXY_TOKEN="<token>"
-export IPPROXY_BASE="https://api.wanyuagent.com/api"
+export ZTPROXY_TOKEN="<token>"
+export ZTPROXY_BASE="https://api.wanyuagent.com/api"
 ```
 
 ## 2. 查询账户余额
 
 ```bash
-curl -X GET "$IPPROXY_BASE/open/app/dashboard/info/v2" \
-  -H "Authorization: Bearer $IPPROXY_TOKEN"
+curl -X GET "$ZTPROXY_BASE/open/app/dashboard/info/v2" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN"
 ```
 
 响应会返回当前账号的余额和资源统计。
@@ -37,8 +37,8 @@ curl -X GET "$IPPROXY_BASE/open/app/dashboard/info/v2" \
 ## 3. 查询产品
 
 ```bash
-curl -X POST "$IPPROXY_BASE/open/app/product/query/v2" \
-  -H "Authorization: Bearer $IPPROXY_TOKEN" \
+curl -X POST "$ZTPROXY_BASE/open/app/product/query/v2" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "proxyType": 103
@@ -50,8 +50,8 @@ curl -X POST "$IPPROXY_BASE/open/app/product/query/v2" \
 ## 4. 创建静态代理订单
 
 ```bash
-curl -X POST "$IPPROXY_BASE/open/app/static/order/create/v2" \
-  -H "Authorization: Bearer $IPPROXY_TOKEN" \
+curl -X POST "$ZTPROXY_BASE/open/app/static/order/create/v2" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "orderType": "static_proxy",
@@ -76,22 +76,22 @@ curl -X POST "$IPPROXY_BASE/open/app/static/order/create/v2" \
 ## 5. 查询静态订单和代理实例
 
 ```bash
-curl -X GET "$IPPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10" \
-  -H "Authorization: Bearer $IPPROXY_TOKEN"
+curl -X GET "$ZTPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN"
 ```
 
 也可以按订单号、IP、用户名、密码或地区搜索：
 
 ```bash
-curl -X GET "$IPPROXY_BASE/open/app/static/order/list/v2?search=192.0.2.10&page=1&pageSize=10" \
-  -H "Authorization: Bearer $IPPROXY_TOKEN"
+curl -X GET "$ZTPROXY_BASE/open/app/static/order/list/v2?search=192.0.2.10&page=1&pageSize=10" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN"
 ```
 
 ## 6. 创建动态代理订单
 
 ```bash
-curl -X POST "$IPPROXY_BASE/open/app/order/create/v2" \
-  -H "Authorization: Bearer $IPPROXY_TOKEN" \
+curl -X POST "$ZTPROXY_BASE/open/app/order/create/v2" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "orderType": "dynamic_proxy",

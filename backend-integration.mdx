@@ -1,21 +1,21 @@
 ---
 title: 后端集成
-description: 外部系统如何集成 IPProxy 对外 API。
+description: 外部系统如何集成 ZTProxy 对外 API。
 ---
 
 # 后端集成
 
-外部系统应通过 IPProxy 对外 API 域名进行集成：
+外部系统应通过 ZTProxy 对外 API 域名进行集成：
 
 ```text
 https://api.wanyuagent.com/api
 ```
 
-除非 IPProxy 支持团队明确提供独立集成方式，否则不要直接调用上游供应商 API。
+除非 ZTProxy 支持团队明确提供独立集成方式，否则不要直接调用上游供应商 API。
 
 ## 推荐集成方式
 
-1. 在你的后端服务中保存 IPProxy 账号凭证。
+1. 在你的后端服务中保存 ZTProxy 账号凭证。
 2. 登录并缓存 Bearer Token。
 3. 遇到 `401` 时重新登录。
 4. 创建订单前查询产品和余额。
@@ -24,7 +24,7 @@ https://api.wanyuagent.com/api
 
 ## 指纹浏览器集成
 
-通过指纹浏览器访问 IPProxy API 时，使用同一域名：
+通过指纹浏览器访问 ZTProxy API 时，使用同一域名：
 
 ```text
 api.wanyuagent.com

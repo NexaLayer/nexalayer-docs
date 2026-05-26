@@ -1,6 +1,6 @@
-# IPProxy API 文档
+# ZTProxy API 文档
 
-这是 IPProxy 对外 API 的 Mintlify 文档站。
+这是 ZTProxy 对外 API 的 Mintlify 文档站。
 
 ## 本地开发
 

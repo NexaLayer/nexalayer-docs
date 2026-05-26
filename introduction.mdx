@@ -1,11 +1,11 @@
 ---
 title: 介绍
-description: IPProxy 对外 API 文档，覆盖登录、产品查询、代理订单、续费、余额和交易记录。
+description: ZTProxy 对外 API 文档，覆盖登录、产品查询、代理订单、续费、余额和交易记录。
 ---
 
 # 介绍
 
-IPProxy 提供面向合作方、代理商系统和指纹浏览器场景的 HTTP API。你可以通过 API 完成登录、用户管理、产品与地区查询、动态代理订单、静态代理订单、续费、白名单、余额和交易记录查询。
+ZTProxy 提供面向合作方、代理商系统和指纹浏览器场景的 HTTP API。你可以通过 API 完成登录、用户管理、产品与地区查询、动态代理订单、静态代理订单、续费、白名单、余额和交易记录查询。
 
 ## 基础地址
 
@@ -15,7 +15,7 @@ IPProxy 提供面向合作方、代理商系统和指纹浏览器场景的 HTTP 
 https://api.wanyuagent.com/api
 ```
 
-如果通过指纹浏览器访问 IPProxy API，也使用同一个 API 域名：`api.wanyuagent.com`。
+如果通过指纹浏览器访问 ZTProxy API，也使用同一个 API 域名：`api.wanyuagent.com`。
 
 ## 响应格式
 
@@ -45,7 +45,7 @@ https://api.wanyuagent.com/api
 
 | 概念 | 说明 |
 | --- | --- |
-| 用户 | IPProxy 平台账号。代理商可以创建和管理自己的下级用户。 |
+| 用户 | ZTProxy 平台账号。代理商可以创建和管理自己的下级用户。 |
 | 产品 | 可购买的代理资源包，通过 `product_no` / `poolId` 标识。 |
 | 动态订单 | 按流量使用的动态代理订单。 |
 | 静态订单 | 固定 IP 订单，包含地区、时长、IP 数量、项目或 CIDR 等配置。 |

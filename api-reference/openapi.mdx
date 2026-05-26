@@ -1,6 +1,6 @@
 ---
 title: 接口参考
-description: IPProxy 对外 API 接口参考。基础地址：https://api.wanyuagent.com/api
+description: ZTProxy 对外 API 接口参考。基础地址：https://api.wanyuagent.com/api
 ---
 
 # 接口参考
@@ -80,8 +80,8 @@ Authorization: Bearer <token>
 查询当前登录用户余额。
 
 ```bash
-curl "$IPPROXY_BASE/open/app/user/balance/current" \
-  -H "Authorization: Bearer $IPPROXY_TOKEN"
+curl "$ZTPROXY_BASE/open/app/user/balance/current" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN"
 ```
 
 ## 产品与地区
@@ -110,8 +110,8 @@ curl "$IPPROXY_BASE/open/app/user/balance/current" \
 查询产品服务地区。
 
 ```bash
-curl "$IPPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%20York%20City_2" \
-  -H "Authorization: Bearer $IPPROXY_TOKEN"
+curl "$ZTPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%20York%20City_2" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN"
 ```
 
 | 参数 | 类型 | 必填 | 说明 |
@@ -193,8 +193,8 @@ curl "$IPPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%2
 查询静态订单和代理实例。
 
 ```bash
-curl "$IPPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10&status=active" \
-  -H "Authorization: Bearer $IPPROXY_TOKEN"
+curl "$ZTPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10&status=active" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN"
 ```
 
 | 参数 | 类型 | 说明 |
@@ -276,7 +276,7 @@ curl "$IPPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10&status=acti
 
 ## 指纹浏览器 API 域名
 
-通过指纹浏览器调用 IPProxy API 时，使用同一个后端域名：
+通过指纹浏览器调用 ZTProxy API 时，使用同一个后端域名：
 
 ```text
 https://api.wanyuagent.com/api
