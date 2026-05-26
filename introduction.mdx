@@ -1,54 +1,73 @@
 ---
 title: Introduction
-description: NexaLayer — AI Agent Network Execution Layer. Session-based proxy infrastructure for AI-native workloads.
+description: IPProxy public API for account login, product query, proxy orders, renewal, balance, and transaction records.
 ---
 
 # Introduction
 
-NexaLayer is an **API-first network execution layer** that sits between AI Agents and proxy infrastructure. It exposes session-based abstraction over dynamic and static proxies so agents can operate globally without managing raw IP pools.
-
-## What NexaLayer provides
-
-- **Session abstraction** — Create, rotate, renew, and terminate proxy sessions via a single API.
-- **Unified interface** — One API for both dynamic (rotating) and static (fixed-IP) proxies.
-- **Agent-first design** — Authentication (API Key or JWT), idempotency, rate-limit headers, and telemetry for autonomous workflows.
-- **Self-service** — Register, recharge, and manage sessions without a human dashboard (dashboard optional).
+IPProxy provides HTTP APIs for partners and agent systems to manage proxy resources programmatically. The public API covers login, user management, product and region query, dynamic proxy orders, static proxy orders, renewals, whitelist operations, dashboard balance, and transaction records.
 
 ## Base URL
 
-All API requests use:
+All examples in this documentation use the production API domain:
 
+```text
+https://api.wanyuagent.com/api
 ```
-https://api.nexalayer.net/v1
+
+For fingerprint browser integrations, call the same IPProxy API domain from the browser automation environment: `api.wanyuagent.com`.
+
+## Response format
+
+Most IPProxy APIs return the following shape:
+
+```json
+{
+  "code": 0,
+  "message": "success",
+  "data": {}
+}
 ```
+
+Some legacy endpoints use `msg` instead of `message`:
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {}
+}
+```
+
+Treat `code: 0` as success. Non-zero `code` or an HTTP 4xx/5xx status means the request failed.
 
 ## Core concepts
 
 | Concept | Description |
-|--------|-------------|
-| **Agent** | An app registered via `POST /account/register`. Identified by `api_key` (and optionally `api_secret` for JWT). |
-| **Session** | A proxy usage session. Has `session_id`, `type` (dynamic/static), `status`, and `proxy` (host, port, credentials). |
-| **Telemetry** | Event reporting (success, http_error, captcha, timeout, block) to track session health and drive rotation advice. |
+| --- | --- |
+| User | An IPProxy account. Agents can create and manage their sub-users. |
+| Product | A proxy resource package, identified by `product_no` / `poolId`. |
+| Dynamic order | Traffic-based rotating proxy order. |
+| Static order | Fixed IP order with region, duration, IP count, and optional project / CIDR settings. |
+| Instance | A concrete proxy IP/port/credential record attached to a static order. |
+| Balance | Account available amount used for order creation and renewal. |
 
-## Document structure
+## Main API areas
 
-- **Getting started** — Quickstart, authentication, accounts.
-- **Products** — List products, regions, and recommendations.
-- **Sessions** — Create (dynamic/static), rotate, renew, terminate.
-- **Billing** — Balance, recharge, transactions.
-- **Telemetry** — Report events, batch report, session health.
-- **Stats & Errors** — Overview stats, error codes, retry guidance.
-- **Practices** — Best practices for sessions and security.
-- **Architecture** — System design and backend integration.
-- **Testing** — Smoke, integration, and E2E test design.
+- **Authentication**: `POST /auth/login`
+- **Users**: create sub-users and query current balance
+- **Products and regions**: query available proxy products and service areas
+- **Orders**: create dynamic/static proxy orders, list static orders, renew or release resources
+- **Proxy access**: whitelist management and extracted proxy credentials
+- **Billing records**: balance, recharge/adjustment records, and consumption records
 
 ## Next steps
 
 <CardGroup cols={2}>
   <Card title="Quickstart" icon="rocket" href="/quickstart">
-    Register, create a session, and send traffic in minutes.
+    Log in, query products, create an order, and read proxy details.
   </Card>
-  <Card title="Authentication" icon="key" href="/authentication">
-    API Key (recommended) or JWT Token.
+  <Card title="API reference" icon="book-open" href="/api-reference/openapi">
+    See the endpoint list, request parameters, and example responses.
   </Card>
 </CardGroup>

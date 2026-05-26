@@ -1,57 +1,40 @@
 ---
 title: Stats
-description: "Overview and usage statistics. Base URL: https://api.nexalayer.net/v1"
+description: IPProxy dashboard, resource, and order statistics APIs. Base URL: https://api.wanyuagent.com/api
 ---
 
 # Stats
 
-Aggregate statistics for balance, sessions, traffic, and cost.
+Use dashboard and order-statistics endpoints for account and resource summaries.
 
-## Overview
-
-<CodeGroup>
-
-```bash Request
-curl -X GET "https://api.nexalayer.net/v1/stats/overview" \
-  -H "X-API-Key: <api_key>"
-```
-
-```json Response
-{
-  "success": true,
-  "data": {
-    "balance": 1000.00,
-    "active_sessions": 5,
-    "total_sessions": 20,
-    "today_traffic_gb": 2.5,
-    "month_traffic_gb": 45.0,
-    "today_cost": 25.00,
-    "month_cost": 450.00
-  }
-}
-```
-
-</CodeGroup>
-
-## Traffic stats
+## Dashboard summary
 
 ```bash
-curl -X GET "https://api.nexalayer.net/v1/stats/traffic?granularity=day&start_date=2026-02-01&end_date=2026-02-15" \
-  -H "X-API-Key: <api_key>"
+curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2" \
+  -H "Authorization: Bearer <token>"
 ```
 
-## Cost stats
+Admins can pass `target_user_id` where permitted.
+
+## Static order statistics
 
 ```bash
-curl -X GET "https://api.nexalayer.net/v1/stats/cost?period=month" \
-  -H "X-API-Key: <api_key>"
+curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/statistics" \
+  -H "Authorization: Bearer <token>"
 ```
 
-## Usage report
+The response includes counts such as total, active, processing, pending, expired, cancelled, failed, expiring soon, and cooling-period orders.
+
+## Static resource stats
 
 ```bash
-curl -X GET "https://api.nexalayer.net/v1/billing/usage-report?period=week" \
-  -H "X-API-Key: <api_key>"
+curl -X GET "https://api.wanyuagent.com/api/open/app/static/resource/stats" \
+  -H "Authorization: Bearer <token>"
 ```
 
-Next: [Errors](/errors), [Best practices](/best-practices).
+## Dynamic resource stats
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/dynamic/resource/stats?productNo=dynamic_ipweb" \
+  -H "Authorization: Bearer <token>"
+```

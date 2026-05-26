@@ -1,34 +1,37 @@
 ---
 title: Balance
-description: "Query account balance. Base URL: https://api.nexalayer.net/v1"
+description: Query IPProxy account balance. Base URL: https://api.wanyuagent.com/api
 ---
 
 # Balance
 
-Query current balance before creating sessions or recharging.
+Check balance before creating or renewing orders.
 
-## Request
+## Dashboard balance
 
-<CodeGroup>
-
-```bash Request
-curl -X GET "https://api.nexalayer.net/v1/billing/balance" \
-  -H "X-API-Key: <api_key>"
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2" \
+  -H "Authorization: Bearer <token>"
 ```
 
-```json Response
-{
-  "success": true,
-  "data": {
-    "balance": 1000.00,
-    "currency": "CNY",
-    "frozen": 0.00,
-    "available": 1000.00,
-    "last_recharge_at": "2026-02-14T08:00:00Z"
-  }
-}
+This endpoint returns the current user's dashboard summary, including balance and resource statistics.
+
+## Current user balance
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/user/balance/current" \
+  -H "Authorization: Bearer <token>"
 ```
 
-</CodeGroup>
+Use this endpoint when you only need the authenticated user's balance.
 
-Insufficient balance will result in `INSUFFICIENT_BALANCE` (402) when creating sessions or renewing. Use [Recharge](/billing/recharge) to add funds.
+## Admin target user
+
+Administrators can query another user through dashboard APIs where permitted:
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2?target_user_id=1001" \
+  -H "Authorization: Bearer <token>"
+```
+
+If balance is insufficient, order creation or renewal returns a non-zero `code` or an HTTP error with a message such as `用户余额不足` or `目标用户余额不足`.

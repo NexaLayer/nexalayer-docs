@@ -1,34 +1,28 @@
 ---
-title: Terminate session
-description: "End a session and release resources. Base URL: https://api.nexalayer.net/v1"
+title: Release orders
+description: Release or cancel static proxy resources. Base URL: https://api.wanyuagent.com/api
 ---
 
-# Terminate session
+# Release orders
 
-Call `POST /sessions/{session_id}/terminate` to end a session. The session will no longer be usable; remaining traffic or time is forfeited according to product terms.
+Use the cancel endpoint to release a static proxy order when it is no longer needed.
 
-## Request
+## Endpoint
 
-<CodeGroup>
-
-```bash Request
-curl -X POST "https://api.nexalayer.net/v1/sessions/sess_a1b2c3d4-e5f6-7890/terminate" \
-  -H "X-API-Key: <api_key>"
+```bash
+curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/STA202605260001abc123/cancel" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "reason": "No longer needed"
+  }'
 ```
 
-```json Response
-{
-  "success": true,
-  "data": {
-    "session_id": "sess_a1b2c3d4-e5f6-7890",
-    "status": "terminated",
-    "terminated_at": "2026-02-15T11:00:00Z"
-  }
-}
-```
+Replace `STA202605260001abc123` with the actual `order_no`.
 
-</CodeGroup>
+## Notes
 
-Subsequent `GET /sessions/{session_id}` will show `status: "terminated"`. Terminate sessions when done to free quota and avoid unnecessary cost.
-
-Next: [Session usage](/sessions/overview#api-summary) (`GET /sessions/{session_id}/usage`), [Best practices](/best-practices).
+- Release behavior depends on the product and order status.
+- Released instances are no longer usable.
+- Always query the order list after release to verify final status.
+- Refund or remaining-time handling follows the configured product policy.

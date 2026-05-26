@@ -1,30 +1,297 @@
 ---
-title: OpenAPI
-description: NexaLayer API OpenAPI 3.0 specification.
+title: API reference
+description: IPProxy public API endpoint reference. Base URL: https://api.wanyuagent.com/api
 ---
 
-The API is described by an OpenAPI 3.0 spec. Use it for code generation, docs, or client stubs.
+# API reference
 
-**Spec location (placeholder):**
+Base URL:
 
-- [openapi.yaml](https://github.com/NexaLayer/nexalayer-api/blob/main/openapi/openapi.yaml) in the `nexalayer-api` repository.
+```text
+https://api.wanyuagent.com/api
+```
 
-**Base URL:** `https://api.nexalayer.com/v1`
+Authenticated endpoints require:
 
-**Key endpoints:**
+```text
+Authorization: Bearer <token>
+```
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | /auth/token | Exchange API Key/Secret for Bearer token |
-| POST | /account/register | Register and get API key |
-| GET | /billing/balance | Get account balance |
-| POST | /billing/recharge | Recharge account |
-| GET | /products | List products |
-| POST | /products/recommend | Get product recommendations |
-| POST | /sessions | Create session |
-| GET | /sessions/{session_id} | Get session |
-| POST | /sessions/{session_id}/rotate | Rotate session IP |
-| GET | /sessions/{session_id}/usage | Session usage |
-| GET | /stats/overview | Stats overview |
+## Authentication
 
-For full request/response schemas, open the `openapi.yaml` file or import it into Swagger UI / Postman.
+### POST `/auth/login`
+
+Obtain a JWT token.
+
+```json Request
+{
+  "username": "your_username",
+  "password": "your_password"
+}
+```
+
+```json Response
+{
+  "code": 0,
+  "message": "登录成功",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIs...",
+    "user": {
+      "id": 1001,
+      "username": "your_username",
+      "is_agent": true,
+      "balance": 1000,
+      "status": "active"
+    }
+  }
+}
+```
+
+## Users
+
+### POST `/open/app/user/v2`
+
+Create a user under the current administrator or agent account.
+
+```json Request
+{
+  "username": "sub_user_001",
+  "password": "password123",
+  "email": "user@example.com",
+  "phone": "13812345678",
+  "remark": "API sub-user",
+  "is_agent": false,
+  "balance": 0
+}
+```
+
+Important fields:
+
+| Field | Type | Required | Description |
+| --- | --- | :---: | --- |
+| `username` | string | Yes | 3-50 characters. Must be unique. |
+| `password` | string | Yes | 6-50 characters. |
+| `email` | string | No | Contact email. |
+| `phone` | string | No | 11 digit phone number. |
+| `is_agent` | boolean | No | Whether the new user is an agent. |
+| `balance` | number | No | Initial balance. |
+| `agent_id` | number | No | Admins can assign a user to an agent. |
+
+### GET `/open/app/user/balance/current`
+
+Return the authenticated user's current balance.
+
+```bash
+curl "$IPPROXY_BASE/open/app/user/balance/current" \
+  -H "Authorization: Bearer $IPPROXY_TOKEN"
+```
+
+## Products and regions
+
+### POST `/open/app/product/query/v2`
+
+Query available products.
+
+```json Request
+{
+  "proxyType": 103,
+  "productNo": "ZT_US_New York City_2"
+}
+```
+
+Common request fields:
+
+| Field | Type | Required | Description |
+| --- | --- | :---: | --- |
+| `proxyType` | number | No | Proxy type filter. Common values include `103` for static and `104` for dynamic. |
+| `productNo` | string | No | Product number to query. |
+| `areaCode` | string | No | Region filter. |
+
+Response items include product fields such as `product_no`, `product_name`, `proxy_type`, `inventory`, `country_code`, `city_code`, `duration`, `unit`, `global_price`, `cidr_info`, and `project_list`.
+
+### GET `/open/app/product/area/v2`
+
+Query product service areas.
+
+```bash
+curl "$IPPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%20York%20City_2" \
+  -H "Authorization: Bearer $IPPROXY_TOKEN"
+```
+
+Query parameters:
+
+| Parameter | Type | Required | Description |
+| --- | --- | :---: | --- |
+| `proxyType` | number | No | Product proxy type. |
+| `productNo` | string | No | Product number. |
+
+## Orders
+
+### POST `/open/app/order/create/v2`
+
+Create an order. Use `orderType: "dynamic_proxy"` for dynamic proxy orders. The same endpoint can also create basic static orders, but static orders should normally use `/open/app/static/order/create/v2`.
+
+```json Dynamic proxy request
+{
+  "orderType": "dynamic_proxy",
+  "poolId": "dynamic_ipweb",
+  "trafficAmount": 1,
+  "unitPrice": 5,
+  "totalAmount": 5,
+  "remark": "API dynamic order",
+  "userId": 1001,
+  "ipCount": 1,
+  "duration": 30,
+  "unit": 1
+}
+```
+
+### POST `/open/app/static/order/create/v2`
+
+Create a static proxy order.
+
+```json Static proxy request
+{
+  "orderType": "static_proxy",
+  "poolId": "ZT_US_New York City_2",
+  "trafficAmount": null,
+  "unitPrice": 10,
+  "totalAmount": 10,
+  "remark": "API static order",
+  "userId": 1001,
+  "regionCode": "US",
+  "countryCode": "US",
+  "cityCode": "New York City",
+  "staticType": "isp",
+  "ipCount": 1,
+  "cycleTimes": 1,
+  "duration": 30,
+  "unit": 1,
+  "extBandWidth": 0,
+  "bandWidthPrice": 0,
+  "bridgePrice": 0,
+  "projectId": "default"
+}
+```
+
+Static order fields:
+
+| Field | Type | Required | Description |
+| --- | --- | :---: | --- |
+| `orderType` | string | Yes | Use `static_proxy`. |
+| `poolId` | string | Yes | Product number. |
+| `userId` | number | Yes | Target user ID. Agents can only order for their sub-users. |
+| `unitPrice` | number | Yes | Unit price. If `0`, backend may calculate from configured prices. |
+| `totalAmount` | number | Yes | Total order amount. If `0`, backend calculates from price, period, and IP count where supported. |
+| `regionCode` | string | No | Region code. |
+| `countryCode` | string | No | Country code. |
+| `cityCode` | string | No | City code. |
+| `staticType` | string | No | Static resource type. |
+| `ipCount` | number | Yes | Number of IPs. |
+| `cycleTimes` | number | Yes | Number of purchase cycles. |
+| `duration` | number | Yes | Duration value. |
+| `unit` | number | Yes | `1` = day, `3` = month, `4` = year. |
+| `cidrBlocks` | array | No | CIDR quantity selections, for products that support CIDR assignment. |
+| `assignedIp` | string | No | Specific IP address. |
+| `assignedIpList` | array | No | Specific IP address list. |
+| `projectId` | string | No | Project / business type for shared static proxy products. |
+
+### GET `/open/app/static/order/list/v2`
+
+List static orders and proxy instances.
+
+```bash
+curl "$IPPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10&status=active" \
+  -H "Authorization: Bearer $IPPROXY_TOKEN"
+```
+
+Query parameters:
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `page` | number | Page number, default `1`. |
+| `pageSize` / `page_size` | number | Page size, max `100`. |
+| `status` | string | Order status filter. |
+| `filter` | string | Business filter used by the console. |
+| `user_id` | number | User filter. |
+| `agent_id` | number | Admin-only agent filter. |
+| `search` | string | Search order number, IP, port, username, password, or remark. |
+| `region` | string | Fuzzy region filter. |
+| `created_start` / `created_end` | string | Creation date range. |
+| `expire_start` / `expire_end` | string | Expiration date range. |
+| `show_recycle_bin` | boolean | Include recycle-bin instances for normal users. |
+
+### GET `/open/app/static/order/statistics`
+
+Return static order counts by status.
+
+### POST `/open/app/static/order/renew`
+
+Renew a static proxy order or instance. Send the target order/instance identifiers and renewal period according to the product purchased.
+
+### POST `/open/app/static/order/{order_no}/cancel`
+
+Release or cancel a static order.
+
+## Proxy whitelist
+
+### POST `/open/app/proxy/addIpWhiteList/v2`
+
+Add an IP whitelist rule.
+
+```json Request
+{
+  "ip": "203.0.113.10"
+}
+```
+
+### POST `/open/app/proxy/delIpWhiteList/v2`
+
+Delete an IP whitelist rule.
+
+```json Request
+{
+  "ip": "203.0.113.10"
+}
+```
+
+These two whitelist endpoints are intentionally available without the normal Bearer middleware in some deployments, but callers should still send Bearer auth when available.
+
+## Dashboard and records
+
+### GET `/open/app/dashboard/info/v2`
+
+Return balance, resource counts, and dashboard summary for the current user. Admins can pass `target_user_id`.
+
+### GET `/open/app/user/transactions`
+
+Return consumption records.
+
+Query parameters:
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `page` | number | Page number. |
+| `page_size` | number | Page size, max `100`. |
+| `type` | string | Transaction type. |
+| `order_type` | string | `static` or `dynamic`. |
+| `start_date` / `end_date` | string | Date range, `YYYY-MM-DD`. |
+| `username` | string | Admin-only username filter. |
+| `order_no` | string | Order number filter. |
+| `keyword` | string | Search remark, type, order number, or username. |
+| `target_user_id` | number | Target user filter. |
+| `agent_id` | number | Admin-only agent filter. |
+
+### GET `/transaction/agent/transactions`
+
+Return recharge and balance adjustment records for the current user, agent, or admin scope.
+
+## Browser API domain
+
+When using the fingerprint browser product, use the same API host:
+
+```text
+https://api.wanyuagent.com/api
+```
+
+Browser environment APIs are under `/api/browser` on the same backend and are documented separately from the proxy ordering APIs.

@@ -1,51 +1,20 @@
 ---
-title: Session health
-description: "Query session health metrics. Base URL: https://api.nexalayer.net/v1"
+title: Health
+description: Health and status checks for IPProxy integrations.
 ---
 
-# Session health
+# Health
 
-After reporting telemetry events, you can query aggregated health for a session. Use this to decide whether to rotate or continue.
+For API-level health, call:
 
-## Request
-
-<CodeGroup>
-
-```bash Request
-curl -X GET "https://api.nexalayer.net/v1/sessions/sess_xxx/health" \
-  -H "X-API-Key: <api_key>"
+```bash
+curl -X GET "https://api.wanyuagent.com/health"
 ```
 
-```json Response
-{
-  "success": true,
-  "data": {
-    "risk_level": "low",
-    "health_score": 95,
-    "success_rate": 0.97,
-    "block_probability": 0.03,
-    "consecutive_failures": 0,
-    "recommendation": "ok",
-    "stats_24h": {
-      "total_requests": 150,
-      "success_count": 146,
-      "error_count": 4,
-      "avg_latency_ms": 320
-    }
-  }
-}
-```
+For account and resource health, use:
 
-</CodeGroup>
+- `GET /api/open/app/dashboard/info/v2`
+- `GET /api/open/app/static/order/statistics`
+- `GET /api/open/app/static/order/list/v2`
 
-## Fields
-
-| Field | Description |
-|-------|-------------|
-| `risk_level` | `low` \| `medium` \| `high` |
-| `health_score` | 0–100 |
-| `success_rate` | 0.0–1.0 |
-| `block_probability` | Estimated block probability |
-| `recommendation` | `ok` \| `consider_rotate` \| `rotate_now` \| `pause` |
-
-Use `recommendation === "rotate_now"` to trigger [Rotate](/sessions/rotate). See [Telemetry overview](/telemetry/overview) for event reporting.
+These endpoints provide the practical status information needed for integrations and reconciliation.

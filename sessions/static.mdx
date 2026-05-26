@@ -1,71 +1,73 @@
 ---
-title: Static sessions
-description: "Create and use static (fixed-IP) proxy sessions. Base URL: https://api.nexalayer.net/v1"
+title: Static orders
+description: Create and query fixed IP proxy orders. Base URL: https://api.wanyuagent.com/api
 ---
 
-# Static sessions
+# Static orders
 
-Static sessions provide fixed IPs and are billed by duration (e.g. 30 or 90 days). Creation may be synchronous or asynchronous depending on product; check `status` and use `proxy` when `active`.
+Static proxy orders provide fixed IP resources for a selected product, region, duration, and IP count.
 
-## Create
+## Create static order
 
-<CodeGroup>
-
-```bash Request
-curl -X POST "https://api.nexalayer.net/v1/sessions" \
-  -H "X-API-Key: <api_key>" \
+```bash
+curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create/v2" \
+  -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
-  -H "Idempotency-Key: create_static_001" \
   -d '{
-    "type": "static",
-    "config": {
-      "product_no": "LM_US_LA_01",
-      "quantity": 2,
-      "duration_days": 30,
-      "country": "US",
-      "city": "LA"
-    }
+    "orderType": "static_proxy",
+    "poolId": "ZT_US_New York City_2",
+    "unitPrice": 10,
+    "totalAmount": 10,
+    "remark": "API static order",
+    "userId": 1001,
+    "regionCode": "US",
+    "countryCode": "US",
+    "cityCode": "New York City",
+    "staticType": "isp",
+    "ipCount": 1,
+    "cycleTimes": 1,
+    "duration": 30,
+    "unit": 1
   }'
 ```
 
-```json Response
-{
-  "success": true,
-  "data": {
-    "session_id": "sess_x1y2z3w4-a5b6-7890",
-    "type": "static",
-    "status": "active",
-    "proxy": {
-      "host": "192.168.1.100",
-      "port": 40000,
-      "username": "static_user01",
-      "password": "static_pass01",
-      "protocol": "socks5",
-      "full_url": "socks5://static_user01:static_pass01@192.168.1.100:40000"
-    },
-    "location": { "country": "US", "city": "LA" },
-    "ip_list": ["192.168.1.100", "192.168.1.101"],
-    "expires_at": "2026-03-17T10:00:00Z",
-    "created_at": "2026-02-15T10:00:00Z"
-  }
-}
+## Duration rules
+
+| `unit` | Meaning | Common valid `duration` values |
+| --- | --- | --- |
+| `1` | Day | `30` for normal static products; some static resource products support `30`, `90`, `365`. |
+| `3` | Month | `1`, `3`, `6`, `12`; some static resource products support `1`, `3`, `12`. |
+| `4` | Year | `1`. |
+
+## Optional static fields
+
+| Field | Description |
+| --- | --- |
+| `cidrBlocks` | Array of `{ "cidr": "x.x.x.x/yy", "count": 1 }` for CIDR-based products. |
+| `assignedIp` | Request one specific IP. |
+| `assignedIpList` | Request multiple specific IPs. |
+| `projectId` | Project code for shared static products. |
+| `extBandWidth` | Additional bandwidth. |
+| `bandWidthPrice` | Bandwidth price. |
+| `bridgePrice` | Bridge fee. |
+
+## List static orders
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/list/v2?page=1&pageSize=10" \
+  -H "Authorization: Bearer <token>"
 ```
 
-</CodeGroup>
+Search examples:
 
-## Config parameters
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/list/v2?search=STA2026&page=1&pageSize=10" \
+  -H "Authorization: Bearer <token>"
+```
 
-| Parameter | Type | Required | Description |
-|-----------|------|:--------:|-------------|
-| `product_no` | string | Yes | Product code from `GET /products`. |
-| `quantity` | number | Yes | Number of IPs. |
-| `duration_days` | number | Yes | 30 or 90 (product-dependent). |
-| `country` | string | Yes | Country code. |
-| `city` | string | No | City code. |
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/list/v2?region=New%20York&status=active" \
+  -H "Authorization: Bearer <token>"
+```
 
-## Get session / usage
-
-- `GET /sessions/{session_id}` — full session including `proxy`, `expires_at`, `ip_list`.
-- `GET /sessions/{session_id}/usage` — usage and remaining time/traffic.
-
-To extend: [Renew](/sessions/renew). To release: [Terminate](/sessions/terminate).
+The list response includes order fields and, where available, `instances` containing proxy IP, port, username, password, status, and expiration data.

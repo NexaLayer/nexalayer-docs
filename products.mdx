@@ -1,88 +1,59 @@
 ---
 title: Products
-description: "List products, regions, and get recommendations. Base URL: https://api.nexalayer.net/v1"
+description: Query IPProxy products, regions, inventory, and pricing. Base URL: https://api.wanyuagent.com/api
 ---
 
 # Products
 
-NexaLayer exposes two product types: **dynamic** (rotating IP, pay per traffic) and **static** (fixed IP, pay per duration). Use the product API to list available products and get recommendations before creating sessions.
+Products define which proxy resource can be purchased. Use product query APIs before creating orders so you can pick the correct `poolId`, region, duration, IP count, and price.
 
-## Product types
+## Product query
 
-| Type | Description | Billing |
-|------|-------------|---------|
-| Dynamic | Rotating IPs; suitable for scraping, data collection | Per traffic (GB) |
-| Static | Fixed IPs; suitable for account management, SEO monitoring | Per duration (e.g. 30/90 days) |
-
-## List products
-
-<CodeGroup>
-
-```bash All products
-curl -X GET "https://api.nexalayer.net/v1/products" \
-  -H "X-API-Key: <api_key>"
-```
-
-```bash By type
-curl -X GET "https://api.nexalayer.net/v1/products?type=dynamic" \
-  -H "X-API-Key: <api_key>"
-```
-
-```bash By country
-curl -X GET "https://api.nexalayer.net/v1/products?country=US" \
-  -H "X-API-Key: <api_key>"
-```
-
-</CodeGroup>
-
-**Response shape:** `data.items[]` with `product_no`, `name`, `type`, `price`, `unit`, and related fields. Use `product_no` in session `config` when calling `POST /sessions`.
-
-## List regions
-
-<CodeGroup>
-
-```bash Request
-curl -X GET "https://api.nexalayer.net/v1/products/regions" \
-  -H "X-API-Key: <api_key>"
-```
-
-```json Response
-{
-  "success": true,
-  "data": {
-    "items": [
-      { "code": "US", "name": "United States" },
-      { "code": "GB", "name": "United Kingdom" }
-    ]
-  }
-}
-```
-
-</CodeGroup>
-
-## Product recommendation
-
-Get recommended products by use case and constraints.
-
-<CodeGroup>
-
-```bash Request
-curl -X POST "https://api.nexalayer.net/v1/products/recommend" \
-  -H "X-API-Key: <api_key>" \
+```bash
+curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
+  -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
-    "use_case": "web_scraping",
-    "target_region": "US",
-    "budget": 100.00,
-    "session_count": 5,
-    "require_sticky_ip": false
+    "proxyType": 103
   }'
 ```
 
-</CodeGroup>
+Useful response fields:
 
-**use_case** examples: `web_scraping`, `data_collection`, `account_management`, `ad_verification`, `seo_monitoring`, `market_research`, `general`.
+| Field | Description |
+| --- | --- |
+| `product_no` | Product number. Use as `poolId` when creating orders. |
+| `product_name` | Display name. |
+| `proxy_type` | Proxy category. Common values: `103` static, `104` dynamic. |
+| `inventory` | Available quantity. |
+| `country_code`, `state_code`, `city_code` | Location fields. |
+| `duration`, `unit` | Supported duration configuration. |
+| `global_price` | Default sales price where configured. |
+| `band_width`, `band_width_price` | Bandwidth and bandwidth pricing where applicable. |
+| `cidr_info` | CIDR-level inventory and pricing where applicable. |
+| `project_list` | Project inventory for shared static proxy products. |
 
-Response contains recommended products; use their `product_no` in `POST /sessions` config.
+## Region query
 
-Next: [Sessions overview](/sessions/overview), [Dynamic session](/sessions/dynamic), [Static session](/sessions/static).
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%20York%20City_2" \
+  -H "Authorization: Bearer <token>"
+```
+
+Use the returned region/country/city codes as `regionCode`, `countryCode`, and `cityCode` in static order requests.
+
+## Common product types
+
+| Product | Typical use | Order endpoint |
+| --- | --- | --- |
+| Static proxy | Fixed IP, fixed duration, stable proxy credentials | `POST /open/app/static/order/create/v2` |
+| Dynamic proxy | Traffic-based rotating proxy resources | `POST /open/app/order/create/v2` |
+| Shared static proxy | Static product with `project_list` / project inventory | `POST /open/app/static/order/create/v2` with `projectId` |
+
+## Selecting a product
+
+1. Query products by `proxyType`.
+2. Check `inventory` and region fields.
+3. Confirm duration rules. For normal static products, `unit` supports `1` day, `3` month, and `4` year; valid durations depend on product configuration.
+4. Use `product_no` as `poolId` when creating the order.
+5. If the product has `project_list`, choose a `projectId` with sufficient inventory.

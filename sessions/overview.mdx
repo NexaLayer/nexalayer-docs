@@ -1,57 +1,45 @@
 ---
-title: Sessions overview
-description: "Session lifecycle, types, and API summary. Base URL: https://api.nexalayer.net/v1"
+title: Orders overview
+description: IPProxy order APIs for dynamic and static proxy resources. Base URL: https://api.wanyuagent.com/api
 ---
 
-# Sessions overview
+# Orders overview
 
-A **session** is a proxy usage unit. Each session has a `session_id`, `type` (dynamic or static), `status`, and when active, a `proxy` object (host, port, credentials, `full_url`).
+IPProxy exposes order APIs directly. Use dynamic orders for traffic-based rotating proxy resources and static orders for fixed IP resources.
 
-## Lifecycle
+## Endpoint summary
 
-```
-creating → active → [rotating] → expired
-                  ↘ error
-                  ↘ terminated (manual)
-```
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `POST` | `/open/app/order/create/v2` | Create a dynamic proxy order. |
+| `POST` | `/open/app/static/order/create/v2` | Create a static proxy order. |
+| `GET` | `/open/app/static/order/list/v2` | List static orders and proxy instances. |
+| `GET` | `/open/app/static/order/statistics` | Query static order status counts. |
+| `POST` | `/open/app/static/order/renew` | Renew a static proxy order or instance. |
+| `POST` | `/open/app/static/order/{order_no}/cancel` | Release/cancel a static order. |
 
-- **creating** — Session created; backend is provisioning. Poll `GET /sessions/{session_id}` until `status === "active"`.
-- **active** — Ready; use `proxy.full_url` to send traffic.
-- **rotating** — (Dynamic only) IP rotation in progress.
-- **expired** — Traffic or time exhausted.
-- **error** — Provisioning or runtime error.
-- **terminated** — Manually terminated via `POST /sessions/{session_id}/terminate`.
+## Shared order fields
 
-## Session types
+| Field | Description |
+| --- | --- |
+| `orderType` | `dynamic_proxy` or `static_proxy`. |
+| `poolId` | Product number from product query. |
+| `userId` | Target user ID. |
+| `unitPrice` | Unit price. |
+| `totalAmount` | Total order amount. |
+| `remark` | Optional order note. |
 
-| Type | API doc | Description |
-|------|--------|-------------|
-| Dynamic | [Dynamic](/sessions/dynamic) | Rotating IP; pay per traffic (GB). Create with `type: "dynamic"` and `config.product_no`, `config.traffic_gb`, etc. |
-| Static | [Static](/sessions/static) | Fixed IP; pay per duration. Create with `type: "static"` and `config.product_no`, `config.quantity`, `config.duration_days`. |
+## Status and response
 
-## API summary
+Successful order creation returns `code: 0` and an order object in `data`. Important response fields include:
 
-| Action | Method | Path |
-|--------|--------|------|
-| Create | POST | `/sessions` |
-| List | GET | `/sessions?status=active&type=dynamic&page=1&page_size=20` |
-| Get | GET | `/sessions/{session_id}` |
-| Rotate (dynamic) | POST | `/sessions/{session_id}/rotate` |
-| Renew (static) | POST | `/sessions/{session_id}/renew` |
-| Terminate | POST | `/sessions/{session_id}/terminate` |
-| Usage | GET | `/sessions/{session_id}/usage` |
-| Whitelist | POST | `/sessions/{session_id}/whitelist` |
+| Field | Description |
+| --- | --- |
+| `order_no` | IPProxy order number. |
+| `app_order_no` | Application order number. |
+| `status` | Current order status. |
+| `product_no` / `pool_type` | Purchased product. |
+| `amount` / `total_amount` | Charged amount. |
+| `created_at`, `updated_at` | Order timestamps. |
 
-## Idempotency
-
-For create and renew, send `Idempotency-Key` to avoid duplicate orders on retries:
-
-```bash
-curl -X POST "https://api.nexalayer.net/v1/sessions" \
-  -H "X-API-Key: <api_key>" \
-  -H "Content-Type: application/json" \
-  -H "Idempotency-Key: create_dynamic_001" \
-  -d '{ "type": "dynamic", "config": { ... } }'
-```
-
-Next: [Dynamic](/sessions/dynamic), [Static](/sessions/static), [Rotate](/sessions/rotate), [Renew](/sessions/renew), [Terminate](/sessions/terminate).
+Use [Static orders](/sessions/static) for fixed IP resources and [Dynamic orders](/sessions/dynamic) for traffic-based resources.

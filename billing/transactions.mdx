@@ -1,55 +1,48 @@
 ---
 title: Transactions
-description: "List billing transactions. Base URL: https://api.nexalayer.net/v1"
+description: Query IPProxy consumption, recharge, and adjustment records. Base URL: https://api.wanyuagent.com/api
 ---
 
 # Transactions
 
-List account transactions (recharges, consumption, etc.) with pagination.
+IPProxy exposes two commonly used transaction record APIs: consumption records and agent balance records.
 
-## Request
+## Consumption records
 
-<CodeGroup>
-
-```bash Request
-curl -X GET "https://api.nexalayer.net/v1/billing/transactions?page=1&page_size=20&type=all" \
-  -H "X-API-Key: <api_key>"
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/user/transactions?page=1&page_size=10&order_type=static" \
+  -H "Authorization: Bearer <token>"
 ```
 
-```json Response
-{
-  "success": true,
-  "data": {
-    "items": [
-      {
-        "transaction_no": "T20260215100000xxxx",
-        "type": "recharge",
-        "amount": 500.00,
-        "balance": 1500.00,
-        "status": "completed",
-        "created_at": "2026-02-15T10:15:00Z"
-      },
-      {
-        "transaction_no": "T20260215100100yyyy",
-        "type": "consumption",
-        "amount": -25.00,
-        "balance": 1475.00,
-        "details": { "session_id": "sess_xxx" },
-        "created_at": "2026-02-15T10:20:00Z"
-      }
-    ],
-    "pagination": {
-      "page": 1,
-      "page_size": 20,
-      "total": 42,
-      "total_pages": 3
-    }
-  }
-}
+Query parameters:
+
+| Parameter | Description |
+| --- | --- |
+| `page` | Page number. |
+| `page_size` | Page size, max `100`. |
+| `type` | Transaction type. |
+| `order_type` | `static` or `dynamic`. |
+| `start_date`, `end_date` | Date range in `YYYY-MM-DD` format. |
+| `username` | Username filter, admin scope. |
+| `order_no` | Order number filter. |
+| `keyword` | Search remark, type, order number, or username. |
+| `target_user_id` | Target user ID. |
+| `agent_id` | Agent filter, admin scope. |
+
+## Recharge and adjustment records
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/transaction/agent/transactions?page=1&page_size=10" \
+  -H "Authorization: Bearer <token>"
 ```
 
-</CodeGroup>
+Query parameters:
 
-Use `type` to filter (e.g. `recharge`, `consumption`, `all`). Response includes `pagination` for page, page_size, total, total_pages.
+| Parameter | Description |
+| --- | --- |
+| `order_no` | Order number search. |
+| `start_date`, `end_date` | Date range in `YYYY-MM-DD` format. |
+| `page`, `page_size` | Pagination. |
+| `user_id` | Optional user filter, subject to account permissions. |
 
-Next: [Usage report](/stats) (stats/usage), [Balance](/billing/balance).
+Agents can view their own and sub-user records. Normal users can only view their own records. Administrators can view all permitted records.

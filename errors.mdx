@@ -1,70 +1,60 @@
 ---
 title: Errors
-description: "Error format, codes, rate limits, and retry guidance. Base URL: https://api.nexalayer.net/v1"
+description: IPProxy error response format and troubleshooting. Base URL: https://api.wanyuagent.com/api
 ---
 
 # Errors
 
-All error responses share a common shape. Use `error.code` for programmatic handling and `error.message` for logging.
+IPProxy APIs use HTTP status codes plus a JSON response body. Business failures usually include a non-zero `code` and a Chinese `message` or `msg`.
 
-## Response format
+## Common formats
 
 ```json
 {
-  "success": false,
-  "data": null,
-  "error": {
-    "code": "INSUFFICIENT_BALANCE",
-    "message": "Insufficient balance. Current balance: 50.00; required: 100.00",
-    "details": {
-      "current_balance": 50.00,
-      "required_amount": 100.00
-    }
-  },
-  "meta": {
-    "request_id": "req_xxxx"
-  }
+  "code": 401,
+  "message": "未提供认证令牌",
+  "data": {}
 }
 ```
 
-## Error codes
+```json
+{
+  "code": 400,
+  "msg": "目标用户余额不足",
+  "data": {}
+}
+```
 
-| Code | HTTP | Description | Action |
-|------|:----:|-------------|--------|
-| `AUTH_INVALID_KEY` | 401 | Invalid API Key | Check key |
-| `AUTH_EXPIRED_TOKEN` | 401 | JWT expired | Refresh token |
-| `AUTH_INSUFFICIENT_PERMISSION` | 403 | Permission denied | Check scope |
-| `RATE_LIMIT_EXCEEDED` | 429 | Too many requests | Back off; use `Retry-After` |
-| `ACCOUNT_DISABLED` | 403 | Account disabled | Contact support |
-| `INSUFFICIENT_BALANCE` | 402 | Balance too low | Recharge |
-| `SESSION_NOT_FOUND` | 404 | Session missing | Check session_id |
-| `SESSION_EXPIRED` | 410 | Session expired | Create new session |
-| `SESSION_LIMIT_REACHED` | 429 | Session limit | Terminate old sessions |
-| `PRODUCT_NOT_FOUND` | 404 | Product invalid | List products |
-| `PRODUCT_OUT_OF_STOCK` | 409 | Out of stock | Retry or other product |
-| `INVALID_REQUEST` | 400 | Bad parameters | Fix request body |
-| `IDEMPOTENCY_CONFLICT` | 409 | Duplicate idempotency key | Use new key or reuse cached response |
-| `BACKEND_ERROR` | 502 | Backend failure | Retry with backoff |
-| `BACKEND_TIMEOUT` | 504 | Backend timeout | Retry |
-| `INTERNAL_ERROR` | 500 | Internal error | Contact support |
+FastAPI validation errors may use the standard `detail` field:
 
-## Rate limit headers
+```json
+{
+  "detail": [
+    {
+      "loc": ["body", "duration"],
+      "msg": "field required",
+      "type": "value_error.missing"
+    }
+  ]
+}
+```
 
-All responses include:
+## Common errors
 
-| Header | Description |
-|--------|-------------|
-| `X-RateLimit-Limit` | Max requests per window |
-| `X-RateLimit-Remaining` | Remaining in window |
-| `X-RateLimit-Reset` | Window reset (Unix timestamp) |
-
-On 429, `Retry-After` (seconds) is also present. Use it before retrying.
+| HTTP / Code | Message | Meaning | Action |
+| --- | --- | --- | --- |
+| `401` | `未提供认证令牌` | Missing Bearer token. | Send `Authorization: Bearer <token>`. |
+| `401` | `无效的认证令牌` | Token is invalid or expired. | Log in again. |
+| `401` | `邮箱或密码错误` | Login failed. | Check username/password. |
+| `403` | `没有创建用户的权限` | Current user cannot create users. | Use admin/agent account. |
+| `403` | `只能为下级用户创建订单` | Agent attempted to order for unrelated user. | Use a sub-user under that agent. |
+| `400` | `目标用户余额不足` | Balance is lower than order amount. | Recharge or lower order amount. |
+| `404` | `用户不存在` | Target user does not exist. | Check `userId`. |
+| `500` | `创建订单失败` | Backend error during order creation. | Retry after checking request fields; contact support if persistent. |
 
 ## Retry guidance
 
-- **Do not retry:** `AUTH_INVALID_KEY`, `INSUFFICIENT_BALANCE`, `INVALID_REQUEST`, `SESSION_NOT_FOUND` — fix input or state.
-- **Refresh and retry:** `AUTH_EXPIRED_TOKEN` — get new token then retry.
-- **Wait and retry:** `RATE_LIMIT_EXCEEDED` — sleep `Retry-After` then retry.
-- **Exponential backoff:** `BACKEND_ERROR`, `BACKEND_TIMEOUT` — retry with 2^attempt delay.
-
-Next: [Best practices](/best-practices) (idempotency, telemetry, rotation).
+- Do not retry validation, permission, or insufficient-balance errors without changing the request.
+- Re-login and retry once for token errors.
+- Retry network or 5xx failures with exponential backoff.
+- For order creation, avoid blind repeated retries. Query order lists first to confirm whether an order was already created.

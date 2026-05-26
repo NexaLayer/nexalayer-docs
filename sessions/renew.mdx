@@ -1,39 +1,33 @@
 ---
-title: Renew session
-description: "Extend static session duration. Base URL: https://api.nexalayer.net/v1"
+title: Renew orders
+description: Renew static proxy resources. Base URL: https://api.wanyuagent.com/api
 ---
 
-# Renew session
+# Renew orders
 
-**Static** sessions can be extended with `POST /sessions/{session_id}/renew`. Dynamic sessions are traffic-based; add traffic by creating a new session or via product-specific APIs.
+Use the static renewal endpoint to extend a static proxy order or instance.
 
-## Request
+## Endpoint
 
-<CodeGroup>
-
-```bash Request
-curl -X POST "https://api.nexalayer.net/v1/sessions/sess_x1y2z3w4-a5b6-7890/renew" \
-  -H "X-API-Key: <api_key>" \
+```bash
+curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/renew" \
+  -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
-  -H "Idempotency-Key: renew_001" \
-  -d '{ "duration_days": 30 }'
+  -d '{
+    "order_no": "STA202605260001abc123",
+    "duration": 30,
+    "unit": 1,
+    "cycleTimes": 1
+  }'
 ```
 
-```json Response
-{
-  "success": true,
-  "data": {
-    "session_id": "sess_x1y2z3w4-a5b6-7890",
-    "old_expires_at": "2026-03-17T10:00:00Z",
-    "new_expires_at": "2026-04-16T10:00:00Z",
-    "cost": 50.00,
-    "renewed_at": "2026-02-15T10:00:00Z"
-  }
-}
-```
+The renewal payload can vary by product and order type. Include the target order number or instance identifiers, duration fields, and pricing fields required by the product being renewed.
 
-</CodeGroup>
+## Before renewing
 
-Use `Idempotency-Key` to avoid duplicate charges on retries. Cost is deducted from account balance.
+1. Query the order with `/open/app/static/order/list/v2`.
+2. Confirm the current user has permission to renew the target order.
+3. Confirm balance with `/open/app/dashboard/info/v2` or `/open/app/user/balance/current`.
+4. Use the same duration rules as static order creation.
 
-Next: [Terminate](/sessions/terminate), [Billing](/billing/balance).
+If balance is insufficient or the order cannot be renewed, the API returns a non-zero `code` or an HTTP error response.

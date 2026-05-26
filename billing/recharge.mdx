@@ -1,68 +1,26 @@
 ---
 title: Recharge
-description: "Create USDT recharge order and check status. Base URL: https://api.nexalayer.net/v1"
+description: Recharge and payment-related APIs for IPProxy accounts. Base URL: https://api.wanyuagent.com/api
 ---
 
 # Recharge
 
-Recharge is done via USDT (TRC20). Create an order, send the required USDT amount to the returned wallet address, then poll status until `paid`.
+Recharge and payment flows are account-specific. Use the transaction APIs to audit recharge and adjustment records, and use the dashboard balance API to verify final balance.
 
-## Step 1: Create recharge order
+## Related endpoints
 
-<CodeGroup>
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/transaction/agent/transactions` | Recharge and adjustment records. |
+| `GET` | `/open/app/user/transactions` | Consumption records. |
+| `GET` | `/open/app/dashboard/info/v2` | Current balance and dashboard summary. |
+| `GET` | `/open/app/user/balance/current` | Current authenticated user balance. |
 
-```bash Request
-curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
-  -H "X-API-Key: <api_key>" \
-  -H "Content-Type: application/json" \
-  -d '{ "amount": 500.00, "payment_method": "usdt" }'
-```
+## Recommended verification flow
 
-```json Response
-{
-  "success": true,
-  "data": {
-    "order_id": "PAY20260215100000xxxx",
-    "amount": 500.00,
-    "amount_usdt": 69.44,
-    "usdt_rate": 7.2,
-    "wallet_address": "TXxxxxxxxxxxxxxxxxxxxx",
-    "network": "TRC20",
-    "expire_time": "2026-02-15T11:00:00Z",
-    "status": "pending"
-  }
-}
-```
+1. Query current balance.
+2. Complete the recharge or balance adjustment through the agreed payment process.
+3. Query `/transaction/agent/transactions` to confirm the record.
+4. Query balance again to confirm the updated amount.
 
-</CodeGroup>
-
-Send `amount_usdt` USDT (TRC20) to `wallet_address` before `expire_time`.
-
-## Step 2: Check status
-
-<CodeGroup>
-
-```bash Request
-curl -X GET "https://api.nexalayer.net/v1/billing/recharge/PAY20260215100000xxxx/status" \
-  -H "X-API-Key: <api_key>"
-```
-
-```json Response (paid)
-{
-  "success": true,
-  "data": {
-    "order_id": "PAY20260215100000xxxx",
-    "status": "paid",
-    "amount": 500.00,
-    "paid_amount_usdt": 69.44,
-    "confirmations": 6,
-    "completed_at": "2026-02-15T10:15:00Z"
-  }
-}
-```
-
-</CodeGroup>
-
-**Status values:** `pending`, `confirming`, `paid`, `expired`, `failed`.
-
-Next: [Transactions](/billing/transactions).
+For online payment integrations, contact IPProxy support to confirm which payment endpoint is enabled for your account and environment.

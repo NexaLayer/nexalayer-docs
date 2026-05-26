@@ -1,71 +1,19 @@
 ---
-title: Telemetry overview
-description: "Report session events to drive health and rotation recommendations. Base URL: https://api.nexalayer.net/v1"
+title: Telemetry
+description: Telemetry status for IPProxy public APIs.
 ---
 
-# Telemetry overview
+# Telemetry
 
-Telemetry lets agents report proxy usage outcomes (success, errors, captcha, timeout, block). The system updates session health and can return a **recommendation** (e.g. `consider_rotate`, `rotate_now`). Strongly recommended for all agents.
+The current IPProxy public API documentation does not define client-side telemetry submission endpoints. For operational visibility, use order list, dashboard, resource stats, and transaction APIs.
 
-## Event types
+Relevant endpoints:
 
-| event_type | Description |
-|------------|-------------|
-| `success` | Request succeeded |
-| `http_error` | HTTP error (use `status_code`, e.g. 403, 429) |
-| `captcha` | Captcha encountered |
-| `timeout` | Connection/request timeout |
-| `block` | IP blocked |
-| `rate_limit` | Target rate-limited |
-| `custom` | Custom event |
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /open/app/dashboard/info/v2` | Account and resource summary. |
+| `GET /open/app/static/order/list/v2` | Static order and proxy instance status. |
+| `GET /open/app/static/order/statistics` | Static order status counts. |
+| `GET /open/app/user/transactions` | Consumption records. |
 
-## Single event: report-event
-
-<CodeGroup>
-
-```bash Success
-curl -X POST "https://api.nexalayer.net/v1/sessions/sess_xxx/report-event" \
-  -H "X-API-Key: <api_key>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "event_type": "success",
-    "status_code": 200,
-    "latency_ms": 320,
-    "target_host": "example.com"
-  }'
-```
-
-```bash HTTP error
-curl -X POST "https://api.nexalayer.net/v1/sessions/sess_xxx/report-event" \
-  -H "X-API-Key: <api_key>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "event_type": "http_error",
-    "status_code": 403,
-    "latency_ms": 150,
-    "target_host": "example.com",
-    "error_message": "Forbidden"
-  }'
-```
-
-```json Response
-{
-  "success": true,
-  "data": {
-    "event_id": "evt_xxxxxxxx",
-    "session_health": {
-      "risk_level": "medium",
-      "health_score": 72,
-      "success_rate": 0.85,
-      "consecutive_failures": 3,
-      "recommendation": "consider_rotate"
-    }
-  }
-}
-```
-
-</CodeGroup>
-
-**recommendation:** `ok` \| `consider_rotate` \| `rotate_now` \| `pause`. Use it to decide when to call [Rotate](/sessions/rotate).
-
-Next: [Session health](/telemetry/health), [Batch report](/telemetry/batch).
+If you need custom callback or telemetry ingestion, coordinate the schema with IPProxy support before implementation.

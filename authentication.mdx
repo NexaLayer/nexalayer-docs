@@ -1,60 +1,38 @@
 ---
 title: Authentication
-description: "API Key (recommended) or JWT Token. All requests use base URL https://api.nexalayer.net/v1"
+description: Use IPProxy username/password login to obtain a Bearer token. Base URL: https://api.wanyuagent.com/api
 ---
 
 # Authentication
 
-NexaLayer supports two authentication modes. **API Key is recommended for AI Agents** — no token lifecycle to manage.
+IPProxy public APIs use JWT Bearer authentication. First call the login endpoint with your IPProxy username and password, then send the returned token in the `Authorization` header.
 
-## Mode 1: API Key (recommended)
-
-Send the API key on every request. No token exchange or refresh.
-
-| Header | Value |
-|--------|--------|
-| `X-API-Key` | Your `api_key` (e.g. `ak_a1b2c3d4e5f6g7h8`) |
-
-<CodeGroup>
-
-```bash Example
-curl -X GET "https://api.nexalayer.net/v1/account/info" \
-  -H "X-API-Key: ak_xxxxxxxxxxxxxxxx"
-```
-
-</CodeGroup>
-
-- Use for all server-side and agent workloads.
-- Key is long-lived until you rotate it; no expiry handling needed.
-
-## Mode 2: JWT Token (optional)
-
-Exchange `api_key` + `api_secret` for a short-lived Bearer token. Use when you need token expiry semantics (e.g. web console).
-
-### Obtain token
+## Login
 
 <CodeGroup>
 
 ```bash Request
-curl -X POST "https://api.nexalayer.net/v1/auth/token" \
+curl -X POST "https://api.wanyuagent.com/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
-    "api_key": "ak_xxxxxxxxxxxxxxxx",
-    "api_secret": "sk_xxxxxxxxxxxxxxxx"
+    "username": "your_username",
+    "password": "your_password"
   }'
 ```
 
 ```json Response
 {
-  "success": true,
+  "code": 0,
+  "message": "登录成功",
   "data": {
-    "access_token": "eyJhbGciOiJIUzI1NiIs...",
-    "token_type": "Bearer",
-    "expires_in": 3600,
-    "agent": {
-      "id": 1,
-      "name": "My AI Agent",
-      "permissions": ["proxy:read", "proxy:write", "session:manage", "billing:read"]
+    "token": "eyJhbGciOiJIUzI1NiIs...",
+    "user": {
+      "id": 1001,
+      "username": "your_username",
+      "is_admin": false,
+      "is_agent": true,
+      "balance": 1000,
+      "status": "active"
     }
   }
 }
@@ -62,33 +40,28 @@ curl -X POST "https://api.nexalayer.net/v1/auth/token" \
 
 </CodeGroup>
 
-### Use token
+## Use token
 
-| Header | Value |
-|--------|--------|
-| `Authorization` | `Bearer <access_token>` |
-
-### Refresh token
-
-Before expiry, call:
+Send the token on every authenticated request:
 
 ```bash
-curl -X POST "https://api.nexalayer.net/v1/auth/refresh" \
-  -H "Authorization: Bearer <current_token>"
+Authorization: Bearer <token>
 ```
 
-## Comparison
+Example:
 
-| | API Key | JWT |
-|--|--------|-----|
-| Setup | One header | Token exchange + refresh |
-| Lifetime | Long-lived | Short (e.g. 1 hour) |
-| Best for | Agents, scripts, backend | Web console, high-security flows |
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2" \
+  -H "Authorization: Bearer <token>"
+```
 
-## Security
+## Token errors
 
-- Store `api_key` and `api_secret` in environment variables or a secret manager; do not commit them.
-- Use HTTPS for all requests.
-- Rotate secret via `POST /account/rotate-secret` if compromised; API Key mode is unaffected.
+| HTTP | Message | Meaning |
+| --- | --- | --- |
+| 401 | 未提供认证令牌 | Missing `Authorization` header. |
+| 401 | 无效的认证令牌 | Token is invalid or expired. |
+| 401 | 用户不存在 | Token user no longer exists. |
+| 403 | 账号未激活，请先前往邮箱点击激活链接 | Account exists but is not active. |
 
-Next: [Accounts](/accounts) (register, info, rotate-secret).
+Store credentials and tokens in a secret manager or server-side environment variables. Do not expose them in frontend code or logs.

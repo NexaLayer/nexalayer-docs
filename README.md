@@ -1,20 +1,23 @@
-# NexaLayer Docs
+# IPProxy API Docs
 
-Documentation site for **NexaLayer** — The Network Execution Layer for AI Agents. Built with [Mintlify](https://mintlify.com).
+Documentation site for IPProxy public APIs, built with Mintlify.
 
-## Local development
+## Development
+
+Install Mintlify CLI if needed:
 
 ```bash
 npm i -g mintlify
+```
+
+Run locally from this directory:
+
+```bash
 mintlify dev
 ```
 
-## Structure
+## Production API
 
-- `docs/` — MDX pages (introduction, quickstart, authentication, sessions, billing, products, stats, API reference).
-- `mint.json` — Mintlify config; update `baseUrl` and nav as needed.
-
-## Links
-
-- Production: [docs.nexalayer.com](https://docs.nexalayer.net) (configure in Mintlify dashboard).
-- API base: `https://api.nexalayer.net/v1`.
+- API base: `https://api.wanyuagent.com/api`
+- Health: `https://api.wanyuagent.com/health`
+- Fingerprint browser API host: `api.wanyuagent.com`

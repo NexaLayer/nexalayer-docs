@@ -1,70 +1,33 @@
 ---
 title: Best practices
-description: "Session management, performance, and security. Base URL: https://api.nexalayer.net/v1"
+description: Recommended usage patterns for IPProxy public APIs. Base URL: https://api.wanyuagent.com/api
 ---
 
 # Best practices
 
-## Session management
+## Authentication
 
-### Do
+- Keep username, password, and Bearer tokens server-side.
+- Refresh the token by logging in again when the API returns `401`.
+- Do not embed tokens in fingerprint browser scripts that are visible to end users.
 
-- **Use Idempotency-Key** for create and renew to avoid duplicate orders on retries.
-- **Terminate** sessions when done: `POST /sessions/{session_id}/terminate`.
-- **Monitor usage** via `GET /sessions/{session_id}/usage`; act when usage is high (e.g. >80%).
-- **Limit concurrency** when creating many sessions (e.g. semaphore or queue).
+## Order creation
 
-### Avoid
+- Query products immediately before creating orders so `inventory`, `duration`, and price are current.
+- Use `product_no` as `poolId`.
+- Check balance before create and renew calls.
+- For agents, ensure `userId` belongs to the current agent.
+- After a create call fails or times out, query the order list before retrying to avoid duplicate orders.
 
-- Leaving sessions active indefinitely without cleanup.
-- Rotating on a fixed schedule regardless of success/failure — prefer rotating on errors (403, 429, captcha) or when telemetry recommends it.
-- Hardcoding `api_key` or `api_secret`; use environment variables or a secret manager.
-- Skipping telemetry — report success and errors so the system can suggest when to rotate.
+## Static proxy usage
 
-## Performance
+- Query `/open/app/static/order/list/v2` after creation to read final instance credentials.
+- Search by order number or IP when reconciling a user report.
+- Release resources only after confirming they are no longer in use.
+- For shared static products, pass the intended `projectId` and verify project inventory.
 
-| Practice | Description |
-|----------|-------------|
-| Reuse sessions | One session for many requests instead of creating per request |
-| Smart rotation | Use telemetry `recommendation` (e.g. `rotate_now`) rather than blind timed rotation |
-| Report telemetry | Enables better health and rotation advice |
-| Cache products | Product list changes infrequently; cache 5–10 minutes |
-| Connection pool | Use HTTP client connection pooling |
-| Respect rate limits | Read `X-RateLimit-*` headers and throttle to avoid 429 |
+## Operational checks
 
-## Security
-
-| Practice | Description |
-|----------|-------------|
-| Env for secrets | Store API key/secret in env or secret manager |
-| HTTPS only | All requests to `https://api.nexalayer.net/v1` |
-| Token refresh | If using JWT, refresh before expiry |
-| Monitor usage | Watch for unexpected API or session usage |
-
-## Example: rotate on recommendation
-
-After each request, report the outcome and optionally rotate when the API suggests it:
-
-```python
-# After request
-event_type = "success" if resp.status_code < 400 else "http_error"
-report = requests.post(
-    f"{BASE}/sessions/{session_id}/report-event",
-    json={
-        "event_type": event_type,
-        "status_code": resp.status_code,
-        "latency_ms": latency_ms,
-        "target_host": host,
-    },
-    headers=headers
-).json()["data"]
-rec = report["session_health"]["recommendation"]
-if rec == "rotate_now":
-    requests.post(
-        f"{BASE}/sessions/{session_id}/rotate",
-        json={"reason": f"http_{resp.status_code}"},
-        headers=headers
-    )
-```
-
-Next: [Architecture](/architecture), [Errors](/errors).
+- Keep an audit trail of request payloads, response `order_no`, and balance before/after order creation.
+- Use `order_no` filters when reconciling transactions.
+- Page through list APIs with `page` and `pageSize` / `page_size`; do not request more than 100 rows per page.
