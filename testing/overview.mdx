@@ -1,29 +1,29 @@
 ---
-title: Testing overview
-description: Test strategy for IPProxy public API integrations.
+title: 测试概览
+description: IPProxy 对外 API 集成测试策略。
 ---
 
-# Testing overview
+# 测试概览
 
-Use a staged test flow that exercises the same endpoints your production integration will call.
+建议按生产集成会调用的真实接口设计测试流程。
 
-## Recommended layers
+## 推荐测试层级
 
-| Layer | Scope |
+| 层级 | 范围 |
 | --- | --- |
-| Smoke | Login, dashboard, product query, and static order list. |
-| Order flow | Create a small dynamic or static order, then query order status. |
-| Permission | Confirm agents can only operate on permitted sub-users. |
-| Billing | Compare balance and transaction records before and after an order. |
-| Error handling | Missing token, invalid token, insufficient balance, invalid product. |
+| 冒烟测试 | 登录、仪表盘、产品查询、静态订单列表。 |
+| 订单流程 | 创建小规格动态或静态订单，然后查询订单状态。 |
+| 权限测试 | 确认代理商只能操作自己的下级用户。 |
+| 账务测试 | 对比下单前后的余额和交易记录。 |
+| 错误处理 | 缺少 token、无效 token、余额不足、产品无效。 |
 
-## Environment
+## 环境
 
-- Base URL: `https://api.wanyuagent.com/api`
-- Health URL: `https://api.wanyuagent.com/health`
-- Use a dedicated test account and test sub-user.
-- Avoid production-sized orders during automated tests.
+- 基础地址：`https://api.wanyuagent.com/api`
+- 健康检查：`https://api.wanyuagent.com/health`
+- 使用专用测试账号和测试下级用户。
+- 自动化测试中避免创建生产规格订单。
 
-## Cleanup
+## 清理
 
-For static proxy tests, release test resources when finished where the product policy allows it.
+静态代理测试结束后，如果产品策略允许，请释放测试资源。

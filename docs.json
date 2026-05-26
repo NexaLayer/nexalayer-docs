@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "theme": "mint",
-  "name": "IPProxy API Docs",
+  "name": "IPProxy API 文档",
   "logo": {
     "dark": "/logo.svg",
     "light": "/logo.svg"
@@ -13,7 +13,7 @@
   "navigation": {
     "groups": [
       {
-        "group": "Getting Started",
+        "group": "快速开始",
         "pages": [
           "introduction",
           "quickstart",
@@ -22,13 +22,13 @@
         ]
       },
       {
-        "group": "Products & Regions",
+        "group": "产品与地区",
         "pages": [
           "products"
         ]
       },
       {
-        "group": "Orders",
+        "group": "订单",
         "pages": [
           "sessions/overview",
           "sessions/dynamic",
@@ -38,7 +38,7 @@
         ]
       },
       {
-        "group": "Billing & Records",
+        "group": "账单与记录",
         "pages": [
           "billing/balance",
           "billing/transactions",
@@ -46,7 +46,7 @@
         ]
       },
       {
-        "group": "Reference",
+        "group": "参考",
         "pages": [
           "api-reference/openapi",
           "errors",

@@ -1,26 +1,26 @@
 ---
-title: Recharge
-description: Recharge and payment-related APIs for IPProxy accounts. Base URL: https://api.wanyuagent.com/api
+title: 充值
+description: IPProxy 账户充值和支付相关接口说明。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Recharge
+# 充值
 
-Recharge and payment flows are account-specific. Use the transaction APIs to audit recharge and adjustment records, and use the dashboard balance API to verify final balance.
+充值和支付流程与账号配置有关。请使用交易记录接口审计充值和调整记录，并使用余额接口确认最终余额。
 
-## Related endpoints
+## 相关接口
 
-| Method | Endpoint | Description |
+| 方法 | 接口 | 说明 |
 | --- | --- | --- |
-| `GET` | `/transaction/agent/transactions` | Recharge and adjustment records. |
-| `GET` | `/open/app/user/transactions` | Consumption records. |
-| `GET` | `/open/app/dashboard/info/v2` | Current balance and dashboard summary. |
-| `GET` | `/open/app/user/balance/current` | Current authenticated user balance. |
+| `GET` | `/transaction/agent/transactions` | 充值和余额调整记录。 |
+| `GET` | `/open/app/user/transactions` | 消费记录。 |
+| `GET` | `/open/app/dashboard/info/v2` | 当前余额和仪表盘概览。 |
+| `GET` | `/open/app/user/balance/current` | 当前登录用户余额。 |
 
-## Recommended verification flow
+## 推荐核对流程
 
-1. Query current balance.
-2. Complete the recharge or balance adjustment through the agreed payment process.
-3. Query `/transaction/agent/transactions` to confirm the record.
-4. Query balance again to confirm the updated amount.
+1. 查询当前余额。
+2. 通过约定支付流程完成充值或余额调整。
+3. 查询 `/transaction/agent/transactions` 确认记录。
+4. 再次查询余额，确认金额已更新。
 
-For online payment integrations, contact IPProxy support to confirm which payment endpoint is enabled for your account and environment.
+如果需要在线支付集成，请先联系 IPProxy 支持确认当前账号和环境启用的支付接口。

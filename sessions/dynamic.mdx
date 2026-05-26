@@ -1,13 +1,13 @@
 ---
-title: Dynamic orders
-description: Create traffic-based dynamic proxy orders. Base URL: https://api.wanyuagent.com/api
+title: 动态订单
+description: 创建按流量使用的动态代理订单。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Dynamic orders
+# 动态订单
 
-Dynamic proxy orders are traffic-based resources for rotating proxy usage.
+动态代理订单用于购买按流量使用的动态代理资源。
 
-## Create dynamic order
+## 创建动态订单
 
 ```bash
 curl -X POST "https://api.wanyuagent.com/api/open/app/order/create/v2" \
@@ -27,28 +27,28 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/order/create/v2" \
   }'
 ```
 
-## Fields
+## 字段说明
 
-| Field | Type | Required | Description |
+| 字段 | 类型 | 必填 | 说明 |
 | --- | --- | :---: | --- |
-| `orderType` | string | Yes | Use `dynamic_proxy`. |
-| `poolId` | string | Yes | Dynamic product number. |
-| `trafficAmount` | number | Yes | Traffic quantity. |
-| `userId` | number | Yes | Target user ID. |
-| `unitPrice` | number | Yes | Unit price. |
-| `totalAmount` | number | Yes | Total amount. |
-| `remark` | string | No | Order note. |
+| `orderType` | string | 是 | 动态代理使用 `dynamic_proxy`。 |
+| `poolId` | string | 是 | 动态代理产品编号。 |
+| `trafficAmount` | number | 是 | 流量数量。 |
+| `userId` | number | 是 | 目标用户 ID。 |
+| `unitPrice` | number | 是 | 单价。 |
+| `totalAmount` | number | 是 | 总金额。 |
+| `remark` | string | 否 | 订单备注。 |
 
-## Flow usage
+## 流量查询
 
-For user-level remaining dynamic flow, use:
+查询用户所有产品的动态流量：
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/user/1001/products-flow" \
   -H "Authorization: Bearer <token>"
 ```
 
-For a specific product:
+查询指定产品剩余流量：
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/user/1001/remaining-flow/dynamic_ipweb" \

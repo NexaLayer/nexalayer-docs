@@ -1,19 +1,19 @@
 ---
-title: Smoke tests
-description: Smoke test checklist for IPProxy APIs.
+title: 冒烟测试
+description: IPProxy API 冒烟测试清单。
 ---
 
-# Smoke tests
+# 冒烟测试
 
-Run these checks before enabling an integration.
+正式启用集成前，建议先执行以下检查：
 
-1. `GET https://api.wanyuagent.com/health` returns healthy status.
-2. `POST /api/auth/login` returns `code: 0` and `data.token`.
-3. `GET /api/open/app/dashboard/info/v2` returns current account data.
-4. `POST /api/open/app/product/query/v2` returns available products.
-5. `GET /api/open/app/product/area/v2` returns supported areas.
-6. `GET /api/open/app/static/order/list/v2?page=1&pageSize=10` returns paginated data.
-7. `GET /api/open/app/user/transactions?page=1&page_size=10` returns consumption records.
-8. Missing Bearer token on a protected endpoint returns `401`.
+1. `GET https://api.wanyuagent.com/health` 返回健康状态。
+2. `POST /api/auth/login` 返回 `code: 0` 和 `data.token`。
+3. `GET /api/open/app/dashboard/info/v2` 返回当前账号数据。
+4. `POST /api/open/app/product/query/v2` 返回可用产品。
+5. `GET /api/open/app/product/area/v2` 返回支持地区。
+6. `GET /api/open/app/static/order/list/v2?page=1&pageSize=10` 返回分页数据。
+7. `GET /api/open/app/user/transactions?page=1&page_size=10` 返回消费记录。
+8. 保护接口缺少 Bearer Token 时返回 `401`。
 
-For order-creation smoke tests, use the smallest permitted product and confirm balance before sending the request.
+如果冒烟测试包含创建订单，请选择允许的最小规格产品，并在请求前确认余额。

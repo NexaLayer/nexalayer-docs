@@ -1,13 +1,13 @@
 ---
-title: Release orders
-description: Release or cancel static proxy resources. Base URL: https://api.wanyuagent.com/api
+title: 释放订单
+description: 释放或取消静态代理资源。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Release orders
+# 释放订单
 
-Use the cancel endpoint to release a static proxy order when it is no longer needed.
+不再需要静态代理订单时，可以使用取消接口释放资源。
 
-## Endpoint
+## 接口
 
 ```bash
 curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/STA202605260001abc123/cancel" \
@@ -18,11 +18,11 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/STA2026052600
   }'
 ```
 
-Replace `STA202605260001abc123` with the actual `order_no`.
+将 `STA202605260001abc123` 替换为真实 `order_no`。
 
-## Notes
+## 注意事项
 
-- Release behavior depends on the product and order status.
-- Released instances are no longer usable.
-- Always query the order list after release to verify final status.
-- Refund or remaining-time handling follows the configured product policy.
+- 释放行为取决于产品和订单状态。
+- 已释放的实例不能继续使用。
+- 释放后请再次查询订单列表确认最终状态。
+- 是否退款或如何处理剩余时长，以产品配置策略为准。

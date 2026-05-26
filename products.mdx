@@ -1,13 +1,13 @@
 ---
-title: Products
-description: Query IPProxy products, regions, inventory, and pricing. Base URL: https://api.wanyuagent.com/api
+title: 产品
+description: 查询 IPProxy 产品、地区、库存和价格。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Products
+# 产品
 
-Products define which proxy resource can be purchased. Use product query APIs before creating orders so you can pick the correct `poolId`, region, duration, IP count, and price.
+产品定义了可购买的代理资源。创建订单前，请先查询产品，确认正确的 `poolId`、地区、时长、IP 数量和价格。
 
-## Product query
+## 查询产品
 
 ```bash
 curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
@@ -18,42 +18,42 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
   }'
 ```
 
-Useful response fields:
+常用响应字段：
 
-| Field | Description |
+| 字段 | 说明 |
 | --- | --- |
-| `product_no` | Product number. Use as `poolId` when creating orders. |
-| `product_name` | Display name. |
-| `proxy_type` | Proxy category. Common values: `103` static, `104` dynamic. |
-| `inventory` | Available quantity. |
-| `country_code`, `state_code`, `city_code` | Location fields. |
-| `duration`, `unit` | Supported duration configuration. |
-| `global_price` | Default sales price where configured. |
-| `band_width`, `band_width_price` | Bandwidth and bandwidth pricing where applicable. |
-| `cidr_info` | CIDR-level inventory and pricing where applicable. |
-| `project_list` | Project inventory for shared static proxy products. |
+| `product_no` | 产品编号，创建订单时作为 `poolId` 使用。 |
+| `product_name` | 产品显示名称。 |
+| `proxy_type` | 代理类型，常见值：`103` 静态，`104` 动态。 |
+| `inventory` | 可用库存。 |
+| `country_code`、`state_code`、`city_code` | 位置字段。 |
+| `duration`、`unit` | 支持的时长配置。 |
+| `global_price` | 已配置的默认销售价格。 |
+| `band_width`、`band_width_price` | 带宽和带宽价格。 |
+| `cidr_info` | 支持 CIDR 产品时的网段库存和价格。 |
+| `project_list` | 共享静态代理产品的项目库存。 |
 
-## Region query
+## 查询地区
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%20York%20City_2" \
   -H "Authorization: Bearer <token>"
 ```
 
-Use the returned region/country/city codes as `regionCode`, `countryCode`, and `cityCode` in static order requests.
+返回的区域、国家、城市代码可用于静态订单请求中的 `regionCode`、`countryCode` 和 `cityCode`。
 
-## Common product types
+## 常见产品类型
 
-| Product | Typical use | Order endpoint |
+| 产品 | 典型用途 | 下单接口 |
 | --- | --- | --- |
-| Static proxy | Fixed IP, fixed duration, stable proxy credentials | `POST /open/app/static/order/create/v2` |
-| Dynamic proxy | Traffic-based rotating proxy resources | `POST /open/app/order/create/v2` |
-| Shared static proxy | Static product with `project_list` / project inventory | `POST /open/app/static/order/create/v2` with `projectId` |
+| 静态代理 | 固定 IP、固定时长、稳定代理账号密码 | `POST /open/app/static/order/create/v2` |
+| 动态代理 | 按流量使用的动态代理资源 | `POST /open/app/order/create/v2` |
+| 共享静态代理 | 带 `project_list` / 项目库存的静态产品 | `POST /open/app/static/order/create/v2`，并传入 `projectId` |
 
-## Selecting a product
+## 选择产品建议
 
-1. Query products by `proxyType`.
-2. Check `inventory` and region fields.
-3. Confirm duration rules. For normal static products, `unit` supports `1` day, `3` month, and `4` year; valid durations depend on product configuration.
-4. Use `product_no` as `poolId` when creating the order.
-5. If the product has `project_list`, choose a `projectId` with sufficient inventory.
+1. 按 `proxyType` 查询产品。
+2. 检查 `inventory` 和地区字段。
+3. 确认时长规则。普通静态产品中，`unit` 支持 `1` 天、`3` 月、`4` 年，具体 `duration` 取值以产品配置为准。
+4. 创建订单时使用 `product_no` 作为 `poolId`。
+5. 如果产品包含 `project_list`，请选择库存充足的 `projectId`。

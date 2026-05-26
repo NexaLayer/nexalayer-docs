@@ -1,20 +1,20 @@
 ---
-title: Health
-description: Health and status checks for IPProxy integrations.
+title: 健康检查
+description: IPProxy 集成中的健康和状态检查。
 ---
 
-# Health
+# 健康检查
 
-For API-level health, call:
+API 服务健康检查：
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/health"
 ```
 
-For account and resource health, use:
+账户和资源状态可使用：
 
 - `GET /api/open/app/dashboard/info/v2`
 - `GET /api/open/app/static/order/statistics`
 - `GET /api/open/app/static/order/list/v2`
 
-These endpoints provide the practical status information needed for integrations and reconciliation.
+这些接口能提供集成和对账所需的主要状态信息。

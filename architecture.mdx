@@ -1,52 +1,52 @@
 ---
-title: Architecture
-description: IPProxy public API architecture and responsibility boundaries.
+title: 架构
+description: IPProxy 对外 API 架构和职责边界。
 ---
 
-# Architecture
+# 架构
 
-IPProxy public APIs are served by the IPProxy backend. There is no separate agent session gateway in the public contract; clients call IPProxy order, product, user, balance, and transaction APIs directly.
+IPProxy 对外 API 由 IPProxy 后端直接提供。当前公开契约中没有额外的会话网关层，调用方直接访问 IPProxy 的订单、产品、用户、余额和交易记录接口。
 
 ```text
-Client / Partner System / Fingerprint Browser
+客户系统 / 合作方系统 / 指纹浏览器
         |
-        | HTTPS + Bearer token
+        | HTTPS + Bearer Token
         v
 https://api.wanyuagent.com/api
         |
         v
-IPProxy Backend
-  - Auth and user permissions
-  - Product inventory and pricing
-  - Dynamic and static order creation
-  - Static proxy instances
-  - Balance and transaction records
-  - Supplier integrations where needed
+IPProxy 后端
+  - 登录认证和用户权限
+  - 产品库存和价格
+  - 动态/静态订单创建
+  - 静态代理实例
+  - 余额和交易记录
+  - 必要时对接上游供应商
 ```
 
-## Responsibility split
+## 职责划分
 
-| Area | IPProxy API responsibility |
+| 模块 | IPProxy API 职责 |
 | --- | --- |
-| Authentication | Login and JWT Bearer validation. |
-| Users | Admin/agent sub-user creation and permission checks. |
-| Products | Product, region, inventory, project, and CIDR data. |
-| Orders | Dynamic/static order creation, listing, renewal, and release. |
-| Billing | Balance, consumption records, recharge/adjustment records. |
-| Proxy access | Static instance credentials and whitelist management. |
+| 认证 | 登录和 JWT Bearer Token 校验。 |
+| 用户 | 管理员/代理商创建下级用户和权限检查。 |
+| 产品 | 产品、地区、库存、项目和 CIDR 数据。 |
+| 订单 | 动态/静态订单创建、查询、续费和释放。 |
+| 账务 | 余额、消费记录、充值/调整记录。 |
+| 代理访问 | 静态实例凭证和白名单管理。 |
 
-## Request flow
+## 请求流程
 
-1. Client logs in with `POST /auth/login`.
-2. Client stores `data.token` and sends it as `Authorization: Bearer <token>`.
-3. Client queries products and balance.
-4. Client creates an order for a permitted `userId`.
-5. Client queries order list/details to retrieve proxy instances and reconcile status.
-6. Client queries transactions for billing audit.
+1. 调用方使用 `POST /auth/login` 登录。
+2. 调用方保存 `data.token`，并在后续请求中使用 `Authorization: Bearer <token>`。
+3. 查询产品和余额。
+4. 为有权限的 `userId` 创建订单。
+5. 查询订单列表或详情，获取代理实例并核对状态。
+6. 查询交易记录进行账务审计。
 
-## Domain
+## 域名
 
-Use the production API domain for both normal server integrations and fingerprint browser integrations:
+普通服务端集成和指纹浏览器集成都使用生产 API 域名：
 
 ```text
 https://api.wanyuagent.com/api

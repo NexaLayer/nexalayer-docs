@@ -1,13 +1,13 @@
 ---
-title: Quickstart
-description: Log in, query products, create an IPProxy order, and retrieve proxy information. Base URL: https://api.wanyuagent.com/api
+title: 快速开始
+description: 登录、查询产品、创建 IPProxy 订单并获取代理信息。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Quickstart
+# 快速开始
 
-This guide shows the typical IPProxy API flow: login, check balance, query products, create an order, and read order details.
+本页演示典型 API 调用流程：登录、检查余额、查询产品、创建订单、查询订单代理信息。
 
-## 1. Log in
+## 1. 登录
 
 ```bash
 curl -X POST "https://api.wanyuagent.com/api/auth/login" \
@@ -18,23 +18,23 @@ curl -X POST "https://api.wanyuagent.com/api/auth/login" \
   }'
 ```
 
-Save `data.token` from the response.
+保存响应中的 `data.token`。
 
 ```bash
 export IPPROXY_TOKEN="<token>"
 export IPPROXY_BASE="https://api.wanyuagent.com/api"
 ```
 
-## 2. Check account balance
+## 2. 查询账户余额
 
 ```bash
 curl -X GET "$IPPROXY_BASE/open/app/dashboard/info/v2" \
   -H "Authorization: Bearer $IPPROXY_TOKEN"
 ```
 
-The response includes current account balance and resource statistics for the authenticated user.
+响应会返回当前账号的余额和资源统计。
 
-## 3. Query products
+## 3. 查询产品
 
 ```bash
 curl -X POST "$IPPROXY_BASE/open/app/product/query/v2" \
@@ -45,9 +45,9 @@ curl -X POST "$IPPROXY_BASE/open/app/product/query/v2" \
   }'
 ```
 
-Use the returned `product_no` as `poolId` when creating an order.
+返回结果中的 `product_no` 可作为创建订单时的 `poolId`。
 
-## 4. Create a static proxy order
+## 4. 创建静态代理订单
 
 ```bash
 curl -X POST "$IPPROXY_BASE/open/app/static/order/create/v2" \
@@ -71,23 +71,23 @@ curl -X POST "$IPPROXY_BASE/open/app/static/order/create/v2" \
   }'
 ```
 
-The response returns the created order, including `order_no`. Static proxy instances are available from the static order list or order detail APIs.
+响应会返回创建后的订单信息，其中包括 `order_no`。静态代理实例可通过静态订单列表或订单详情接口查询。
 
-## 5. List static orders and proxy instances
+## 5. 查询静态订单和代理实例
 
 ```bash
 curl -X GET "$IPPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10" \
   -H "Authorization: Bearer $IPPROXY_TOKEN"
 ```
 
-You can search by order number, IP, username, password, or region:
+也可以按订单号、IP、用户名、密码或地区搜索：
 
 ```bash
 curl -X GET "$IPPROXY_BASE/open/app/static/order/list/v2?search=192.0.2.10&page=1&pageSize=10" \
   -H "Authorization: Bearer $IPPROXY_TOKEN"
 ```
 
-## 6. Create a dynamic proxy order
+## 6. 创建动态代理订单
 
 ```bash
 curl -X POST "$IPPROXY_BASE/open/app/order/create/v2" \
@@ -107,14 +107,14 @@ curl -X POST "$IPPROXY_BASE/open/app/order/create/v2" \
   }'
 ```
 
-## Common next calls
+## 常用后续接口
 
-| Task | Endpoint |
+| 任务 | 接口 |
 | --- | --- |
-| Create sub-user | `POST /open/app/user/v2` |
-| Query current balance | `GET /open/app/user/balance/current` |
-| Query regions | `GET /open/app/product/area/v2` |
-| Renew static order | `POST /open/app/static/order/renew` |
-| Release static order | `POST /open/app/static/order/{order_no}/cancel` |
-| Add IP whitelist | `POST /open/app/proxy/addIpWhiteList/v2` |
-| Transaction records | `GET /open/app/user/transactions` |
+| 创建下级用户 | `POST /open/app/user/v2` |
+| 查询当前余额 | `GET /open/app/user/balance/current` |
+| 查询地区 | `GET /open/app/product/area/v2` |
+| 静态订单续费 | `POST /open/app/static/order/renew` |
+| 释放静态订单 | `POST /open/app/static/order/{order_no}/cancel` |
+| 添加 IP 白名单 | `POST /open/app/proxy/addIpWhiteList/v2` |
+| 查询交易记录 | `GET /open/app/user/transactions` |

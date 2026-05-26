@@ -1,38 +1,38 @@
 ---
-title: Stats
-description: IPProxy dashboard, resource, and order statistics APIs. Base URL: https://api.wanyuagent.com/api
+title: 统计
+description: IPProxy 仪表盘、资源和订单统计接口。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Stats
+# 统计
 
-Use dashboard and order-statistics endpoints for account and resource summaries.
+通过仪表盘和订单统计接口查询账号与资源概览。
 
-## Dashboard summary
+## 仪表盘概览
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2" \
   -H "Authorization: Bearer <token>"
 ```
 
-Admins can pass `target_user_id` where permitted.
+管理员在权限允许时可以传入 `target_user_id`。
 
-## Static order statistics
+## 静态订单统计
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/statistics" \
   -H "Authorization: Bearer <token>"
 ```
 
-The response includes counts such as total, active, processing, pending, expired, cancelled, failed, expiring soon, and cooling-period orders.
+响应包含总数、活跃、处理中、待处理、已过期、已取消、失败、即将到期、冷却期等状态数量。
 
-## Static resource stats
+## 静态资源统计
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/static/resource/stats" \
   -H "Authorization: Bearer <token>"
 ```
 
-## Dynamic resource stats
+## 动态资源统计
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/dynamic/resource/stats?productNo=dynamic_ipweb" \

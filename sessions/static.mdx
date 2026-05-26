@@ -1,13 +1,13 @@
 ---
-title: Static orders
-description: Create and query fixed IP proxy orders. Base URL: https://api.wanyuagent.com/api
+title: 静态订单
+description: 创建和查询固定 IP 代理订单。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Static orders
+# 静态订单
 
-Static proxy orders provide fixed IP resources for a selected product, region, duration, and IP count.
+静态代理订单用于购买固定 IP 资源，需要指定产品、地区、时长和 IP 数量。
 
-## Create static order
+## 创建静态订单
 
 ```bash
 curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create/v2" \
@@ -31,34 +31,34 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create/v2" \
   }'
 ```
 
-## Duration rules
+## 时长规则
 
-| `unit` | Meaning | Common valid `duration` values |
+| `unit` | 含义 | 常见 `duration` |
 | --- | --- | --- |
-| `1` | Day | `30` for normal static products; some static resource products support `30`, `90`, `365`. |
-| `3` | Month | `1`, `3`, `6`, `12`; some static resource products support `1`, `3`, `12`. |
-| `4` | Year | `1`. |
+| `1` | 天 | 普通静态产品通常为 `30`；部分静态资源产品支持 `30`、`90`、`365`。 |
+| `3` | 月 | `1`、`3`、`6`、`12`；部分静态资源产品支持 `1`、`3`、`12`。 |
+| `4` | 年 | `1`。 |
 
-## Optional static fields
+## 可选字段
 
-| Field | Description |
+| 字段 | 说明 |
 | --- | --- |
-| `cidrBlocks` | Array of `{ "cidr": "x.x.x.x/yy", "count": 1 }` for CIDR-based products. |
-| `assignedIp` | Request one specific IP. |
-| `assignedIpList` | Request multiple specific IPs. |
-| `projectId` | Project code for shared static products. |
-| `extBandWidth` | Additional bandwidth. |
-| `bandWidthPrice` | Bandwidth price. |
-| `bridgePrice` | Bridge fee. |
+| `cidrBlocks` | CIDR 产品可传 `{ "cidr": "x.x.x.x/yy", "count": 1 }` 数组。 |
+| `assignedIp` | 指定单个 IP。 |
+| `assignedIpList` | 指定多个 IP。 |
+| `projectId` | 共享静态代理产品的项目代码。 |
+| `extBandWidth` | 额外带宽。 |
+| `bandWidthPrice` | 带宽价格。 |
+| `bridgePrice` | 桥接费用。 |
 
-## List static orders
+## 查询静态订单
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/list/v2?page=1&pageSize=10" \
   -H "Authorization: Bearer <token>"
 ```
 
-Search examples:
+搜索示例：
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/list/v2?search=STA2026&page=1&pageSize=10" \
@@ -70,4 +70,4 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/list/v2?region
   -H "Authorization: Bearer <token>"
 ```
 
-The list response includes order fields and, where available, `instances` containing proxy IP, port, username, password, status, and expiration data.
+列表响应会返回订单字段；如果已有实例，也会包含 `instances`，其中包括代理 IP、端口、用户名、密码、状态和到期时间等信息。

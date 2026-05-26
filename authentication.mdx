@@ -1,17 +1,17 @@
 ---
-title: Authentication
-description: Use IPProxy username/password login to obtain a Bearer token. Base URL: https://api.wanyuagent.com/api
+title: 认证
+description: 使用 IPProxy 用户名和密码登录并获取 Bearer Token。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Authentication
+# 认证
 
-IPProxy public APIs use JWT Bearer authentication. First call the login endpoint with your IPProxy username and password, then send the returned token in the `Authorization` header.
+IPProxy 对外 API 使用 JWT Bearer Token 认证。先使用用户名和密码调用登录接口，之后在需要认证的请求中携带返回的 token。
 
-## Login
+## 登录
 
 <CodeGroup>
 
-```bash Request
+```bash 请求
 curl -X POST "https://api.wanyuagent.com/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
@@ -20,7 +20,7 @@ curl -X POST "https://api.wanyuagent.com/api/auth/login" \
   }'
 ```
 
-```json Response
+```json 响应
 {
   "code": 0,
   "message": "登录成功",
@@ -40,28 +40,28 @@ curl -X POST "https://api.wanyuagent.com/api/auth/login" \
 
 </CodeGroup>
 
-## Use token
+## 使用 Token
 
-Send the token on every authenticated request:
+所有需要认证的接口都需要在请求头中携带：
 
-```bash
+```text
 Authorization: Bearer <token>
 ```
 
-Example:
+示例：
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2" \
   -H "Authorization: Bearer <token>"
 ```
 
-## Token errors
+## 常见认证错误
 
-| HTTP | Message | Meaning |
+| HTTP | 提示 | 说明 |
 | --- | --- | --- |
-| 401 | 未提供认证令牌 | Missing `Authorization` header. |
-| 401 | 无效的认证令牌 | Token is invalid or expired. |
-| 401 | 用户不存在 | Token user no longer exists. |
-| 403 | 账号未激活，请先前往邮箱点击激活链接 | Account exists but is not active. |
+| 401 | 未提供认证令牌 | 未携带 `Authorization` 请求头。 |
+| 401 | 无效的认证令牌 | Token 无效或已过期。 |
+| 401 | 用户不存在 | Token 对应用户已不存在。 |
+| 403 | 账号未激活，请先前往邮箱点击激活链接 | 账号存在但未激活。 |
 
-Store credentials and tokens in a secret manager or server-side environment variables. Do not expose them in frontend code or logs.
+请把账号、密码和 token 保存在服务端或密钥管理系统中，不要写入前端代码或日志。

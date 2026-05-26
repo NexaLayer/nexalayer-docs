@@ -1,36 +1,36 @@
 ---
-title: Integration tests
-description: Integration tests for IPProxy order and billing flows.
+title: 集成测试
+description: IPProxy 订单和账务流程集成测试。
 ---
 
-# Integration tests
+# 集成测试
 
-Integration tests should verify that API calls produce the expected IPProxy records.
+集成测试应验证 API 调用能产生预期的 IPProxy 记录。
 
-## Static order flow
+## 静态订单流程
 
-1. Login.
-2. Query products and choose a product with sufficient inventory.
-3. Query balance.
-4. Create a static order with `POST /api/open/app/static/order/create/v2`.
-5. Save `order_no`.
-6. Query `/api/open/app/static/order/list/v2?search=<order_no>`.
-7. Assert the order exists and proxy instances are returned when available.
-8. Query `/api/open/app/user/transactions?order_no=<order_no>`.
-9. Verify consumption and balance changes.
+1. 登录。
+2. 查询产品，选择库存充足的产品。
+3. 查询余额。
+4. 使用 `POST /api/open/app/static/order/create/v2` 创建静态订单。
+5. 保存 `order_no`。
+6. 查询 `/api/open/app/static/order/list/v2?search=<order_no>`。
+7. 断言订单存在，并在可用时返回代理实例。
+8. 查询 `/api/open/app/user/transactions?order_no=<order_no>`。
+9. 核对消费记录和余额变化。
 
-## Dynamic order flow
+## 动态订单流程
 
-1. Login.
-2. Query dynamic product data.
-3. Create a dynamic order with `POST /api/open/app/order/create/v2`.
-4. Assert the returned order has `order_no`, `pool_type`, amount, and active status.
-5. Query transaction records for the order.
+1. 登录。
+2. 查询动态产品数据。
+3. 使用 `POST /api/open/app/order/create/v2` 创建动态订单。
+4. 断言响应中包含 `order_no`、`pool_type`、金额和有效状态。
+5. 按订单号查询交易记录。
 
-## Permission flow
+## 权限流程
 
-Use an agent account and verify:
+使用代理商账号验证：
 
-- The agent can create orders for its own sub-users.
-- The agent cannot create orders for unrelated users.
-- Normal users cannot query other users' transaction records.
+- 代理商可以为自己的下级用户创建订单。
+- 代理商不能为无关用户创建订单。
+- 普通用户不能查询其他用户的交易记录。

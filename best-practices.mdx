@@ -1,33 +1,33 @@
 ---
-title: Best practices
-description: Recommended usage patterns for IPProxy public APIs. Base URL: https://api.wanyuagent.com/api
+title: 最佳实践
+description: IPProxy 对外 API 推荐使用方式。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Best practices
+# 最佳实践
 
-## Authentication
+## 认证
 
-- Keep username, password, and Bearer tokens server-side.
-- Refresh the token by logging in again when the API returns `401`.
-- Do not embed tokens in fingerprint browser scripts that are visible to end users.
+- 用户名、密码和 Bearer Token 应保存在服务端。
+- API 返回 `401` 时，重新登录获取新 token。
+- 不要把 token 暴露在终端用户可见的指纹浏览器脚本中。
 
-## Order creation
+## 创建订单
 
-- Query products immediately before creating orders so `inventory`, `duration`, and price are current.
-- Use `product_no` as `poolId`.
-- Check balance before create and renew calls.
-- For agents, ensure `userId` belongs to the current agent.
-- After a create call fails or times out, query the order list before retrying to avoid duplicate orders.
+- 创建订单前即时查询产品，确保 `inventory`、`duration` 和价格是最新的。
+- 使用 `product_no` 作为 `poolId`。
+- 创建和续费前先检查余额。
+- 代理商下单时，确保 `userId` 属于当前代理商。
+- 创建请求失败或超时时，先查询订单列表确认是否已生成订单，再决定是否重试。
 
-## Static proxy usage
+## 静态代理使用
 
-- Query `/open/app/static/order/list/v2` after creation to read final instance credentials.
-- Search by order number or IP when reconciling a user report.
-- Release resources only after confirming they are no longer in use.
-- For shared static products, pass the intended `projectId` and verify project inventory.
+- 创建后查询 `/open/app/static/order/list/v2` 获取最终实例凭证。
+- 用户反馈问题时，可按订单号或 IP 搜索定位。
+- 释放资源前确认业务不再使用该代理。
+- 共享静态产品需要传入正确的 `projectId`，并提前确认项目库存。
 
-## Operational checks
+## 运维核对
 
-- Keep an audit trail of request payloads, response `order_no`, and balance before/after order creation.
-- Use `order_no` filters when reconciling transactions.
-- Page through list APIs with `page` and `pageSize` / `page_size`; do not request more than 100 rows per page.
+- 记录请求参数、响应 `order_no`、扣费前后余额，方便审计。
+- 对账时使用 `order_no` 过滤交易记录。
+- 列表接口使用 `page` 和 `pageSize` / `page_size` 分页，每页不要超过 100 条。

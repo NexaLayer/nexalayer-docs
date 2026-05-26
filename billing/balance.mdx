@@ -1,37 +1,37 @@
 ---
-title: Balance
-description: Query IPProxy account balance. Base URL: https://api.wanyuagent.com/api
+title: 余额
+description: 查询 IPProxy 账户余额。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Balance
+# 余额
 
-Check balance before creating or renewing orders.
+创建订单或续费前，请先确认账户余额。
 
-## Dashboard balance
+## 仪表盘余额
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2" \
   -H "Authorization: Bearer <token>"
 ```
 
-This endpoint returns the current user's dashboard summary, including balance and resource statistics.
+该接口返回当前用户的仪表盘概览，其中包含余额和资源统计。
 
-## Current user balance
+## 当前用户余额
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/user/balance/current" \
   -H "Authorization: Bearer <token>"
 ```
 
-Use this endpoint when you only need the authenticated user's balance.
+只需要当前登录用户余额时，使用该接口。
 
-## Admin target user
+## 管理员查询指定用户
 
-Administrators can query another user through dashboard APIs where permitted:
+管理员在权限允许时可以通过仪表盘接口查询指定用户：
 
 ```bash
 curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2?target_user_id=1001" \
   -H "Authorization: Bearer <token>"
 ```
 
-If balance is insufficient, order creation or renewal returns a non-zero `code` or an HTTP error with a message such as `用户余额不足` or `目标用户余额不足`.
+如果余额不足，创建订单或续费接口会返回非 0 `code` 或 HTTP 错误，提示通常为 `用户余额不足` 或 `目标用户余额不足`。

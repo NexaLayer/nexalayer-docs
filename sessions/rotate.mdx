@@ -1,16 +1,16 @@
 ---
-title: Rotation
-description: Dynamic proxy rotation notes for IPProxy.
+title: 轮换
+description: IPProxy 动态代理轮换说明。
 ---
 
-# Rotation
+# 轮换
 
-IPProxy does not expose a session-style rotate abstraction in the public API. Dynamic proxy rotation is handled by the dynamic proxy product and extraction/access method configured for your account.
+IPProxy 当前对外 API 不提供会话式的 rotate 抽象。动态代理的轮换能力由具体动态代理产品和账号已开通的提取/访问方式决定。
 
-For public API integrations, use:
+公开 API 集成中通常使用：
 
-- `POST /open/app/order/create/v2` to create dynamic proxy orders.
-- Dynamic product and flow APIs to check available products and usage.
-- Product-specific proxy extraction/access instructions provided with your account.
+- `POST /open/app/order/create/v2` 创建动态代理订单。
+- 动态产品和流量接口查询可用产品与使用量。
+- 根据账号开通的产品说明获取动态代理提取或访问方式。
 
-Contact IPProxy support if your integration needs a dedicated dynamic proxy extraction endpoint enabled.
+如果你的集成需要专门的动态代理提取接口，请联系 IPProxy 支持开通并确认接口参数。

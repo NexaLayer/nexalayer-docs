@@ -1,23 +1,23 @@
-# IPProxy API Docs
+# IPProxy API 文档
 
-Documentation site for IPProxy public APIs, built with Mintlify.
+这是 IPProxy 对外 API 的 Mintlify 文档站。
 
-## Development
+## 本地开发
 
-Install Mintlify CLI if needed:
+如需安装 Mintlify CLI：
 
 ```bash
 npm i -g mintlify
 ```
 
-Run locally from this directory:
+在当前目录启动本地预览：
 
 ```bash
 mintlify dev
 ```
 
-## Production API
+## 生产 API
 
-- API base: `https://api.wanyuagent.com/api`
-- Health: `https://api.wanyuagent.com/health`
-- Fingerprint browser API host: `api.wanyuagent.com`
+- API 基础地址：`https://api.wanyuagent.com/api`
+- 健康检查：`https://api.wanyuagent.com/health`
+- 指纹浏览器 API 域名：`api.wanyuagent.com`

@@ -1,13 +1,13 @@
 ---
-title: Renew orders
-description: Renew static proxy resources. Base URL: https://api.wanyuagent.com/api
+title: 订单续费
+description: 静态代理资源续费。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Renew orders
+# 订单续费
 
-Use the static renewal endpoint to extend a static proxy order or instance.
+使用静态续费接口延长静态代理订单或实例的有效期。
 
-## Endpoint
+## 接口
 
 ```bash
 curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/renew" \
@@ -21,13 +21,13 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/renew" \
   }'
 ```
 
-The renewal payload can vary by product and order type. Include the target order number or instance identifiers, duration fields, and pricing fields required by the product being renewed.
+续费参数会因产品和订单类型而不同。请根据实际产品传入目标订单号或实例标识、续费时长和必要的价格字段。
 
-## Before renewing
+## 续费前检查
 
-1. Query the order with `/open/app/static/order/list/v2`.
-2. Confirm the current user has permission to renew the target order.
-3. Confirm balance with `/open/app/dashboard/info/v2` or `/open/app/user/balance/current`.
-4. Use the same duration rules as static order creation.
+1. 使用 `/open/app/static/order/list/v2` 查询目标订单。
+2. 确认当前用户有权限续费该订单。
+3. 使用 `/open/app/dashboard/info/v2` 或 `/open/app/user/balance/current` 确认余额充足。
+4. 使用与静态订单创建一致的时长规则。
 
-If balance is insufficient or the order cannot be renewed, the API returns a non-zero `code` or an HTTP error response.
+如果余额不足或订单不支持续费，接口会返回非 0 `code` 或 HTTP 错误。

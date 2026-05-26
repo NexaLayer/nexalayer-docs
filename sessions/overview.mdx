@@ -1,45 +1,45 @@
 ---
-title: Orders overview
-description: IPProxy order APIs for dynamic and static proxy resources. Base URL: https://api.wanyuagent.com/api
+title: 订单概览
+description: IPProxy 动态代理和静态代理订单接口。基础地址：https://api.wanyuagent.com/api
 ---
 
-# Orders overview
+# 订单概览
 
-IPProxy exposes order APIs directly. Use dynamic orders for traffic-based rotating proxy resources and static orders for fixed IP resources.
+IPProxy 直接对外提供订单 API。动态订单用于按流量使用的动态代理资源，静态订单用于固定 IP 资源。
 
-## Endpoint summary
+## 接口概览
 
-| Method | Endpoint | Description |
+| 方法 | 接口 | 说明 |
 | --- | --- | --- |
-| `POST` | `/open/app/order/create/v2` | Create a dynamic proxy order. |
-| `POST` | `/open/app/static/order/create/v2` | Create a static proxy order. |
-| `GET` | `/open/app/static/order/list/v2` | List static orders and proxy instances. |
-| `GET` | `/open/app/static/order/statistics` | Query static order status counts. |
-| `POST` | `/open/app/static/order/renew` | Renew a static proxy order or instance. |
-| `POST` | `/open/app/static/order/{order_no}/cancel` | Release/cancel a static order. |
+| `POST` | `/open/app/order/create/v2` | 创建动态代理订单。 |
+| `POST` | `/open/app/static/order/create/v2` | 创建静态代理订单。 |
+| `GET` | `/open/app/static/order/list/v2` | 查询静态订单和代理实例。 |
+| `GET` | `/open/app/static/order/statistics` | 查询静态订单状态统计。 |
+| `POST` | `/open/app/static/order/renew` | 静态代理订单或实例续费。 |
+| `POST` | `/open/app/static/order/{order_no}/cancel` | 释放或取消静态订单。 |
 
-## Shared order fields
+## 通用订单字段
 
-| Field | Description |
+| 字段 | 说明 |
 | --- | --- |
-| `orderType` | `dynamic_proxy` or `static_proxy`. |
-| `poolId` | Product number from product query. |
-| `userId` | Target user ID. |
-| `unitPrice` | Unit price. |
-| `totalAmount` | Total order amount. |
-| `remark` | Optional order note. |
+| `orderType` | `dynamic_proxy` 或 `static_proxy`。 |
+| `poolId` | 产品查询返回的产品编号。 |
+| `userId` | 目标用户 ID。 |
+| `unitPrice` | 单价。 |
+| `totalAmount` | 订单总金额。 |
+| `remark` | 可选备注。 |
 
-## Status and response
+## 状态和响应
 
-Successful order creation returns `code: 0` and an order object in `data`. Important response fields include:
+订单创建成功时返回 `code: 0`，订单对象位于 `data`。常用响应字段包括：
 
-| Field | Description |
+| 字段 | 说明 |
 | --- | --- |
-| `order_no` | IPProxy order number. |
-| `app_order_no` | Application order number. |
-| `status` | Current order status. |
-| `product_no` / `pool_type` | Purchased product. |
-| `amount` / `total_amount` | Charged amount. |
-| `created_at`, `updated_at` | Order timestamps. |
+| `order_no` | IPProxy 订单号。 |
+| `app_order_no` | 应用订单号。 |
+| `status` | 当前订单状态。 |
+| `product_no` / `pool_type` | 已购买产品。 |
+| `amount` / `total_amount` | 扣费金额。 |
+| `created_at`、`updated_at` | 订单时间。 |
 
-Use [Static orders](/sessions/static) for fixed IP resources and [Dynamic orders](/sessions/dynamic) for traffic-based resources.
+固定 IP 资源请阅读 [静态订单](/sessions/static)，按流量使用的资源请阅读 [动态订单](/sessions/dynamic)。

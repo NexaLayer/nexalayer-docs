@@ -1,33 +1,33 @@
 ---
-title: Backend integration
-description: How external systems integrate with IPProxy public APIs.
+title: 后端集成
+description: 外部系统如何集成 IPProxy 对外 API。
 ---
 
-# Backend integration
+# 后端集成
 
-External systems should integrate with IPProxy through the public API domain only:
+外部系统应通过 IPProxy 对外 API 域名进行集成：
 
 ```text
 https://api.wanyuagent.com/api
 ```
 
-Do not call upstream supplier APIs directly unless IPProxy support explicitly provides a separate integration.
+除非 IPProxy 支持团队明确提供独立集成方式，否则不要直接调用上游供应商 API。
 
-## Recommended integration pattern
+## 推荐集成方式
 
-1. Keep IPProxy credentials in your backend service.
-2. Login and cache the Bearer token.
-3. Re-login on `401`.
-4. Query products and balance before creating orders.
-5. Persist `order_no`, `app_order_no`, `product_no`, target `userId`, request payload, and response body.
-6. Use static order list and transaction APIs for reconciliation.
+1. 在你的后端服务中保存 IPProxy 账号凭证。
+2. 登录并缓存 Bearer Token。
+3. 遇到 `401` 时重新登录。
+4. 创建订单前查询产品和余额。
+5. 持久化 `order_no`、`app_order_no`、`product_no`、目标 `userId`、请求参数和响应体。
+6. 使用静态订单列表和交易记录接口做对账。
 
-## Fingerprint browser integrations
+## 指纹浏览器集成
 
-When using the fingerprint browser to access IPProxy APIs, use the same domain:
+通过指纹浏览器访问 IPProxy API 时，使用同一域名：
 
 ```text
 api.wanyuagent.com
 ```
 
-Prefer performing privileged API calls from your backend rather than exposing credentials inside browser scripts.
+建议将带权限的 API 调用放在你的后端完成，不要把账号密码或 token 暴露在浏览器脚本中。
