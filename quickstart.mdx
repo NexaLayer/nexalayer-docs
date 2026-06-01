@@ -45,7 +45,17 @@ curl -X POST "$ZTPROXY_BASE/open/app/product/query/v2" \
   }'
 ```
 
-返回结果中的 `product_no` 可作为创建订单时的 `poolId`。
+返回结果中的 `productId` 可作为创建订单时的 `poolId`。静态 `103` 产品会返回 `areaCode`、`countryCode`、`stateCode` 和 `cityCode`。
+
+如果需要查询城市名称或 IP 段，可继续调用：
+
+```bash
+curl "$ZTPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=<productId>" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN"
+
+curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=US&cityCode=NYC" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN"
+```
 
 ## 4. 创建静态代理订单
 

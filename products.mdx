@@ -18,20 +18,61 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
   }'
 ```
 
+可按国家或城市筛选：
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "proxyType": 103,
+    "countryCode": "US",
+    "cityCode": "NYC"
+  }'
+```
+
 常用响应字段：
 
 | 字段 | 说明 |
 | --- | --- |
-| `product_no` | 产品编号，创建订单时作为 `poolId` 使用。 |
-| `product_name` | 产品显示名称。 |
-| `proxy_type` | 代理类型，常见值：`103` 静态，`104` 动态。 |
-| `inventory` | 可用库存。 |
-| `country_code`、`state_code`、`city_code` | 位置字段。 |
+| `productId` | 产品编号，创建订单时作为 `poolId` 使用。 |
+| `name` | 产品显示名称。 |
+| `proxyType` | 代理类型，常见值：`103` 静态，`104` 动态。 |
+| `stock` | 可用库存。 |
+| `area` / `areaCode` | 区域代码。 |
+| `country` / `countryCode` | 国家代码。 |
+| `state` / `stateCode` | 州、省或行政区代码。 |
+| `city` / `cityCode` | 城市代码。 |
 | `duration`、`unit` | 支持的时长配置。 |
-| `global_price` | 已配置的默认销售价格。 |
-| `band_width`、`band_width_price` | 带宽和带宽价格。 |
-| `cidr_info` | 支持 CIDR 产品时的网段库存和价格。 |
-| `project_list` | 共享静态代理产品的项目库存。 |
+| `price` | 当前产品默认销售价格。 |
+
+示例响应：
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": [
+    {
+      "productId": "ZT_US_New York City_2",
+      "name": "United States New York",
+      "proxyType": 103,
+      "area": "NA",
+      "areaCode": "NA",
+      "country": "US",
+      "countryCode": "US",
+      "state": "US-NY",
+      "stateCode": "US-NY",
+      "city": "NYC",
+      "cityCode": "NYC",
+      "price": 1.2,
+      "stock": 20,
+      "duration": 30,
+      "unit": 1
+    }
+  ]
+}
+```
 
 ## 查询地区
 
@@ -40,7 +81,99 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/product/area/v2?proxyType=1
   -H "Authorization: Bearer <token>"
 ```
 
-返回的区域、国家、城市代码可用于静态订单请求中的 `regionCode`、`countryCode` 和 `cityCode`。
+返回的区域、国家、城市代码可用于静态订单请求中的 `regionCode`、`countryCode` 和 `cityCode`。如果需要把 `region` 或 `city` code 转成客户可读名称，请使用此接口返回的 `areaName`、`countryName`、`cityName`。
+
+示例响应：
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": [
+    {
+      "areaCode": "NA",
+      "areaName": "North America",
+      "countries": [
+        {
+          "countryCode": "US",
+          "countryName": "United States",
+          "cities": [
+            {
+              "cityCode": "NYC",
+              "cityName": "New York"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+## 查询国家或城市拥有的 IP 段
+
+使用 `GET /open/app/product/ip-ranges/v2` 查询指定国家、城市或产品下可用的 CIDR/IP 段列表。
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/product/ip-ranges/v2?proxyType=103&countryCode=US&cityCode=NYC" \
+  -H "Authorization: Bearer <token>"
+```
+
+查询参数：
+
+| 参数 | 必填 | 说明 |
+| --- | :---: | --- |
+| `proxyType` | 否 | 产品类型，默认 `103`。 |
+| `productNo` | 否 | 按产品编号筛选。 |
+| `areaCode` | 否 | 按区域代码筛选。 |
+| `countryCode` | 否 | 按国家代码筛选。 |
+| `cityCode` | 否 | 按城市代码筛选。 |
+| `includeDisabled` | 否 | 是否包含停用 IP 段，默认 `false`。 |
+
+示例响应：
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "items": [
+      {
+        "productId": "ZT_US_New York City_2",
+        "name": "United States New York",
+        "proxyType": 103,
+        "area": "NA",
+        "areaCode": "NA",
+        "country": "US",
+        "countryCode": "US",
+        "countryName": "United States",
+        "state": "US-NY",
+        "stateCode": "US-NY",
+        "stateName": "New York",
+        "city": "NYC",
+        "cityCode": "NYC",
+        "cityName": "New York",
+        "stock": 20,
+        "ipRanges": [
+          {
+            "ipRange": "198.51.100.0/24",
+            "cidr": "198.51.100.0/24",
+            "count": 256,
+            "available": 256,
+            "asn": "AS12345",
+            "isp": "Example ISP",
+            "projectList": [],
+            "enable": "1"
+          }
+        ],
+        "ipRangeCount": 1
+      }
+    ],
+    "totalProducts": 1,
+    "totalIpRanges": 1
+  }
+}
+```
 
 ## 常见产品类型
 

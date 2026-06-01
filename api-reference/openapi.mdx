@@ -102,8 +102,10 @@ curl "$ZTPROXY_BASE/open/app/user/balance/current" \
 | `proxyType` | number | 否 | 代理类型筛选。常见值：`103` 静态，`104` 动态。 |
 | `productNo` | string | 否 | 产品编号。 |
 | `areaCode` | string | 否 | 地区筛选。 |
+| `countryCode` | string | 否 | 国家筛选。 |
+| `cityCode` | string | 否 | 城市筛选。 |
 
-响应项通常包含 `product_no`、`product_name`、`proxy_type`、`inventory`、`country_code`、`city_code`、`duration`、`unit`、`global_price`、`cidr_info` 和 `project_list` 等字段。
+响应项通常包含 `productId`、`name`、`proxyType`、`stock`、`area` / `areaCode`、`country` / `countryCode`、`state` / `stateCode`、`city` / `cityCode`、`duration`、`unit` 和 `price` 等字段。
 
 ### GET `/open/app/product/area/v2`
 
@@ -118,6 +120,28 @@ curl "$ZTPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%2
 | --- | --- | :---: | --- |
 | `proxyType` | number | 否 | 产品代理类型。 |
 | `productNo` | string | 否 | 产品编号。 |
+
+响应会返回 `areaCode` / `areaName`、`countryCode` / `countryName`、`cityCode` / `cityName`，可用于把产品中的地区和城市 code 转成展示名称。
+
+### GET `/open/app/product/ip-ranges/v2`
+
+查询指定国家、城市或产品下可用的 CIDR/IP 段列表。
+
+```bash
+curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=US&cityCode=NYC" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN"
+```
+
+| 参数 | 类型 | 必填 | 说明 |
+| --- | --- | :---: | --- |
+| `proxyType` | number | 否 | 产品代理类型，默认 `103`。 |
+| `productNo` | string | 否 | 产品编号。 |
+| `areaCode` | string | 否 | 区域代码。 |
+| `countryCode` | string | 否 | 国家代码。 |
+| `cityCode` | string | 否 | 城市代码。 |
+| `includeDisabled` | boolean | 否 | 是否包含停用 IP 段，默认 `false`。 |
+
+响应数据位于 `data.items`，每个产品项包含 `countryName`、`stateName`、`cityName` 和 `ipRanges`。`ipRanges[].ipRange` 即可用 CIDR/IP 段。
 
 ## 订单
 
