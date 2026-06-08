@@ -7,10 +7,12 @@ description: 查询 ZTProxy 产品、地区、库存和价格。基础地址：h
 
 产品定义了可购买的代理资源。创建订单前，请先查询产品，确认正确的 `poolId`、地区、时长、IP 数量和价格。
 
-## 查询产品
+## 查询标准化产品
+
+推荐使用 `POST /open/app/product/query-standard/v2`。该接口对外返回统一地区码，用户无需理解每个产品自己的供应商地区 code。
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
+curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -18,16 +20,16 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
   }'
 ```
 
-如果已经从产品响应中拿到了某个产品的国家或城市代码，也可以用同一套代码继续筛选：
+可按统一国家或城市代码筛选：
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
+curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
     "proxyType": 103,
-    "countryCode": "<countryCode-from-product>",
-    "cityCode": "<cityCode-from-product>"
+    "standardCountryCode": "US",
+    "standardCityCode": "NEW_YORK"
   }'
 ```
 
@@ -39,10 +41,12 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
 | `name` | 产品显示名称。 |
 | `proxyType` | 代理类型，常见值：`103` 静态，`104` 动态。 |
 | `stock` | 可用库存。 |
-| `area` / `areaCode` | 区域代码。 |
-| `country` / `countryCode` | 国家代码。 |
-| `state` / `stateCode` | 州、省或行政区代码。 |
-| `city` / `cityCode` | 城市代码。 |
+| `countryCode` | 标准国家代码，使用 ISO2，如 `US`、`JP`。 |
+| `countryName` | 标准国家名称。 |
+| `cityCode` | 标准城市代码，如 `NEW_YORK`。 |
+| `cityName` | 城市名称。 |
+| `mappingStatus` | 映射状态：`mapped`、`partial`、`unmapped`。 |
+| `codeScope` | 固定为 `standard`。 |
 | `duration`、`unit` | 支持的时长配置。 |
 | `price` | 当前产品默认销售价格。 |
 
@@ -57,14 +61,12 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
       "productId": "ZT_US_New York City_2",
       "name": "United States New York",
       "proxyType": 103,
-      "area": "6",
-      "areaCode": "6",
-      "country": "USA",
-      "countryCode": "USA",
-      "state": "USA0NY",
-      "stateCode": "USA0NY",
-      "city": "USA0NYQEE",
-      "cityCode": "USA0NYQEE",
+      "countryCode": "US",
+      "countryName": "United States",
+      "cityCode": "NEW_YORK",
+      "cityName": "New York",
+      "mappingStatus": "mapped",
+      "codeScope": "standard",
       "price": 1.2,
       "stock": 20,
       "duration": 30,
@@ -74,27 +76,28 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query/v2" \
 }
 ```
 
-## 地区代码来源
+## 地区代码规则
 
-静态 `103` 产品没有全局统一的国家或城市标准表。请以 `POST /open/app/product/query/v2` 返回的每个产品字段为准：
+标准接口对用户只暴露统一地区码。下单时请使用同一个产品返回的标准 `countryCode` 和 `cityCode`：
 
 | 字段 | 用途 |
 | --- | --- |
-| `area` / `areaCode` | 创建静态订单时的 `regionCode`。 |
-| `country` / `countryCode` | 创建静态订单时的 `countryCode`。 |
-| `state` / `stateCode` | 产品所在州、省或行政区，仅在返回时使用。 |
-| `city` / `cityCode` | 创建静态订单时的 `cityCode`。 |
+| `countryCode` | 创建标准静态订单时的 `countryCode`。 |
+| `cityCode` | 创建标准静态订单时的 `cityCode`。 |
+| `mappingStatus` | `mapped` 可直接使用；`partial` 表示城市名暂未完全标准化，但仍可按返回值下单。 |
 
-不同供应商和不同产品可能使用不同的国家、城市代码格式。不要把某个产品返回的 `countryCode` 或 `cityCode` 直接套用到其他产品；下单时应使用同一个 `productId` 响应项里的地区字段。
+系统会在后台根据 `productId + countryCode + cityCode` 转换成该产品自己的 `regionCode`、`countryCode`、`cityCode`，再进入原有下单链路。旧 `POST /open/app/product/query/v2` 仍保留原始产品 code，供历史集成兼容使用。
 
 ## 查询国家或城市拥有的 IP 段
 
 使用 `GET /open/app/product/ip-ranges/v2` 查询指定国家、城市或产品下可用的 CIDR/IP 段列表。
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<countryCode-from-product>&cityCode=<cityCode-from-product>" \
+curl -X GET "https://api.wanyuagent.com/api/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<source-country-code>&cityCode=<source-city-code>" \
   -H "Authorization: Bearer <token>"
 ```
+
+该 IP 段接口仍使用产品原始地区 code。若你的集成只使用标准地区码，请先使用 `query-standard/v2` 并设置 `includeSourceCodes: true` 获取 `sourceLocation`，或只按 `productNo` 查询。
 
 查询参数：
 
@@ -156,9 +159,9 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/product/ip-ranges/v2?proxyT
 
 | 产品 | 典型用途 | 下单接口 |
 | --- | --- | --- |
-| 静态代理 | 固定 IP、固定时长、稳定代理账号密码 | `POST /open/app/static/order/create/v2` |
+| 静态代理 | 固定 IP、固定时长、稳定代理账号密码 | `POST /open/app/static/order/create-standard/v2` |
 | 动态代理 | 按流量使用的动态代理资源 | `POST /open/app/order/create/v2` |
-| 共享静态代理 | 带 `project_list` / 项目库存的静态产品 | `POST /open/app/static/order/create/v2`，并传入 `projectId` |
+| 共享静态代理 | 带 `project_list` / 项目库存的静态产品 | `POST /open/app/static/order/create-standard/v2`，并传入 `projectId` |
 
 ## 选择产品建议
 

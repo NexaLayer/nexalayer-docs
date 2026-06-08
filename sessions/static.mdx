@@ -7,10 +7,12 @@ description: 创建和查询固定 IP 代理订单。基础地址：https://api.
 
 静态代理订单用于购买固定 IP 资源，需要指定产品、地区、时长和 IP 数量。
 
-## 创建静态订单
+## 创建标准静态订单
+
+推荐使用 `POST /open/app/static/order/create-standard/v2`。该接口接收标准 `countryCode` / `cityCode`，后台会自动转换成产品自己的地区 code。
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create/v2" \
+curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create-standard/v2" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -20,9 +22,8 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create/v2" \
     "totalAmount": 10,
     "remark": "API static order",
     "userId": 1001,
-    "regionCode": "<areaCode-from-product>",
-    "countryCode": "<countryCode-from-product>",
-    "cityCode": "<cityCode-from-product>",
+    "countryCode": "US",
+    "cityCode": "NEW_YORK",
     "staticType": "isp",
     "ipCount": 1,
     "cycleTimes": 1,
@@ -30,6 +31,8 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create/v2" \
     "unit": 1
   }'
 ```
+
+旧 `POST /open/app/static/order/create/v2` 仍保留原始产品地区 code 入参，供历史集成兼容使用。
 
 ## 时长规则
 

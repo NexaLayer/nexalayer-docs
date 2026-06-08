@@ -86,9 +86,32 @@ curl "$ZTPROXY_BASE/open/app/user/balance/current" \
 
 ## 产品与地区
 
+### POST `/open/app/product/query-standard/v2`
+
+查询使用统一地区码展示的产品列表。推荐新集成使用该接口。
+
+```json 请求
+{
+  "proxyType": 103,
+  "standardCountryCode": "US",
+  "standardCityCode": "NEW_YORK",
+  "includeSourceCodes": false
+}
+```
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | :---: | --- |
+| `proxyType` | number 或 number[] | 否 | 代理类型筛选，默认 `103`。 |
+| `productNo` | string | 否 | 产品编号。 |
+| `standardCountryCode` | string | 否 | 标准国家代码，使用 ISO2，如 `US`、`JP`。 |
+| `standardCityCode` | string | 否 | 标准城市代码，如 `NEW_YORK`。 |
+| `includeSourceCodes` | boolean | 否 | 是否返回内部原始产品地区 code，默认 `false`。 |
+
+响应项中的 `countryCode`、`cityCode` 为标准码，`codeScope` 固定为 `standard`。如需调试内部转换，可设置 `includeSourceCodes: true` 查看 `sourceLocation`。
+
 ### POST `/open/app/product/query/v2`
 
-查询可用产品。
+查询可用产品，返回产品原始地区 code。该接口保留给历史集成使用；新集成建议使用 `query-standard/v2`。
 
 ```json 请求
 {
@@ -105,11 +128,11 @@ curl "$ZTPROXY_BASE/open/app/user/balance/current" \
 | `countryCode` | string | 否 | 国家筛选。 |
 | `cityCode` | string | 否 | 城市筛选。 |
 
-响应项通常包含 `productId`、`name`、`proxyType`、`stock`、`area` / `areaCode`、`country` / `countryCode`、`state` / `stateCode`、`city` / `cityCode`、`duration`、`unit` 和 `price` 等字段。
+响应项通常包含 `productId`、`name`、`proxyType`、`stock`、`area` / `areaCode`、`country` / `countryCode`、`state` / `stateCode`、`city` / `cityCode`、`duration`、`unit` 和 `price` 等字段。这些地区字段是产品原始 code，不是统一标准码。
 
 ### 地区字段说明
 
-静态 `103` 产品的地区代码来自 `POST /open/app/product/query/v2` 响应项。下单时请使用同一个产品返回的 `areaCode`、`countryCode` 和 `cityCode`，不要跨产品复用地区代码。
+新集成请使用 `POST /open/app/product/query-standard/v2` 返回的标准 `countryCode` 和 `cityCode`，再调用 `POST /open/app/static/order/create-standard/v2` 下单。系统会在后台转换成产品原始地区 code。
 
 ### GET `/open/app/product/ip-ranges/v2`
 
@@ -135,7 +158,7 @@ curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<cou
 
 ### POST `/open/app/order/create/v2`
 
-创建订单。动态代理订单使用 `orderType: "dynamic_proxy"`。该接口也能创建基础静态订单，但静态订单通常建议使用 `/open/app/static/order/create/v2`。
+创建订单。动态代理订单使用 `orderType: "dynamic_proxy"`。该接口也能创建基础静态订单，但静态订单通常建议使用 `/open/app/static/order/create-standard/v2`。
 
 ```json 动态代理请求
 {
@@ -193,7 +216,7 @@ curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<cou
 
 ### POST `/open/app/static/order/create/v2`
 
-创建静态代理订单。
+创建静态代理订单，使用产品原始地区 code。该接口保留给历史集成使用；新集成建议使用 `create-standard/v2`。
 
 ```json 静态代理请求
 {
@@ -218,6 +241,31 @@ curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<cou
   "projectId": "default"
 }
 ```
+
+### POST `/open/app/static/order/create-standard/v2`
+
+使用标准地区码创建静态代理订单。该接口不改变旧下单接口行为，会在后台根据 `poolId + countryCode + cityCode` 转换成产品原始 `regionCode`、`countryCode` 和 `cityCode`。
+
+```json 标准静态代理请求
+{
+  "orderType": "static_proxy",
+  "poolId": "ZT_US_New York City_2",
+  "trafficAmount": null,
+  "unitPrice": 10,
+  "totalAmount": 10,
+  "remark": "API static order",
+  "userId": 1001,
+  "countryCode": "US",
+  "cityCode": "NEW_YORK",
+  "staticType": "isp",
+  "ipCount": 1,
+  "cycleTimes": 1,
+  "duration": 30,
+  "unit": 1
+}
+```
+
+如果标准地区码不适用于当前产品，接口会返回 `location_not_supported_for_product`，并在 `supportedLocation` 中提示该产品支持的标准地区码。
 
 | 字段 | 类型 | 必填 | 说明 |
 | --- | --- | :---: | --- |

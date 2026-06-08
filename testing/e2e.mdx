@@ -10,8 +10,8 @@ description: ZTProxy 对外 API 端到端流程。
 1. 健康检查：`GET https://api.wanyuagent.com/health`。
 2. 登录：`POST /api/auth/login`。
 3. 仪表盘：`GET /api/open/app/dashboard/info/v2`。
-4. 产品：`POST /api/open/app/product/query/v2`。
-5. 地区：使用产品查询响应项中的 `areaCode`、`countryCode` 和 `cityCode`。
+4. 产品：`POST /api/open/app/product/query-standard/v2`。
+5. 地区：使用标准产品查询响应项中的 `countryCode` 和 `cityCode`。
 6. 余额：`GET /api/open/app/user/balance/current`。
 7. 创建订单：使用最小可用测试产品创建静态或动态订单。
 8. 查询订单：查询静态订单列表或动态订单响应。
