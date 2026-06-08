@@ -47,13 +47,10 @@ curl -X POST "$ZTPROXY_BASE/open/app/product/query/v2" \
 
 返回结果中的 `productId` 可作为创建订单时的 `poolId`。静态 `103` 产品会返回 `areaCode`、`countryCode`、`stateCode` 和 `cityCode`。
 
-如果需要查询城市名称或 IP 段，可继续调用：
+下单时请使用同一个产品响应项里的 `areaCode` / `countryCode` / `cityCode`。如果需要查询 IP 段，可继续调用：
 
 ```bash
-curl "$ZTPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=<productId>" \
-  -H "Authorization: Bearer $ZTPROXY_TOKEN"
-
-curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=US&cityCode=NYC" \
+curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<countryCode-from-product>&cityCode=<cityCode-from-product>" \
   -H "Authorization: Bearer $ZTPROXY_TOKEN"
 ```
 
@@ -69,9 +66,9 @@ curl -X POST "$ZTPROXY_BASE/open/app/static/order/create/v2" \
     "userId": 1001,
     "unitPrice": 10,
     "totalAmount": 10,
-    "regionCode": "US",
-    "countryCode": "US",
-    "cityCode": "New York City",
+    "regionCode": "<areaCode-from-product>",
+    "countryCode": "<countryCode-from-product>",
+    "cityCode": "<cityCode-from-product>",
     "staticType": "isp",
     "ipCount": 1,
     "cycleTimes": 1,
@@ -123,7 +120,7 @@ curl -X POST "$ZTPROXY_BASE/open/app/order/create/v2" \
 | --- | --- |
 | 创建下级用户 | `POST /open/app/user/v2` |
 | 查询当前余额 | `GET /open/app/user/balance/current` |
-| 查询地区 | `GET /open/app/product/area/v2` |
+| 查询产品和地区代码 | `POST /open/app/product/query/v2` |
 | 动态子账户 | 联系 ZTProxy 支持开通对外路径 |
 | 动态代理提取 | `POST /business/dynamic-proxy/extract` |
 | 查询动态流量 | `GET /user/{user_id}/products-flow` |

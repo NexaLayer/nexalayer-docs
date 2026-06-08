@@ -93,7 +93,7 @@ curl "$ZTPROXY_BASE/open/app/user/balance/current" \
 ```json 请求
 {
   "proxyType": 103,
-  "productNo": "ZT_US_New York City_2"
+  "productNo": "<productId-from-product-query>"
 }
 ```
 
@@ -107,28 +107,16 @@ curl "$ZTPROXY_BASE/open/app/user/balance/current" \
 
 响应项通常包含 `productId`、`name`、`proxyType`、`stock`、`area` / `areaCode`、`country` / `countryCode`、`state` / `stateCode`、`city` / `cityCode`、`duration`、`unit` 和 `price` 等字段。
 
-### GET `/open/app/product/area/v2`
+### 地区字段说明
 
-查询产品服务地区。
-
-```bash
-curl "$ZTPROXY_BASE/open/app/product/area/v2?proxyType=103&productNo=ZT_US_New%20York%20City_2" \
-  -H "Authorization: Bearer $ZTPROXY_TOKEN"
-```
-
-| 参数 | 类型 | 必填 | 说明 |
-| --- | --- | :---: | --- |
-| `proxyType` | number | 否 | 产品代理类型。 |
-| `productNo` | string | 否 | 产品编号。 |
-
-响应会返回 `areaCode` / `areaName`、`countryCode` / `countryName`、`cityCode` / `cityName`，可用于把产品中的地区和城市 code 转成展示名称。
+静态 `103` 产品的地区代码来自 `POST /open/app/product/query/v2` 响应项。下单时请使用同一个产品返回的 `areaCode`、`countryCode` 和 `cityCode`，不要跨产品复用地区代码。
 
 ### GET `/open/app/product/ip-ranges/v2`
 
 查询指定国家、城市或产品下可用的 CIDR/IP 段列表。
 
 ```bash
-curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=US&cityCode=NYC" \
+curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<countryCode-from-product>&cityCode=<cityCode-from-product>" \
   -H "Authorization: Bearer $ZTPROXY_TOKEN"
 ```
 
@@ -216,9 +204,9 @@ curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=US&c
   "totalAmount": 10,
   "remark": "API static order",
   "userId": 1001,
-  "regionCode": "US",
-  "countryCode": "US",
-  "cityCode": "New York City",
+  "regionCode": "<areaCode-from-product>",
+  "countryCode": "<countryCode-from-product>",
+  "cityCode": "<cityCode-from-product>",
   "staticType": "isp",
   "ipCount": 1,
   "cycleTimes": 1,
