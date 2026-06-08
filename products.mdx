@@ -7,9 +7,9 @@ description: 查询 ZTProxy 产品、地区、库存和价格。基础地址：h
 
 产品定义了可购买的代理资源。创建订单前，请先查询产品，确认正确的 `poolId`、地区、时长、IP 数量和价格。
 
-## 查询标准化产品
+## 查询产品
 
-推荐使用 `POST /open/app/product/query-standard/v2`。该接口对外返回统一地区码，用户无需理解每个产品自己的供应商地区 code。
+创建订单前，先通过产品查询接口获取可购买产品、库存、价格和地区代码。
 
 ```bash
 curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2" \
@@ -20,7 +20,7 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2"
   }'
 ```
 
-可按统一国家或城市代码筛选：
+可按国家或城市筛选：
 
 ```bash
 curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2" \
@@ -45,8 +45,6 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2"
 | `countryName` | 标准国家名称。 |
 | `cityCode` | 标准城市代码，如 `NEW_YORK`。 |
 | `cityName` | 城市名称。 |
-| `mappingStatus` | 映射状态：`mapped`、`partial`、`unmapped`。 |
-| `codeScope` | 固定为 `standard`。 |
 | `duration`、`unit` | 支持的时长配置。 |
 | `price` | 当前产品默认销售价格。 |
 
@@ -56,48 +54,46 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2"
 {
   "code": 0,
   "msg": "success",
-  "data": [
-    {
-      "productId": "ZT_US_New York City_2",
-      "name": "United States New York",
-      "proxyType": 103,
-      "countryCode": "US",
-      "countryName": "United States",
-      "cityCode": "NEW_YORK",
-      "cityName": "New York",
-      "mappingStatus": "mapped",
-      "codeScope": "standard",
-      "price": 1.2,
-      "stock": 20,
-      "duration": 30,
-      "unit": 1
-    }
-  ]
+  "data": {
+    "items": [
+      {
+        "productId": "ZT_US_New York City_2",
+        "name": "United States New York",
+        "proxyType": 103,
+        "countryCode": "US",
+        "countryName": "United States",
+        "cityCode": "NEW_YORK",
+        "cityName": "New York",
+        "price": 1.2,
+        "stock": 20,
+        "duration": 30,
+        "unit": 1
+      }
+    ],
+    "total": 1
+  }
 }
 ```
 
 ## 地区代码规则
 
-标准接口对用户只暴露统一地区码。下单时请使用同一个产品返回的标准 `countryCode` 和 `cityCode`：
+下单时请使用产品查询接口返回的 `countryCode` 和 `cityCode`：
 
 | 字段 | 用途 |
 | --- | --- |
 | `countryCode` | 创建标准静态订单时的 `countryCode`。 |
 | `cityCode` | 创建标准静态订单时的 `cityCode`。 |
-| `mappingStatus` | `mapped` 可直接使用；`partial` 表示城市名暂未完全标准化，但仍可按返回值下单。 |
 
-系统会在后台根据 `productId + countryCode + cityCode` 转换成该产品自己的 `regionCode`、`countryCode`、`cityCode`，再进入原有下单链路。旧 `POST /open/app/product/query/v2` 仍保留原始产品 code，供历史集成兼容使用。
+同一个国家或城市可能有多个可购买产品。创建订单时请同时传入对应产品的 `productId`、`countryCode` 和 `cityCode`。
 
 ## 查询国家或城市拥有的 IP 段
 
-使用 `GET /open/app/product/ip-ranges/v2` 查询指定国家、城市或产品下可用的 CIDR/IP 段列表。
+使用 `GET /open/app/product/ip-ranges/v2` 查询指定产品下可用的 CIDR/IP 段列表。
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<source-country-code>&cityCode=<source-city-code>" \
+curl -X GET "https://api.wanyuagent.com/api/open/app/product/ip-ranges/v2?proxyType=103&productNo=<productId>" \
   -H "Authorization: Bearer <token>"
 ```
-
-该 IP 段接口仍使用产品原始地区 code。若你的集成只使用标准地区码，请先使用 `query-standard/v2` 并设置 `includeSourceCodes: true` 获取 `sourceLocation`，或只按 `productNo` 查询。
 
 查询参数：
 

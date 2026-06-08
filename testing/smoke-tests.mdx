@@ -11,7 +11,7 @@ description: ZTProxy API 冒烟测试清单。
 2. `POST /api/auth/login` 返回 `code: 0` 和 `data.token`。
 3. `GET /api/open/app/dashboard/info/v2` 返回当前账号数据。
 4. `POST /api/open/app/product/query-standard/v2` 返回可用产品。
-5. 标准产品项包含 `countryCode`、`cityCode` 和 `mappingStatus`。
+5. 产品项包含可下单的 `productId`、`countryCode` 和 `cityCode`。
 6. `GET /api/open/app/static/order/list/v2?page=1&pageSize=10` 返回分页数据。
 7. `GET /api/open/app/user/transactions?page=1&page_size=10` 返回消费记录。
 8. 保护接口缺少 Bearer Token 时返回 `401`。
