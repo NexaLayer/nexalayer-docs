@@ -16,7 +16,8 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2"
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
-    "proxyType": 103
+    "proxyType": 103,
+    "language": "zh"
   }'
 ```
 
@@ -29,7 +30,8 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2"
   -d '{
     "proxyType": 103,
     "standardCountryCode": "US",
-    "standardCityCode": "NEW_YORK"
+    "standardCityCode": "NEW_YORK",
+    "language": "en"
   }'
 ```
 
@@ -42,11 +44,18 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2"
 | `proxyType` | 代理类型，常见值：`103` 静态，`104` 动态。 |
 | `stock` | 可用库存。 |
 | `countryCode` | 标准国家代码，使用 ISO2，如 `US`、`JP`。 |
-| `countryName` | 标准国家名称。 |
+| `countryName` | 按 `language` 返回的国家名称。 |
+| `countryNameEn` | 英文国家名称。 |
+| `countryNameZh` | 中文国家名称。 |
 | `cityCode` | 标准城市代码，如 `NEW_YORK`。 |
-| `cityName` | 城市名称。 |
+| `cityName` | 按 `language` 返回的城市名称。 |
+| `cityNameEn` | 英文城市名称。 |
+| `cityNameZh` | 中文城市名称。 |
+| `nameLanguage` | 当前 `countryName` / `cityName` 使用的语言：`en` 或 `zh`。 |
 | `duration`、`unit` | 支持的时长配置。 |
 | `price` | 当前产品默认销售价格。 |
+
+`language` 可传 `zh` 或 `en`，默认 `en`。未配置中文映射的城市会回退为英文名称，但仍会返回 `cityNameEn` / `cityNameZh` 字段。
 
 示例响应：
 
@@ -61,9 +70,14 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2"
         "name": "United States New York",
         "proxyType": 103,
         "countryCode": "US",
-        "countryName": "United States",
+        "countryName": "美国",
+        "countryNameEn": "United States",
+        "countryNameZh": "美国",
         "cityCode": "NEW_YORK",
-        "cityName": "New York",
+        "cityName": "纽约",
+        "cityNameEn": "New York",
+        "cityNameZh": "纽约",
+        "nameLanguage": "zh",
         "price": 1.2,
         "stock": 20,
         "duration": 30,
@@ -105,6 +119,7 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/product/ip-ranges/v2?proxyT
 | `countryCode` | 否 | 按国家代码筛选。 |
 | `cityCode` | 否 | 按城市代码筛选。 |
 | `includeDisabled` | 否 | 是否包含停用 IP 段，默认 `false`。 |
+| `language` | 否 | 名称语言，支持 `zh` 或 `en`，默认 `en`。 |
 
 示例响应：
 

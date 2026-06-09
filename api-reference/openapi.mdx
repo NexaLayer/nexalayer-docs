@@ -151,7 +151,8 @@ curl -X DELETE "$ZTPROXY_BASE/open/app/agent/sub-users/1001" \
 {
   "proxyType": 103,
   "standardCountryCode": "US",
-  "standardCityCode": "NEW_YORK"
+  "standardCityCode": "NEW_YORK",
+  "language": "zh"
 }
 ```
 
@@ -161,8 +162,9 @@ curl -X DELETE "$ZTPROXY_BASE/open/app/agent/sub-users/1001" \
 | `productNo` | string | 否 | 产品编号。 |
 | `standardCountryCode` | string | 否 | 标准国家代码，使用 ISO2，如 `US`、`JP`。 |
 | `standardCityCode` | string | 否 | 标准城市代码，如 `NEW_YORK`。 |
+| `language` | string | 否 | 名称语言，支持 `zh` 或 `en`，默认 `en`。 |
 
-响应项通常包含 `productId`、`name`、`proxyType`、`stock`、`countryCode`、`countryName`、`cityCode`、`cityName`、`duration`、`unit` 和 `price` 等字段。
+响应项通常包含 `productId`、`name`、`proxyType`、`stock`、`countryCode`、`countryName`、`countryNameEn`、`countryNameZh`、`cityCode`、`cityName`、`cityNameEn`、`cityNameZh`、`nameLanguage`、`duration`、`unit` 和 `price` 等字段。
 
 ### 地区字段说明
 
@@ -185,8 +187,9 @@ curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<cou
 | `countryCode` | string | 否 | 国家代码。 |
 | `cityCode` | string | 否 | 城市代码。 |
 | `includeDisabled` | boolean | 否 | 是否包含停用 IP 段，默认 `false`。 |
+| `language` | string | 否 | 名称语言，支持 `zh` 或 `en`，默认 `en`。 |
 
-响应数据位于 `data.items`，每个产品项包含 `countryName`、`stateName`、`cityName` 和 `ipRanges`。`ipRanges[].ipRange` 即可用 CIDR/IP 段。
+响应数据位于 `data.items`，每个产品项包含 `countryName`、`countryNameEn`、`countryNameZh`、`stateName`、`cityName`、`cityNameEn`、`cityNameZh`、`nameLanguage` 和 `ipRanges`。`ipRanges[].ipRange` 即可用 CIDR/IP 段。
 
 ## 订单
 
