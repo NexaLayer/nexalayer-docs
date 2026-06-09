@@ -25,13 +25,4 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/user/balance/current" \
 
 只需要当前登录用户余额时，使用该接口。
 
-## 管理员查询指定用户
-
-管理员在权限允许时可以通过仪表盘接口查询指定用户：
-
-```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2?target_user_id=1001" \
-  -H "Authorization: Bearer <token>"
-```
-
 如果余额不足，创建订单或续费接口会返回非 0 `code` 或 HTTP 错误，提示通常为 `用户余额不足` 或 `目标用户余额不足`。

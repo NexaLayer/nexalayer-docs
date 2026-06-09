@@ -39,7 +39,6 @@ Authorization: Bearer <token>
     "user": {
       "id": 1001,
       "username": "your_username",
-      "is_agent": true,
       "balance": 1000,
       "status": "active"
     }
@@ -51,7 +50,7 @@ Authorization: Bearer <token>
 
 ### POST `/open/app/user/v2`
 
-在当前管理员或代理商账号下创建用户。
+在当前代理商账号下创建下级用户。
 
 ```json 请求
 {
@@ -60,7 +59,6 @@ Authorization: Bearer <token>
   "email": "user@example.com",
   "phone": "13812345678",
   "remark": "API sub-user",
-  "is_agent": false,
   "balance": 0
 }
 ```
@@ -71,9 +69,7 @@ Authorization: Bearer <token>
 | `password` | string | 是 | 6-50 个字符。 |
 | `email` | string | 否 | 邮箱。 |
 | `phone` | string | 否 | 11 位手机号。 |
-| `is_agent` | boolean | 否 | 是否创建代理商账号。 |
 | `balance` | number | 否 | 初始余额。 |
-| `agent_id` | number | 否 | 管理员可指定用户所属代理商。 |
 
 ### GET `/open/app/user/balance/current`
 
@@ -143,7 +139,7 @@ curl -X DELETE "$ZTPROXY_BASE/open/app/agent/sub-users/1001" \
   -H "Authorization: Bearer $ZTPROXY_TOKEN"
 ```
 
-删除后账号状态为 `deleted`。此接口不能删除代理商账号。
+删除后账号状态为 `deleted`。此接口只用于删除直属下级普通用户。
 
 ## 产品与地区
 
@@ -215,7 +211,7 @@ curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<cou
 
 ### GET `/dynamic`
 
-查询动态订单列表。支持 `page`、`page_size`、`user_id`、`agent_id`、`order_no`、`pool_type` 等参数。
+查询动态订单列表。支持 `page`、`page_size`、`user_id`、`order_no`、`pool_type` 等参数。
 
 ### GET `/dynamic/{order_id}`
 
@@ -313,7 +309,6 @@ curl "$ZTPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10&status=acti
 | `status` | string | 订单状态筛选。 |
 | `filter` | string | 控制台使用的业务筛选。 |
 | `user_id` | number | 用户筛选。 |
-| `agent_id` | number | 管理员按代理商筛选。 |
 | `search` | string | 搜索订单号、IP、端口、用户名、密码或备注。 |
 | `region` | string | 地区模糊筛选。 |
 | `created_start` / `created_end` | string | 创建时间范围。 |
@@ -336,7 +331,7 @@ curl "$ZTPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10&status=acti
 
 ### GET `/open/app/dashboard/info/v2`
 
-查询当前用户的余额、资源数量和仪表盘概览。管理员可传入 `target_user_id`。
+查询当前账号的余额、资源数量和仪表盘概览。
 
 ### GET `/open/app/user/transactions`
 
@@ -349,15 +344,14 @@ curl "$ZTPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10&status=acti
 | `type` | string | 交易类型。 |
 | `order_type` | string | `static` 或 `dynamic`。 |
 | `start_date` / `end_date` | string | 日期范围，格式 `YYYY-MM-DD`。 |
-| `username` | string | 管理员按用户名筛选。 |
+| `username` | string | 用户名筛选。 |
 | `order_no` | string | 订单号筛选。 |
 | `keyword` | string | 搜索备注、类型、订单号或用户名。 |
 | `target_user_id` | number | 目标用户筛选。 |
-| `agent_id` | number | 管理员按代理商筛选。 |
 
 ### GET `/transaction/agent/transactions`
 
-查询当前用户、代理商或管理员权限范围内的充值和余额调整记录。
+查询当前账号及下级用户权限范围内的充值和余额调整记录。
 
 ## USDT 充值
 

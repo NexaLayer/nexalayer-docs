@@ -7,7 +7,7 @@ description: 管理动态代理子账户。基础地址：https://api.wanyuagent
 
 动态代理支持为用户创建子账户，并对每个子账户单独设置流量、状态和密码。所有接口都需要 Bearer Token。
 
-管理员可通过 `user_id` 查询参数指定目标用户；代理商只能操作自己和下级用户；普通用户只能操作自己的子账户。
+代理商只能操作自己和下级用户；普通用户只能操作自己的子账户。
 
 ## 创建子账户
 
@@ -114,4 +114,4 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/child-accounts" \
   -H "Authorization: Bearer <token>"
 ```
 
-该接口会按管理员、代理商、普通用户权限返回可见子账户。
+该接口会按当前账号权限返回可见子账户。

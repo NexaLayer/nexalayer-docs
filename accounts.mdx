@@ -5,7 +5,7 @@ description: 管理 ZTProxy 用户和下级用户。基础地址：https://api.w
 
 # 账号
 
-ZTProxy 账号对应平台用户。管理员和代理商可以通过 API 创建用户。代理商可以创建并管理自己的下级用户，管理员可以管理更大范围内的账号。
+ZTProxy 账号对应平台用户。代理商可以通过 API 创建并管理自己的下级用户。
 
 ## 创建用户
 
@@ -19,7 +19,6 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/user/v2" \
     "email": "user@example.com",
     "phone": "13812345678",
     "remark": "Created from API",
-    "is_agent": false,
     "balance": 0
   }'
 ```
@@ -33,12 +32,7 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/user/v2" \
 | `email` | string | 否 | 邮箱地址。 |
 | `phone` | string | 否 | 11 位手机号。 |
 | `remark` | string | 否 | 备注。 |
-| `is_agent` | boolean | 否 | 是否创建代理商账号。 |
 | `balance` | number | 否 | 初始余额。 |
-| `agent_id` | number | 否 | 管理员可指定所属代理商。 |
-| `auth_type` | number | 否 | 代理商认证类型：`1`、`2` 或 `3`。 |
-| `auth_name` | string | 否 | 需要认证时填写认证名称。 |
-| `no` | string | 否 | 需要认证时填写证件号码。 |
 
 ## 当前余额
 
@@ -51,9 +45,9 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/user/balance/current" \
 
 以下接口仅供代理商账号操作自己的直属下级用户。目标用户必须满足：
 
-- `agent_id` 等于当前登录代理商 ID。
+- 系统校验目标账号属于当前登录代理商。
 - 不是当前代理商自己。
-- 不是管理员账号。
+- 是当前代理商名下的直属下级普通用户。
 - 已删除账号不能再次编辑、调余额或切换状态。
 
 ### 调整下级用户余额
@@ -104,7 +98,7 @@ curl -X DELETE "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001" \
   -H "Authorization: Bearer <token>"
 ```
 
-删除为软删除，账号状态会变为 `deleted`。此接口不用于删除代理商账号。
+删除为软删除，账号状态会变为 `deleted`。此接口只用于删除直属下级普通用户。
 
 ## 仪表盘概览
 
@@ -113,4 +107,4 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2" \
   -H "Authorization: Bearer <token>"
 ```
 
-管理员在权限允许时可以传入 `target_user_id` 查询指定用户的仪表盘概览。
+该接口返回当前账号的仪表盘概览。
