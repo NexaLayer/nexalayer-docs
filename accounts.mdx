@@ -47,6 +47,65 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/user/balance/current" \
   -H "Authorization: Bearer <token>"
 ```
 
+## 代理商管理下级账号
+
+以下接口仅供代理商账号操作自己的直属下级用户。目标用户必须满足：
+
+- `agent_id` 等于当前登录代理商 ID。
+- 不是当前代理商自己。
+- 不是管理员账号。
+- 已删除账号不能再次编辑、调余额或切换状态。
+
+### 调整下级用户余额
+
+```bash
+curl -X POST "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001/balance" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 100,
+    "remark": "API balance adjustment"
+  }'
+```
+
+`amount` 为正数表示增加余额，为负数表示扣减余额。扣减后余额不能小于 0。
+
+### 编辑下级用户账号
+
+```bash
+curl -X PATCH "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001/account" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "sub_user_002",
+    "password": "newPassword123"
+  }'
+```
+
+`username` 和 `password` 至少传一个。此接口修改 ZTProxy 登录账号信息，不修改供应商侧账号字段。
+
+### 启用或禁用下级用户
+
+```bash
+curl -X PATCH "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001/status" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "status": "disabled"
+  }'
+```
+
+`status` 可选 `active` 或 `disabled`。
+
+### 删除下级用户
+
+```bash
+curl -X DELETE "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001" \
+  -H "Authorization: Bearer <token>"
+```
+
+删除为软删除，账号状态会变为 `deleted`。此接口不用于删除代理商账号。
+
 ## 仪表盘概览
 
 ```bash

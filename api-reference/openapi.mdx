@@ -84,6 +84,67 @@ curl "$ZTPROXY_BASE/open/app/user/balance/current" \
   -H "Authorization: Bearer $ZTPROXY_TOKEN"
 ```
 
+### POST `/open/app/agent/sub-users/{user_id}/balance`
+
+代理商调整自己的直属下级用户余额。
+
+```json 请求
+{
+  "amount": 100,
+  "remark": "API balance adjustment"
+}
+```
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | :---: | --- |
+| `amount` | number | 是 | 调整金额。正数增加余额，负数扣减余额。 |
+| `remark` | string | 是 | 调整备注。 |
+
+目标用户必须是当前代理商的直属下级用户，且扣减后余额不能小于 0。
+
+### PATCH `/open/app/agent/sub-users/{user_id}/account`
+
+代理商编辑自己的直属下级用户登录账号信息。
+
+```json 请求
+{
+  "username": "sub_user_002",
+  "password": "newPassword123"
+}
+```
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | :---: | --- |
+| `username` | string | 否 | 新用户名，3-50 个字符，支持字母、数字、下划线和连字符，必须唯一。 |
+| `password` | string | 否 | 新密码，6-50 个字符。 |
+
+`username` 和 `password` 至少传一个。此接口只修改 ZTProxy 登录账号，不修改供应商侧账号字段。
+
+### PATCH `/open/app/agent/sub-users/{user_id}/status`
+
+代理商启用或禁用自己的直属下级用户。
+
+```json 请求
+{
+  "status": "disabled"
+}
+```
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | :---: | --- |
+| `status` | string | 是 | `active` 表示启用，`disabled` 表示禁用。 |
+
+### DELETE `/open/app/agent/sub-users/{user_id}`
+
+代理商软删除自己的直属下级用户。
+
+```bash
+curl -X DELETE "$ZTPROXY_BASE/open/app/agent/sub-users/1001" \
+  -H "Authorization: Bearer $ZTPROXY_TOKEN"
+```
+
+删除后账号状态为 `deleted`。此接口不能删除代理商账号。
+
 ## 产品与地区
 
 ### POST `/open/app/product/query-standard/v2`
