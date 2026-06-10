@@ -55,7 +55,7 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2"
 | `duration`、`unit` | 支持的时长配置。 |
 | `price` | 当前产品默认销售价格。 |
 
-`language` 可传 `zh` 或 `en`，默认 `en`。未配置中文映射的城市会回退为英文名称，但仍会返回 `cityNameEn` / `cityNameZh` 字段。
+`language` 可传 `zh` 或 `en`，默认 `en`。当前可购买产品的国家和城市会同时返回 `countryNameEn` / `countryNameZh`、`cityNameEn` / `cityNameZh`，`countryName` 和 `cityName` 会按请求语言返回。
 
 示例响应：
 
