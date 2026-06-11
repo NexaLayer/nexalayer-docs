@@ -212,7 +212,7 @@ curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<cou
 | `includeDisabled` | boolean | 否 | 是否包含停用 IP 段，默认 `false`。 |
 | `language` | string | 否 | 名称语言，支持 `zh` 或 `en`，默认 `en`。 |
 
-响应数据位于 `data.items`，每个产品项包含 `countryName`、`countryNameEn`、`countryNameZh`、`stateName`、`cityName`、`cityNameEn`、`cityNameZh`、`nameLanguage` 和 `ipRanges`。`ipRanges[].ipRange` 即可用 CIDR/IP 段。
+响应数据位于 `data.items`，每个产品项包含 `product_type` / `productType`、`project_list` / `projects` / `projectList`、`countryName`、`countryNameEn`、`countryNameZh`、`stateName`、`cityName`、`cityNameEn`、`cityNameZh`、`nameLanguage` 和 `ipRanges`。`ipRanges[].ipRange` 即可用 CIDR/IP 段。
 
 ## 订单
 
