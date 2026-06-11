@@ -41,6 +41,77 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/user/balance/current" \
   -H "Authorization: Bearer <token>"
 ```
 
+## 查询下级账号列表和余额
+
+代理商可查询自己的直属下级普通用户，响应会返回每个子账号的余额和基础资料。
+
+```bash
+curl -X GET "https://api.wanyuagent.com/api/open/app/agent/sub-users?page=1&pageSize=20" \
+  -H "Authorization: Bearer <token>"
+```
+
+可选查询参数：
+
+| 参数 | 说明 |
+| --- | --- |
+| `page` | 页码，默认 `1`。 |
+| `pageSize` | 每页数量，默认 `20`，最大 `100`。 |
+| `search` | 按用户名、邮箱或手机号模糊搜索。 |
+| `status` | 按账号状态筛选：`active`、`disabled`、`deleted`。 |
+| `includeDeleted` | 是否包含已删除账号，默认 `false`。 |
+
+示例响应：
+
+```json
+{
+  "code": 0,
+  "message": "查询成功",
+  "data": {
+    "items": [
+      {
+        "id": 1001,
+        "username": "sub_user_001",
+        "email": "user@example.com",
+        "phone": "13812345678",
+        "remark": "Created from API",
+        "status": "active",
+        "balance": 100,
+        "lumi_balance": 0,
+        "ipweb_balance": 0,
+        "total_recharge": 100,
+        "total_consumption": 0,
+        "agent_id": 9001,
+        "created_at": "2026-06-11 10:00:00",
+        "updated_at": "2026-06-11 10:00:00"
+      }
+    ],
+    "list": [
+      {
+        "id": 1001,
+        "username": "sub_user_001",
+        "email": "user@example.com",
+        "phone": "13812345678",
+        "remark": "Created from API",
+        "status": "active",
+        "balance": 100,
+        "lumi_balance": 0,
+        "ipweb_balance": 0,
+        "total_recharge": 100,
+        "total_consumption": 0,
+        "agent_id": 9001,
+        "created_at": "2026-06-11 10:00:00",
+        "updated_at": "2026-06-11 10:00:00"
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "pageSize": 20
+  }
+}
+```
+
+`items` 和 `list` 内容相同；新接入建议读取 `items`。
+
 ## 代理商管理下级账号
 
 以下接口仅供代理商账号操作自己的直属下级用户。目标用户必须满足：

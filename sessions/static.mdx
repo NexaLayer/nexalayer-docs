@@ -32,6 +32,43 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create-standa
   }'
 ```
 
+如果产品查询响应显示该产品为共享静态（`product_type` / `productType` 为 `2` 或 `shared`，或项目列表非空），需要从 `project_list` / `projects` / `projectList` 中选择项目代码，并在请求体中增加 `projectId`：
+
+```json
+{
+  "orderType": "static_proxy",
+  "poolId": "ZT_US_New York City_2",
+  "userId": 1001,
+  "countryCode": "US",
+  "cityCode": "NEW_YORK",
+  "staticType": "isp",
+  "ipCount": 1,
+  "cycleTimes": 1,
+  "duration": 30,
+  "unit": 1,
+  "unitPrice": 10,
+  "totalAmount": 10,
+  "projectId": "game"
+}
+```
+
+创建成功响应示例：
+
+```json
+{
+  "code": 0,
+  "msg": "success",
+  "data": {
+    "orderNo": "STA20260611102030abc123",
+    "appOrderNo": "APP20260611102030def456",
+    "ipipvOrderNo": "IPIPV20260611102030",
+    "balance": 990
+  }
+}
+```
+
+`orderNo` 为本系统订单号，后续查询、续费或释放时优先使用；`appOrderNo` 为本系统提交给供应商侧的应用订单号；`ipipvOrderNo` 为供应商订单号，部分产品或异步场景可能为空。
+
 ## 时长规则
 
 | `unit` | 含义 | 常见 `duration` |
@@ -47,7 +84,7 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create-standa
 | `cidrBlocks` | CIDR 产品可传 `{ "cidr": "x.x.x.x/yy", "count": 1 }` 数组。 |
 | `assignedIp` | 指定单个 IP。 |
 | `assignedIpList` | 指定多个 IP。 |
-| `projectId` | 共享静态代理产品的项目代码。 |
+| `projectId` | 共享静态代理产品的项目代码。共享静态必传，独享静态不需要传。 |
 | `extBandWidth` | 额外带宽。 |
 | `bandWidthPrice` | 带宽价格。 |
 | `bridgePrice` | 桥接费用。 |
