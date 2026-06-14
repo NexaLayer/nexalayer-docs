@@ -77,7 +77,7 @@ curl -X POST "$ZTPROXY_BASE/open/app/static/order/create-standard/v2" \
   }'
 ```
 
-响应会返回创建后的订单信息，其中包括 `order_no`。静态代理实例可通过静态订单列表或订单详情接口查询。
+响应会先返回已受理的订单信息，其中包括 `orderNo` / `order_no` 和 `queued: true`。静态代理实例、供应商订单号和最终状态通过静态订单列表查询。
 
 ## 5. 查询静态订单和代理实例
 

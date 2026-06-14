@@ -276,7 +276,7 @@ curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<cou
 
 ### POST `/open/app/static/order/create-standard/v2`
 
-创建静态代理订单。
+创建静态代理订单。标准静态创建接口采用异步受理模式：校验通过后先返回本系统订单号，后台继续完成供应商开通。
 
 ```json 标准静态代理请求
 {
@@ -319,20 +319,25 @@ curl "$ZTPROXY_BASE/open/app/product/ip-ranges/v2?proxyType=103&countryCode=<cou
 | `assignedIpList` | array | 否 | 指定多个 IP。 |
 | `projectId` | string | 否 | 共享静态代理产品的项目/业务类型。 |
 
-成功响应示例：
+受理成功响应示例：
 
 ```json
 {
   "code": 0,
-  "msg": "success",
+  "msg": "订单已受理，正在处理中，请通过订单列表查询最终状态",
   "data": {
     "orderNo": "STA20260611102030abc123",
+    "order_no": "STA20260611102030abc123",
     "appOrderNo": "APP20260611102030def456",
-    "ipipvOrderNo": "IPIPV20260611102030",
-    "balance": 990
+    "app_order_no": "APP20260611102030def456",
+    "status": "processing",
+    "queued": true,
+    "async": true
   }
 }
 ```
+
+`queued: true` 表示订单已进入后台处理。请使用返回的 `orderNo` 查询 `/open/app/static/order/list/v2` 获取最终状态、供应商订单号和代理实例信息。
 
 ### GET `/open/app/static/order/list/v2`
 

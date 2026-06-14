@@ -52,22 +52,27 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create-standa
 }
 ```
 
-创建成功响应示例：
+标准静态订单创建接口采用异步受理模式。接口通过参数、权限、余额和基础价格校验后，会先返回本系统订单号；供应商开通结果、实例 IP、端口、账号密码和最终状态请后续查询订单列表。
+
+受理成功响应示例：
 
 ```json
 {
   "code": 0,
-  "msg": "success",
+  "msg": "订单已受理，正在处理中，请通过订单列表查询最终状态",
   "data": {
     "orderNo": "STA20260611102030abc123",
+    "order_no": "STA20260611102030abc123",
     "appOrderNo": "APP20260611102030def456",
-    "ipipvOrderNo": "IPIPV20260611102030",
-    "balance": 990
+    "app_order_no": "APP20260611102030def456",
+    "status": "processing",
+    "queued": true,
+    "async": true
   }
 }
 ```
 
-`orderNo` 为本系统订单号，后续查询、续费或释放时优先使用；`appOrderNo` 为本系统提交给供应商侧的应用订单号；`ipipvOrderNo` 为供应商订单号，部分产品或异步场景可能为空。
+`orderNo` / `order_no` 为本系统订单号，后续查询、续费或释放时优先使用；`appOrderNo` / `app_order_no` 为本系统提交给供应商侧的应用订单号。接口返回 `queued: true` 表示订单已进入后台处理，不代表供应商已完成开通。`ipipvOrderNo`、实例信息和最终状态以后续 `/open/app/static/order/list/v2` 查询结果为准。
 
 ## 时长规则
 
@@ -108,4 +113,4 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/list/v2?region
   -H "Authorization: Bearer <token>"
 ```
 
-列表响应会返回订单字段；如果已有实例，也会包含 `instances`，其中包括代理 IP、端口、用户名、密码、状态和到期时间等信息。
+列表响应会返回订单字段；如果订单仍在处理，`status` 通常为 `processing` 且可能暂时没有 `instances`。后台开通完成后，订单会更新为成功/失败等最终状态；如果已有实例，也会包含 `instances`，其中包括代理 IP、端口、用户名、密码、状态和到期时间等信息。
