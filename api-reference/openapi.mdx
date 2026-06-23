@@ -367,7 +367,7 @@ curl "$ZTPROXY_BASE/open/app/static/order/list/v2?page=1&pageSize=10&status=acti
 
 ### POST `/open/app/static/order/renew`
 
-静态代理订单或实例续费。根据具体产品传入目标订单/实例标识、续费时长和价格字段。
+静态代理订单或实例续费。可传 `order_no` / `orderNo` / `order_id` 指定目标订单；未传 `instances` 时默认续费该订单下所有实例。`duration: 30, unit: 1, cycleTimes: 1` 按 1 个月处理。
 
 ### POST `/open/app/static/order/{order_no}/cancel`
 
