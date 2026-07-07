@@ -1,6 +1,6 @@
 ---
 title: 账号
-description: 管理 ZTProxy 用户和下级用户。基础地址：https://api.wanyuagent.com/api
+description: 管理 ZTProxy 用户和下级用户。基础地址：https://backend.ztproxy.net/api
 ---
 
 # 账号
@@ -10,7 +10,7 @@ ZTProxy 账号对应平台用户。代理商可以通过 API 创建并管理自�
 ## 创建用户
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/open/app/user/v2" \
+curl -X POST "https://backend.ztproxy.net/api/open/app/user/v2" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -37,7 +37,7 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/user/v2" \
 ## 当前余额
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/user/balance/current" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/user/balance/current" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -46,7 +46,7 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/user/balance/current" \
 代理商可查询自己的直属下级普通用户，响应会返回每个子账号的余额和基础资料。
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/agent/sub-users?page=1&pageSize=20" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/agent/sub-users?page=1&pageSize=20" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -124,7 +124,7 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/agent/sub-users?page=1&page
 ### 调整下级用户余额
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001/balance" \
+curl -X POST "https://backend.ztproxy.net/api/open/app/agent/sub-users/1001/balance" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -138,7 +138,7 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001/balan
 ### 编辑下级用户账号
 
 ```bash
-curl -X PATCH "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001/account" \
+curl -X PATCH "https://backend.ztproxy.net/api/open/app/agent/sub-users/1001/account" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -152,7 +152,7 @@ curl -X PATCH "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001/acco
 ### 启用或禁用下级用户
 
 ```bash
-curl -X PATCH "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001/status" \
+curl -X PATCH "https://backend.ztproxy.net/api/open/app/agent/sub-users/1001/status" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -165,7 +165,7 @@ curl -X PATCH "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001/stat
 ### 删除下级用户
 
 ```bash
-curl -X DELETE "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001" \
+curl -X DELETE "https://backend.ztproxy.net/api/open/app/agent/sub-users/1001" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -174,7 +174,7 @@ curl -X DELETE "https://api.wanyuagent.com/api/open/app/agent/sub-users/1001" \
 ## 仪表盘概览
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/dashboard/info/v2" \
   -H "Authorization: Bearer <token>"
 ```
 

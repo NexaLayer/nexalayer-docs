@@ -1,6 +1,6 @@
 ---
 title: 统计
-description: ZTProxy 仪表盘、资源和订单统计接口。基础地址：https://api.wanyuagent.com/api
+description: ZTProxy 仪表盘、资源和订单统计接口。基础地址：https://backend.ztproxy.net/api
 ---
 
 # 统计
@@ -10,7 +10,7 @@ description: ZTProxy 仪表盘、资源和订单统计接口。基础地址：ht
 ## 仪表盘概览
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/dashboard/info/v2" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -19,7 +19,7 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/dashboard/info/v2" \
 ## 静态订单统计
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/statistics" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/static/order/statistics" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -28,13 +28,13 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/statistics" \
 ## 静态资源统计
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/static/resource/stats" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/static/resource/stats" \
   -H "Authorization: Bearer <token>"
 ```
 
 ## 动态资源统计
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/dynamic/resource/stats?productNo=<dynamic_product_no>" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/dynamic/resource/stats?productNo=<dynamic_product_no>" \
   -H "Authorization: Bearer <token>"
 ```

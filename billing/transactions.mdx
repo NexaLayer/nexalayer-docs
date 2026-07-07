@@ -1,6 +1,6 @@
 ---
 title: 交易记录
-description: 查询 ZTProxy 消费、充值和余额调整记录。基础地址：https://api.wanyuagent.com/api
+description: 查询 ZTProxy 消费、充值和余额调整记录。基础地址：https://backend.ztproxy.net/api
 ---
 
 # 交易记录
@@ -10,7 +10,7 @@ ZTProxy 常用交易记录接口分为两类：消费记录和代理额度记录
 ## 消费记录
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/user/transactions?page=1&page_size=10&order_type=static" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/user/transactions?page=1&page_size=10&order_type=static" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -31,7 +31,7 @@ curl -X GET "https://api.wanyuagent.com/api/open/app/user/transactions?page=1&pa
 ## 充值和调整记录
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/transaction/agent/transactions?page=1&page_size=10" \
+curl -X GET "https://backend.ztproxy.net/api/transaction/agent/transactions?page=1&page_size=10" \
   -H "Authorization: Bearer <token>"
 ```
 

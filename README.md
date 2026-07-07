@@ -18,5 +18,5 @@ mintlify dev
 
 ## 生产 API
 
-- API 基础地址：`https://api.wanyuagent.com/api`
+- API 基础地址：`https://backend.ztproxy.net/api`
 - 健康检查：`https://api.wanyuagent.com/health`

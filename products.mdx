@@ -1,6 +1,6 @@
 ---
 title: 产品
-description: 查询 ZTProxy 产品、地区、库存和价格。基础地址：https://api.wanyuagent.com/api
+description: 查询 ZTProxy 产品、地区、库存和价格。基础地址：https://backend.ztproxy.net/api
 ---
 
 # 产品
@@ -12,7 +12,7 @@ description: 查询 ZTProxy 产品、地区、库存和价格。基础地址：h
 创建订单前，先通过产品查询接口获取可购买产品、库存、价格和地区代码。
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2" \
+curl -X POST "https://backend.ztproxy.net/api/open/app/product/query-standard/v2" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -24,7 +24,7 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2"
 可按国家或城市筛选：
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2" \
+curl -X POST "https://backend.ztproxy.net/api/open/app/product/query-standard/v2" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -123,7 +123,7 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/product/query-standard/v2"
 使用 `GET /open/app/product/ip-ranges/v2` 查询指定产品下可用的 CIDR/IP 段列表。
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/product/ip-ranges/v2?proxyType=103&productNo=<productId>" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/product/ip-ranges/v2?proxyType=103&productNo=<productId>" \
   -H "Authorization: Bearer <token>"
 ```
 

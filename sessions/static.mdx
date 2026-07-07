@@ -1,6 +1,6 @@
 ---
 title: 静态订单
-description: 创建和查询固定 IP 代理订单。基础地址：https://api.wanyuagent.com/api
+description: 创建和查询固定 IP 代理订单。基础地址：https://backend.ztproxy.net/api
 ---
 
 # 静态订单
@@ -12,7 +12,7 @@ description: 创建和查询固定 IP 代理订单。基础地址：https://api.
 使用产品查询接口返回的 `productId`、`countryCode` 和 `cityCode` 创建静态订单。
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create-standard/v2" \
+curl -X POST "https://backend.ztproxy.net/api/open/app/static/order/create-standard/v2" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -97,19 +97,19 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/static/order/create-standa
 ## 查询静态订单
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/list/v2?page=1&pageSize=10" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/static/order/list/v2?page=1&pageSize=10" \
   -H "Authorization: Bearer <token>"
 ```
 
 搜索示例：
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/list/v2?search=STA2026&page=1&pageSize=10" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/static/order/list/v2?search=STA2026&page=1&pageSize=10" \
   -H "Authorization: Bearer <token>"
 ```
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/open/app/static/order/list/v2?region=New%20York&status=active" \
+curl -X GET "https://backend.ztproxy.net/api/open/app/static/order/list/v2?region=New%20York&status=active" \
   -H "Authorization: Bearer <token>"
 ```
 

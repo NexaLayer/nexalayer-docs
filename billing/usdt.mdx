@@ -1,6 +1,6 @@
 ---
 title: USDT 充值
-description: ZTProxy USDT TRC20 充值订单接口。基础地址：https://api.wanyuagent.com/api
+description: ZTProxy USDT TRC20 充值订单接口。基础地址：https://backend.ztproxy.net/api
 ---
 
 # USDT 充值
@@ -10,7 +10,7 @@ ZTProxy 支持通过 USDT TRC20 创建充值订单、查询链上支付状态、
 ## 获取收款钱包
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/usdt/wallet-info" \
+curl -X GET "https://backend.ztproxy.net/api/usdt/wallet-info" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -19,7 +19,7 @@ curl -X GET "https://api.wanyuagent.com/api/usdt/wallet-info" \
 ## 创建充值订单
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/usdt/create-order" \
+curl -X POST "https://backend.ztproxy.net/api/usdt/create-order" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -59,7 +59,7 @@ curl -X POST "https://api.wanyuagent.com/api/usdt/create-order" \
 ## 查询充值状态
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/usdt/check-status?order_id=USDT202605260001" \
+curl -X GET "https://backend.ztproxy.net/api/usdt/check-status?order_id=USDT202605260001" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -76,7 +76,7 @@ curl -X GET "https://api.wanyuagent.com/api/usdt/check-status?order_id=USDT20260
 ## 查询充值订单列表
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/usdt/orders?page=1&page_size=10&status=pending" \
+curl -X GET "https://backend.ztproxy.net/api/usdt/orders?page=1&page_size=10&status=pending" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -95,7 +95,7 @@ curl -X GET "https://api.wanyuagent.com/api/usdt/orders?page=1&page_size=10&stat
 ## 取消充值订单
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/usdt/cancel-order" \
+curl -X POST "https://backend.ztproxy.net/api/usdt/cancel-order" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{

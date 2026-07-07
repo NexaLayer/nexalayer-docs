@@ -1,6 +1,6 @@
 ---
 title: 动态订单
-description: 创建按流量使用的动态代理订单。基础地址：https://api.wanyuagent.com/api
+description: 创建按流量使用的动态代理订单。基础地址：https://backend.ztproxy.net/api
 ---
 
 # 动态订单
@@ -10,7 +10,7 @@ description: 创建按流量使用的动态代理订单。基础地址：https:/
 ## 创建动态订单
 
 ```bash
-curl -X POST "https://api.wanyuagent.com/api/open/app/order/create/v2" \
+curl -X POST "https://backend.ztproxy.net/api/open/app/order/create/v2" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -44,14 +44,14 @@ curl -X POST "https://api.wanyuagent.com/api/open/app/order/create/v2" \
 查询用户所有产品的动态流量：
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/user/1001/products-flow" \
+curl -X GET "https://backend.ztproxy.net/api/user/1001/products-flow" \
   -H "Authorization: Bearer <token>"
 ```
 
 查询指定产品剩余流量：
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/user/1001/remaining-flow/<dynamic_product_no>" \
+curl -X GET "https://backend.ztproxy.net/api/user/1001/remaining-flow/<dynamic_product_no>" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -60,7 +60,7 @@ curl -X GET "https://api.wanyuagent.com/api/user/1001/remaining-flow/<dynamic_pr
 ## 查询动态订单列表
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/dynamic?page=1&page_size=10&pool_type=<dynamic_product_no>" \
+curl -X GET "https://backend.ztproxy.net/api/dynamic?page=1&page_size=10&pool_type=<dynamic_product_no>" \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -79,14 +79,14 @@ curl -X GET "https://api.wanyuagent.com/api/dynamic?page=1&page_size=10&pool_typ
 按订单 ID 查询：
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/dynamic/123" \
+curl -X GET "https://backend.ztproxy.net/api/dynamic/123" \
   -H "Authorization: Bearer <token>"
 ```
 
 按订单号或应用订单号查询：
 
 ```bash
-curl -X GET "https://api.wanyuagent.com/api/dynamic/order-info/DYN202605260001abc123" \
+curl -X GET "https://backend.ztproxy.net/api/dynamic/order-info/DYN202605260001abc123" \
   -H "Authorization: Bearer <token>"
 ```
 
