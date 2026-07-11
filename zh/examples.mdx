@@ -16,7 +16,7 @@ python3 -m venv .venv
 pip install requests
 
 export NEXALAYER_BASE_URL=https://api.nexalayer.net/v1
-export NEXALAYER_API_KEY=agk_your_key
+export NEXALAYER_API_KEY=ak_your_key
 python main.py
 ```
 
@@ -33,7 +33,7 @@ python main.py
 ```bash
 cd agent/examples/playwright-session-demo
 npm install
-export NEXALAYER_API_KEY=agk_your_key
+export NEXALAYER_API_KEY=ak_your_key
 node index.mjs
 ```
 
@@ -52,4 +52,3 @@ proxy: {
 ```
 
 因此建议优先使用 `host`、`port`、`protocol`、`username`、`password` 字段构造 Playwright 配置。
-

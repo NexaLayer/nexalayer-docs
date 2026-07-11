@@ -14,14 +14,15 @@ https://api.nexalayer.net/v1
 Default auth:
 
 ```text
-X-API-Key: agk_your_key
+X-API-Key: ak_your_key
 ```
 
 ## Endpoints
 
 | Method | Path | Description |
 | --- | --- | --- |
-| `POST` | `/account/register` | Register an Agent and receive API credentials |
+| `POST` | `/account/request-api-key` | Request an API Key by email and claim trial credit once per email |
+| `POST` | `/account/register` | Legacy direct Agent registration |
 | `GET` | `/account/info` | Read Agent account state |
 | `GET` | `/products` | List dynamic and static products |
 | `POST` | `/products/recommend` | Recommend products for a target need |
@@ -54,8 +55,8 @@ X-API-Key: agk_your_key
   "success": true,
   "data": {
     "agent_id": 123,
-    "api_key": "agk_xxx",
-    "api_secret": "ags_xxx",
+    "api_key": "ak_xxx",
+    "api_secret": "sk_xxx",
     "backend_ready": true,
     "backend_sync_error": null,
     "trial": {

@@ -9,35 +9,36 @@ NexaLayer supports API key authentication. Agents, scripts, and automation jobs 
 
 ```bash
 curl "https://api.nexalayer.net/v1/account/info" \
-  -H "X-API-Key: agk_your_key"
+  -H "X-API-Key: ak_your_key"
 ```
 
-## Register
+## Request an API key by email
 
 ```bash
-curl -X POST "https://api.nexalayer.net/v1/account/register" \
+curl -X POST "https://api.nexalayer.net/v1/account/request-api-key" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "my-agent",
-    "contact_email": "dev@example.com",
+    "email": "dev@example.com",
     "referral_code": "optional"
   }'
 ```
 
-Response:
+The response does not include the API key. NexaLayer sends it to the mailbox:
 
 ```json
 {
   "success": true,
   "data": {
-    "agent_id": 123,
-    "api_key": "agk_xxx",
-    "api_secret": "ags_xxx",
+    "status": "email_sent",
+    "claim_status": "granted",
+    "trial_balance": 1,
     "backend_ready": true,
-    "backend_sync_error": null
+    "message": "If the email address is valid, the API key has been sent."
   }
 }
 ```
+
+Trial credit can be claimed once per email address. Later requests resend the existing API key.
 
 ## backend_ready
 
@@ -55,4 +56,3 @@ Idempotency-Key: create-session-20260710-001
 ```
 
 This lets agents retry safely without duplicating paid operations.
-

@@ -11,39 +11,36 @@ This guide walks through the minimum NexaLayer flow:
 API Key -> products -> create session -> proxy.full_url -> report result -> read health -> terminate session
 ```
 
-## 1. Register an Agent or use an existing API key
+## 1. Request an API key by email
 
 ```bash
 BASE_URL="https://api.nexalayer.net/v1"
 
-curl -X POST "$BASE_URL/account/register" \
+curl -X POST "$BASE_URL/account/request-api-key" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "quickstart-demo",
-    "contact_email": "dev@example.com"
+    "email": "dev@example.com"
   }'
 ```
 
-Check `api_key` and `backend_ready`:
+The response does not include the API key. NexaLayer sends it to the mailbox. The first claim for an email address receives $1 trial credit:
 
 ```json
 {
   "data": {
-    "agent_id": 123,
-    "api_key": "agk_xxx",
+    "status": "email_sent",
+    "claim_status": "granted",
+    "trial_balance": 1,
     "backend_ready": true,
-    "trial": {
-      "trial_balance": 1,
-      "claim_status": "granted"
-    }
+    "message": "If the email address is valid, the API key has been sent."
   }
 }
 ```
 
-Only create sessions when `backend_ready=true`. Trial credit is $1 and can be claimed once per email address. It is enough for a small dynamic session; production use can top up with USDT, with a $10 minimum.
+If the same email requests again, NexaLayer resends the existing API key and does not grant trial credit again. Trial credit is enough for a small dynamic session; production use can top up with USDT, with a $10 minimum.
 
 ```bash
-export NEXALAYER_API_KEY="agk_xxx"
+export NEXALAYER_API_KEY="ak_xxx"
 ```
 
 ## 2. List products
