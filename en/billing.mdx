@@ -5,7 +5,24 @@ description: Read balance, create recharge orders, and list transactions.
 
 # Billing
 
-NexaLayer exposes billing endpoints so agents can check resource readiness before provisioning.
+NexaLayer is priced in USD. USDT is the current self-service top-up method, and confirmed deposits become USD balance.
+
+Current fixed pricing:
+
+| Item | Price |
+| --- | --- |
+| Trial credit | $1, one claim per email address |
+| Minimum top-up | $10, paid with USDT |
+| Dynamic Session resources | $4 / GB |
+| Static Session resources | from $10 / month |
+| Session management | Free for now |
+
+## Pricing
+
+```bash
+curl "https://api.nexalayer.net/v1/billing/pricing" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
 
 ## Balance
 
@@ -21,8 +38,10 @@ curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $NEXALAYER_API_KEY" \
   -H "Idempotency-Key: recharge-001" \
-  -d '{ "amount": 10 }'
+  -d '{ "amount_usd": 10, "currency": "USDT" }'
 ```
+
+Recharge requests below $10 are rejected.
 
 ## Transactions
 
@@ -35,6 +54,6 @@ curl "https://api.nexalayer.net/v1/billing/transactions" \
 
 - read balance before creating paid sessions
 - send `Idempotency-Key` on write operations
-- validate real provisioning with low balance or controlled test accounts
+- use the $1 trial credit for a small `quantity=0.25` dynamic session
 - keep recharge, paid provisioning, and cleanup steps recoverable
-
+- trial credit is non-withdrawable and only for NexaLayer resource testing

@@ -5,7 +5,24 @@ description: 查询余额、创建充值订单、读取交易记录。
 
 # 计费与余额
 
-NexaLayer 提供余额和交易读取接口，便于 Agent 在执行前判断是否具备资源条件。
+NexaLayer 对外统一使用 USD 计价。USDT 是当前自助充值方式，确认到账后会进入 USD 余额。
+
+当前固定价格：
+
+| 项目 | 价格 |
+| --- | --- |
+| 试用额度 | $1，同一个邮箱地址只能领取一次 |
+| 最低充值 | $10，USDT 自助充值 |
+| Dynamic Session 资源 | $4 / GB |
+| Static Session 资源 | 最低 $10 / 月 |
+| Session 管理 | 暂时免费 |
+
+## 查询价格
+
+```bash
+curl "https://api.nexalayer.net/v1/billing/pricing" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
 
 ## 查询余额
 
@@ -21,8 +38,10 @@ curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $NEXALAYER_API_KEY" \
   -H "Idempotency-Key: recharge-001" \
-  -d '{ "amount": 10 }'
+  -d '{ "amount_usd": 10, "currency": "USDT" }'
 ```
+
+低于 $10 的充值请求会被拒绝。
 
 ## 查询交易记录
 
@@ -35,6 +54,6 @@ curl "https://api.nexalayer.net/v1/billing/transactions" \
 
 - 创建付费 Session 前先读取余额
 - 写操作携带 `Idempotency-Key`
-- 在测试环境或低额度账号中验证真实创建链路
+- $1 试用额度适合创建 `quantity=0.25` 的小流量 Dynamic Session
 - 不要把充值、扣费和清理动作混在一个不可恢复的脚本里
-
+- 试用额度不可提现，仅用于 NexaLayer 资源测试

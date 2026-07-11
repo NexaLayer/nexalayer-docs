@@ -34,6 +34,7 @@ X-API-Key: agk_your_key
 | `GET` | `/sessions/{session_id}/health` | Read health score and recommendation |
 | `GET` | `/sessions/{session_id}/usage` | Read usage for a Session |
 | `GET` | `/billing/balance` | Read balance and trial credit |
+| `GET` | `/billing/pricing` | Read current public USD pricing rules |
 | `POST` | `/billing/recharge` | Create a recharge order |
 | `GET` | `/billing/transactions` | List transactions |
 | `GET` | `/stats/overview` | Read account-level stats |
@@ -59,7 +60,8 @@ X-API-Key: agk_your_key
     "backend_sync_error": null,
     "trial": {
       "is_trial": true,
-      "trial_balance": 5
+      "trial_balance": 1,
+      "claim_status": "granted"
     }
   }
 }
@@ -71,7 +73,7 @@ X-API-Key: agk_your_key
 {
   "session_type": "dynamic",
   "product_no": "dynamic_ipweb",
-  "quantity": 1,
+  "quantity": 0.25,
   "duration": 30,
   "protocol": "socks5",
   "country_code": "US",
@@ -79,6 +81,31 @@ X-API-Key: agk_your_key
   "project_id": "optional-static-project",
   "rotation_mode": "on_demand",
   "rotation_interval_sec": 300
+}
+```
+
+## BillingResponse
+
+```json
+{
+  "currency": "USD",
+  "cash_balance": 10,
+  "trial_balance": 1,
+  "available_balance": 11,
+  "balance": 11
+}
+```
+
+## PricingResponse
+
+```json
+{
+  "currency": "USD",
+  "trial_credit_usd": 1,
+  "min_recharge_usd": 10,
+  "dynamic_usd_per_gb": 4,
+  "static_min_usd_per_month": 10,
+  "session_management_fee_usd": 0
 }
 ```
 

@@ -17,11 +17,13 @@ curl -X POST "https://api.nexalayer.net/v1/sessions" \
   -d '{
     "session_type": "dynamic",
     "product_no": "dynamic_ipweb",
-    "quantity": 1,
+    "quantity": 0.25,
     "protocol": "socks5",
     "rotation_mode": "on_demand"
   }'
 ```
+
+For dynamic sessions, `quantity` means GB and can be fractional; the current price is $4 / GB. For static sessions, `quantity` means IP count and must be an integer, with a $10 / month minimum.
 
 A static session may include:
 
@@ -81,3 +83,4 @@ curl -X DELETE "https://api.nexalayer.net/v1/sessions/$SID" \
 ```
 
 Every automation workflow should terminate sessions it no longer needs.
+Early termination releases the underlying resource; session management is free for now, and static resources are not automatically refunded by default.

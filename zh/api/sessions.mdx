@@ -17,11 +17,13 @@ curl -X POST "https://api.nexalayer.net/v1/sessions" \
   -d '{
     "session_type": "dynamic",
     "product_no": "dynamic_ipweb",
-    "quantity": 1,
+    "quantity": 0.25,
     "protocol": "socks5",
     "rotation_mode": "on_demand"
   }'
 ```
+
+Dynamic Session 的 `quantity` 表示 GB，可以使用小数；当前价格为 $4 / GB。Static Session 的 `quantity` 表示 IP 数量，必须是整数，最低 $10 / 月。
 
 静态 Session 可包含：
 
@@ -81,3 +83,4 @@ curl -X DELETE "https://api.nexalayer.net/v1/sessions/$SID" \
 ```
 
 所有脚本都应该在清理步骤终止不再使用的 Session。
+提前终止只释放底层资源；Session 管理暂时免费，Static 资源提前终止默认不自动退款。

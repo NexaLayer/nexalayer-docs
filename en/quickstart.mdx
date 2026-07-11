@@ -33,13 +33,14 @@ Check `api_key` and `backend_ready`:
     "api_key": "agk_xxx",
     "backend_ready": true,
     "trial": {
-      "trial_balance": 5
+      "trial_balance": 1,
+      "claim_status": "granted"
     }
   }
 }
 ```
 
-Only create sessions when `backend_ready=true`. It means the NexaLayer account has been synced to the underlying resource backend.
+Only create sessions when `backend_ready=true`. Trial credit is $1 and can be claimed once per email address. It is enough for a small dynamic session; production use can top up with USDT, with a $10 minimum.
 
 ```bash
 export NEXALAYER_API_KEY="agk_xxx"
@@ -66,11 +67,13 @@ curl -X POST "$BASE_URL/sessions" \
   -d "{
     \"session_type\": \"dynamic\",
     \"product_no\": \"$PRODUCT_NO\",
-    \"quantity\": 1,
+    \"quantity\": 0.25,
     \"protocol\": \"socks5\",
     \"rotation_mode\": \"on_demand\"
   }"
 ```
+
+Dynamic sessions are billed at $4 / GB, so `quantity=0.25` reserves $1. Static sessions start at $10 / month. Session lifecycle management is free for now.
 
 Session creation is asynchronous. A successful accepted response usually starts with `status=creating`.
 

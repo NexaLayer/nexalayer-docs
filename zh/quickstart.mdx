@@ -33,13 +33,14 @@ curl -X POST "$BASE_URL/account/register" \
     "api_key": "agk_xxx",
     "backend_ready": true,
     "trial": {
-      "trial_balance": 5
+      "trial_balance": 1,
+      "claim_status": "granted"
     }
   }
 }
 ```
 
-`backend_ready` 必须是 `true`，才应该继续创建 Session。它表示 NexaLayer 账号已经和底层资源后端完成同步。
+`backend_ready` 必须是 `true`，才应该继续创建 Session。试用额度为 $1，同一个邮箱地址只能领取一次。它适合创建小流量 Dynamic Session 验证链路；正式使用前可通过 USDT 自助充值，最低充值 $10。
 
 ```bash
 export NEXALAYER_API_KEY="agk_xxx"
@@ -66,11 +67,13 @@ curl -X POST "$BASE_URL/sessions" \
   -d "{
     \"session_type\": \"dynamic\",
     \"product_no\": \"$PRODUCT_NO\",
-    \"quantity\": 1,
+    \"quantity\": 0.25,
     \"protocol\": \"socks5\",
     \"rotation_mode\": \"on_demand\"
   }"
 ```
+
+Dynamic Session 按 $4 / GB 扣费，因此 `quantity=0.25` 会预扣 $1。Static Session 最低 $10 / 月。Session 创建、查询、遥测、健康和终止管理暂时不收平台费。
 
 创建接口是异步的。成功受理后通常返回 `status=creating`，下一步轮询详情。
 
