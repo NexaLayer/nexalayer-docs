@@ -1,0 +1,83 @@
+---
+title: Session API
+description: 创建、查询、轮换、续费和终止 NexaLayer Session。
+---
+
+# Session API
+
+Session API 是 NexaLayer 的核心。写操作建议携带 `Idempotency-Key`。
+
+## 创建 Session
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/sessions" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -H "Idempotency-Key: create-session-001" \
+  -d '{
+    "session_type": "dynamic",
+    "product_no": "dynamic_ipweb",
+    "quantity": 1,
+    "protocol": "socks5",
+    "rotation_mode": "on_demand"
+  }'
+```
+
+静态 Session 可包含：
+
+```json
+{
+  "session_type": "static",
+  "product_no": "static_us_englewood",
+  "quantity": 1,
+  "duration": 30,
+  "protocol": "socks5",
+  "country_code": "US",
+  "city_code": "ENGLEWOOD",
+  "project_id": "game"
+}
+```
+
+## 查询 Session
+
+```bash
+curl "https://api.nexalayer.net/v1/sessions/$SID" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+`active` 状态会返回 `proxy.full_url`，同时保留 `host`、`port`、`username`、`password` 兼容字段。
+
+## 轮换 Dynamic Session
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/rotate" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -H "Idempotency-Key: rotate-timeout-001" \
+  -d '{ "reason": "timeout" }'
+```
+
+支持原因：
+
+```text
+manual, scheduled, http_403, http_429, captcha, timeout, block
+```
+
+## 续费 Static Session
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/renew" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -H "Idempotency-Key: renew-static-001" \
+  -d '{ "duration": 30 }'
+```
+
+## 终止 Session
+
+```bash
+curl -X DELETE "https://api.nexalayer.net/v1/sessions/$SID" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+所有脚本都应该在清理步骤终止不再使用的 Session。

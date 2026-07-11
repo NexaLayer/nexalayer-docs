@@ -1,0 +1,40 @@
+---
+title: 计费与余额
+description: 查询余额、创建充值订单、读取交易记录。
+---
+
+# 计费与余额
+
+NexaLayer 提供余额和交易读取接口，便于 Agent 在执行前判断是否具备资源条件。
+
+## 查询余额
+
+```bash
+curl "https://api.nexalayer.net/v1/billing/balance" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+## 创建充值订单
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -H "Idempotency-Key: recharge-001" \
+  -d '{ "amount": 10 }'
+```
+
+## 查询交易记录
+
+```bash
+curl "https://api.nexalayer.net/v1/billing/transactions" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+## 接入建议
+
+- 创建付费 Session 前先读取余额
+- 写操作携带 `Idempotency-Key`
+- 在测试环境或低额度账号中验证真实创建链路
+- 不要把充值、扣费和清理动作混在一个不可恢复的脚本里
+

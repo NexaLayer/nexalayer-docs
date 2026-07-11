@@ -1,0 +1,32 @@
+---
+title: 验证状态
+description: 当前文档按 Phase 0 已验证能力书写，并明确真实 Session 的受控边界。
+---
+
+# 验证状态
+
+本文档按当前已经验证的产品边界书写。
+
+## 已验证安全链路
+
+`npm run test:phase0` 用于安全验证，不创建付费 Session。覆盖：
+
+- 注册 Agent
+- API Key 认证
+- 动态产品列表
+- 余额读取
+- 交易记录读取
+- `backend_ready=true` 门槛
+
+## 受控真实链路
+
+`npm run test:phase0:real` 是真实付费 Session 路径，只有在受控环境和低额度账号下使用。它会创建一个 dynamic Session，轮询到 active，检查 `proxy.full_url`，上报遥测，读取健康和计费，然后清理。
+
+## 停止规则
+
+如果真实链路在底层资源侧返回动态账号不可用、供应商无库存或后端同步失败，应停止重试并调查底层资源状态。不要通过反复创建付费 Session 来“撞成功”。
+
+## 文档承诺边界
+
+本公开文档只承诺当前 API 和 Session Layer 能力。Browser OS、完整 Workflow、MCP、更多指纹维度等属于路线图，不在当前公开接入承诺范围内。
+

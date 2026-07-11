@@ -1,0 +1,55 @@
+---
+title: 示例
+description: Python、Playwright 和浏览器自动化示例的推荐接入方式。
+---
+
+# 示例
+
+仓库中已有最小示例，可用于验证 API Key、产品查询、Session 创建、`proxy.full_url` 使用、遥测上报和清理流程。
+
+## Python
+
+```bash
+cd agent/examples/python-quickstart
+python3 -m venv .venv
+. .venv/bin/activate
+pip install requests
+
+export NEXALAYER_BASE_URL=https://api.nexalayer.net/v1
+export NEXALAYER_API_KEY=agk_your_key
+python main.py
+```
+
+没有 API Key 时，可以让示例注册一个 Agent：
+
+```bash
+export NEXALAYER_REGISTER=1
+export NEXALAYER_AGENT_NAME=quickstart-demo
+python main.py
+```
+
+## Playwright
+
+```bash
+cd agent/examples/playwright-session-demo
+npm install
+export NEXALAYER_API_KEY=agk_your_key
+node index.mjs
+```
+
+脚本会创建 dynamic Session，等待 `active`，启动 Chromium 访问 `https://httpbin.org/ip`，把执行结果上报回 NexaLayer，并在结束时清理 Session。
+
+## Playwright 代理形态
+
+NexaLayer 返回 `proxy.full_url`，但 Playwright 通常需要拆成：
+
+```ts
+proxy: {
+  server: "socks5://proxy.example.net:6666",
+  username: "user",
+  password: "pass"
+}
+```
+
+因此建议优先使用 `host`、`port`、`protocol`、`username`、`password` 字段构造 Playwright 配置。
+

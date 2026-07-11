@@ -1,62 +1,62 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "theme": "mint",
-  "name": "ZTProxy API 文档",
+  "name": "NexaLayer Docs",
   "logo": {
     "dark": "/logo.svg",
     "light": "/logo.svg"
   },
   "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#1677ff"
+    "primary": "#4F46E5"
   },
   "navigation": {
     "groups": [
       {
-        "group": "快速开始",
+        "group": "中文",
         "pages": [
-          "introduction",
-          "quickstart",
-          "authentication",
-          "accounts"
+          "zh/README",
+          "zh/introduction",
+          "zh/quick-start",
+          "zh/sessions",
+          "zh/telemetry",
+          "zh/health",
+          "zh/playwright-demo",
+          "zh/concepts/session-layer",
+          "zh/api/authentication",
+          "zh/api/products",
+          "zh/api/sessions",
+          "zh/api/telemetry-health",
+          "zh/billing",
+          "zh/nl-agent",
+          "zh/examples",
+          "zh/validation"
         ]
       },
       {
-        "group": "产品与地区",
+        "group": "English",
         "pages": [
-          "products"
+          "en/introduction",
+          "en/quick-start",
+          "en/sessions",
+          "en/telemetry",
+          "en/health",
+          "en/playwright",
+          "en/concepts/session-layer",
+          "en/api/authentication",
+          "en/api/products",
+          "en/api/sessions",
+          "en/api/telemetry-health",
+          "en/billing",
+          "en/nl-agent",
+          "en/examples",
+          "en/validation"
         ]
       },
       {
-        "group": "订单",
+        "group": "Reference",
         "pages": [
-          "sessions/overview",
-          "sessions/dynamic",
-          "sessions/dynamic-sub-users",
-          "sessions/dynamic-flow",
-          "sessions/static",
-          "sessions/renew",
-          "sessions/terminate"
-        ]
-      },
-      {
-        "group": "账单与记录",
-        "pages": [
-          "billing/balance",
-          "billing/transactions",
-          "billing/usdt",
-          "billing/recharge"
-        ]
-      },
-      {
-        "group": "参考",
-        "pages": [
-          "api-reference/openapi",
-          "errors",
-          "best-practices",
-          "stats",
-          "architecture",
-          "backend-integration"
+          "api-reference/openapi"
         ]
       }
     ]

@@ -1,0 +1,56 @@
+---
+title: Session Layer
+description: NexaLayer models network execution as sessions, not raw proxy IPs.
+---
+
+# Session Layer
+
+The core NexaLayer abstraction is the `Session`. A session is a manageable network execution context that includes the underlying proxy resource, current status, health signals, telemetry, and cleanup actions.
+
+## Why not just return an IP?
+
+AI agents and browser automation workflows need more than a connectable IP:
+
+- retries need to know whether provisioning actually failed
+- execution needs to report timeouts, CAPTCHAs, blocks, and HTTP errors
+- risk should turn into rotation or pause recommendations
+- cleanup must be explicit
+- each task should be auditable after it runs
+
+The session model puts those behaviors into one lifecycle.
+
+## Dynamic sessions
+
+Dynamic sessions are a good fit for:
+
+- high-volume or short-lived tasks
+- jobs that can rotate after `timeout`, `captcha`, or `http_429`
+- workflows that value recoverability more than stable IP identity
+
+Dynamic sessions support `rotate`.
+
+## Static sessions
+
+Static sessions are a good fit for:
+
+- account login and long-lived state
+- fixed country, city, or business project needs
+- automation that depends on IP continuity
+
+Static sessions normally do not rotate. Renew, terminate, or create a new static session instead.
+
+## Status model
+
+| Status | Meaning |
+| --- | --- |
+| `creating` | Accepted and provisioning with the resource backend |
+| `active` | Ready; `proxy.full_url` is available |
+| `failed` | Provisioning failed; inspect the error before retrying |
+| `terminated` | Session has been terminated or released |
+
+## The backend_ready gate
+
+After registration, NexaLayer must sync the Agent account to the underlying resource backend. Only proceed with provisioning when `backend_ready=true`.
+
+If `backend_ready=false`, block provisioning and surface the sync error instead of pretending the account is ready.
+

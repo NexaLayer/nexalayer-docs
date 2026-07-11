@@ -1,0 +1,43 @@
+---
+title: Natural-Language Agent
+description: NexaLayer natural-language routes are a controlled operation surface, not an open-ended chatbot.
+---
+
+# Natural-Language Agent
+
+The NexaLayer NL Agent is a controlled natural-language operation surface. It parses user input into limited intents, maps them to capabilities, and calls explicit APIs.
+
+## Principles
+
+- execute supported resource operations only
+- require confirmation for sensitive actions
+- map Intent to Capability before calling an API
+- preserve result context for follow-ups like “pick the second one”
+- prefer entity-aware routing so an IP-specific question does not become a broad list query
+
+## Flow
+
+```text
+User input
+  -> Intent parsing
+  -> Capability mapping
+  -> Slot extraction and confirmation
+  -> Executor calls API
+  -> Formatter returns a natural-language result
+```
+
+## Example
+
+```text
+User: What dynamic products are available in the US?
+System: Returns a product list and stores it as lastResult.
+
+User: Pick two with the most inventory.
+System: Ranks the previous result and recommends two products.
+
+User: Open the first one.
+System: Asks for confirmation, then creates a session.
+```
+
+Use NL Agent for console workflows and assisted operations. For production scripts, call the REST API directly.
+

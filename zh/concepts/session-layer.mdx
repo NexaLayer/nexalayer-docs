@@ -1,0 +1,56 @@
+---
+title: Session Layer
+description: NexaLayer 的核心抽象是 Session，而不是裸代理 IP。
+---
+
+# Session Layer
+
+NexaLayer 的核心抽象是 `Session`。一个 Session 代表一次可管理的网络执行上下文，包含底层代理资源、状态、健康、使用记录和清理动作。
+
+## 为什么不是直接返回 IP
+
+AI Agent 和浏览器自动化需要的不是“一个能连上的 IP”，而是：
+
+- 创建失败时能知道是否可重试
+- 执行中能上报超时、验证码、封禁和 HTTP 错误
+- 出现风险时能获得轮换建议
+- 自动化结束后能明确释放资源
+- 同一任务能被审计和复盘
+
+Session 把这些行为放到一个生命周期里。
+
+## Dynamic Session
+
+动态 Session 适合：
+
+- 大批量抓取和短周期任务
+- 需要按 `timeout`、`captcha`、`http_429` 等原因轮换的任务
+- 对固定 IP 身份要求不高，但希望自动化可恢复的场景
+
+动态 Session 支持 `rotate`。
+
+## Static Session
+
+静态 Session 适合：
+
+- 账号登录和长期保活
+- 固定国家 / 城市 / 业务项目
+- 对 IP 连续性有要求的自动化任务
+
+静态 Session 通常不做 rotate；需要续费、终止或重新创建。
+
+## 状态模型
+
+| 状态 | 含义 |
+| --- | --- |
+| `creating` | 已受理，正在向底层资源后端申请 |
+| `active` | 可用，`proxy.full_url` 已返回 |
+| `failed` | 创建失败，查看错误信息后决定是否重试 |
+| `terminated` | 已终止或释放 |
+
+## backend_ready 门槛
+
+注册 Agent 后，NexaLayer 需要把账号同步到底层资源后端。只有 `backend_ready=true` 时，才应该继续执行创建 Session 等资源动作。
+
+如果 `backend_ready=false`，正确行为是阻止开通类操作并提示同步失败原因，而不是假装注册成功。
+

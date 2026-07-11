@@ -1,0 +1,58 @@
+---
+title: 认证
+description: NexaLayer 推荐 AI Agent 直接使用 X-API-Key 认证。
+---
+
+# 认证
+
+NexaLayer 支持 API Key 认证。AI Agent、脚本和自动化任务推荐每次请求直接携带 `X-API-Key`。
+
+```bash
+curl "https://api.nexalayer.net/v1/account/info" \
+  -H "X-API-Key: agk_your_key"
+```
+
+## 注册
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/account/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "my-agent",
+    "contact_email": "dev@example.com",
+    "referral_code": "optional"
+  }'
+```
+
+响应：
+
+```json
+{
+  "success": true,
+  "data": {
+    "agent_id": 123,
+    "api_key": "agk_xxx",
+    "api_secret": "ags_xxx",
+    "backend_ready": true,
+    "backend_sync_error": null
+  }
+}
+```
+
+## backend_ready
+
+`backend_ready` 是资源可用性的真实门槛：
+
+- `true`：账号已经完成后端同步，可以继续查询产品、余额并创建 Session
+- `false`：不要继续创建 Session，应该提示用户或重试账号同步
+
+## 幂等请求
+
+创建 Session、轮换、续费、充值等写操作建议携带 `Idempotency-Key`：
+
+```text
+Idempotency-Key: create-session-20260710-001
+```
+
+Agent 可以安全重试同一个动作，避免网络抖动造成重复扣费或重复创建。
+

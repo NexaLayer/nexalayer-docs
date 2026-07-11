@@ -1,0 +1,47 @@
+---
+title: 介绍
+description: NexaLayer 是面向 AI Agent 和浏览器自动化的 Session-based Network Execution Layer。
+---
+
+# NexaLayer 是什么
+
+NexaLayer 是面向 AI Agent、Playwright、Puppeteer、Browser-use、爬虫和自动化脚本的网络执行层。它不把代理资源直接暴露成一堆 IP，而是封装成可创建、可查询、可轮换、可观测、可终止的 `Session`。
+
+传统代理服务回答的是“从哪里访问”。指纹浏览器回答的是“看起来像谁”。NexaLayer 关注的是“这次自动化会话如何持续可用、可恢复、可审计”。
+
+## 核心能力
+
+- Agent 账户注册和 `X-API-Key` 认证
+- 动态 / 静态网络 Session 生命周期管理
+- `proxy.full_url` 输出，便于自动化脚本直接接入
+- 任务结果上报：`success`、`http_error`、`captcha`、`timeout`、`block`、`rate_limit`
+- Session 健康评分、风险等级和轮换建议
+- 余额、充值订单、交易记录等计费接口
+- 受控自然语言 Agent，用有限意图安全地执行网络资源操作
+
+## 基础地址
+
+```text
+https://api.nexalayer.net/v1
+```
+
+所有 Agent API 默认使用：
+
+```text
+X-API-Key: agk_your_key
+```
+
+## 当前产品边界
+
+NexaLayer 当前文档按已经验证的 Phase 0 能力书写：注册、API Key 认证、产品列表、余额和交易读取已经作为安全链路验证；创建真实付费 Session 属于受控路径，接入前应确认账号 `backend_ready=true`，并在低额度或测试环境中执行。
+
+浏览器 OS、完整 Workflow 编排、MCP 和大规模指纹维度属于产品路线中的扩展方向，本文档不会把它们写成已经可用的公开能力。
+
+## 推荐阅读顺序
+
+1. [快速开始](/zh/quickstart)
+2. [Session Layer](/zh/concepts/session-layer)
+3. [认证](/zh/api/authentication)
+4. [Session API](/zh/api/sessions)
+5. [遥测与健康](/zh/api/telemetry-health)
+

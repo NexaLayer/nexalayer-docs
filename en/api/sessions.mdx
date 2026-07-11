@@ -1,0 +1,83 @@
+---
+title: Session API
+description: Create, read, rotate, renew, and terminate NexaLayer sessions.
+---
+
+# Session API
+
+The Session API is the core NexaLayer surface. Send `Idempotency-Key` on write operations.
+
+## Create a session
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/sessions" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -H "Idempotency-Key: create-session-001" \
+  -d '{
+    "session_type": "dynamic",
+    "product_no": "dynamic_ipweb",
+    "quantity": 1,
+    "protocol": "socks5",
+    "rotation_mode": "on_demand"
+  }'
+```
+
+A static session may include:
+
+```json
+{
+  "session_type": "static",
+  "product_no": "static_us_englewood",
+  "quantity": 1,
+  "duration": 30,
+  "protocol": "socks5",
+  "country_code": "US",
+  "city_code": "ENGLEWOOD",
+  "project_id": "game"
+}
+```
+
+## Get a session
+
+```bash
+curl "https://api.nexalayer.net/v1/sessions/$SID" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+When `status=active`, the response includes `proxy.full_url` while keeping `host`, `port`, `username`, and `password` for compatibility.
+
+## Rotate a dynamic session
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/rotate" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -H "Idempotency-Key: rotate-timeout-001" \
+  -d '{ "reason": "timeout" }'
+```
+
+Supported reasons:
+
+```text
+manual, scheduled, http_403, http_429, captcha, timeout, block
+```
+
+## Renew a static session
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/renew" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -H "Idempotency-Key: renew-static-001" \
+  -d '{ "duration": 30 }'
+```
+
+## Terminate a session
+
+```bash
+curl -X DELETE "https://api.nexalayer.net/v1/sessions/$SID" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+Every automation workflow should terminate sessions it no longer needs.

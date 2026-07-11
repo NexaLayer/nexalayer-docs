@@ -1,0 +1,54 @@
+---
+title: 遥测与健康
+description: 上报执行结果，让 NexaLayer 给出健康评分和轮换建议。
+---
+
+# 遥测与健康
+
+NexaLayer 不只返回代理地址，还接收自动化任务的执行结果。上报事件越准确，健康评分和轮换建议越有用。
+
+## 上报事件
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/report-event" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -d '{
+    "event_type": "http_error",
+    "status_code": 403,
+    "target_host": "example.com",
+    "latency_ms": 1800
+  }'
+```
+
+## event_type
+
+| 类型 | 含义 |
+| --- | --- |
+| `success` | 请求或页面任务成功 |
+| `http_error` | HTTP 错误 |
+| `captcha` | 遇到验证码 |
+| `timeout` | 请求或页面加载超时 |
+| `block` | 明确被拦截或封禁 |
+| `rate_limit` | 429 或频控 |
+| `custom` | 业务自定义事件 |
+
+## 查询健康
+
+```bash
+curl "https://api.nexalayer.net/v1/sessions/$SID/health" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+响应包含：
+
+| 字段 | 说明 |
+| --- | --- |
+| `health_score` | 0-100 健康分 |
+| `risk_level` | `low`、`medium`、`high` |
+| `success_rate` | 成功率 |
+| `consecutive_failures` | 连续失败次数 |
+| `recommendation` | `ok`、`consider_rotate`、`rotate_now`、`pause` |
+
+`timeout`、`captcha`、`block` 不是中性噪声，它们应该进入健康判断。
+

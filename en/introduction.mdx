@@ -1,0 +1,47 @@
+---
+title: Introduction
+description: NexaLayer is a session-based Network Execution Layer for AI agents and browser automation.
+---
+
+# What is NexaLayer?
+
+NexaLayer is a Network Execution Layer for AI agents, Playwright, Puppeteer, Browser-use, crawlers, and automation scripts. Instead of exposing raw proxy IPs, it wraps dynamic and static network resources into manageable `Session` objects.
+
+A traditional proxy service answers “where does this request come from?” A fingerprint browser answers “who does this browser look like?” NexaLayer focuses on “how does this automation session stay usable, observable, recoverable, and auditable?”
+
+## Core capabilities
+
+- Agent account registration and `X-API-Key` authentication
+- Dynamic and static network session lifecycle management
+- `proxy.full_url` output for automation tools
+- Execution telemetry: `success`, `http_error`, `captcha`, `timeout`, `block`, and `rate_limit`
+- Session health score, risk level, and rotation recommendation
+- Balance, recharge order, and transaction endpoints
+- Controlled natural-language agent routes for safe network-resource operations
+
+## Base URL
+
+```text
+https://api.nexalayer.net/v1
+```
+
+Most Agent API calls use:
+
+```text
+X-API-Key: agk_your_key
+```
+
+## Current product boundary
+
+These docs describe the currently validated Phase 0 surface: registration, API key auth, product listing, balance reads, and transaction reads. Real paid session creation is a controlled path. Before provisioning resources, make sure the account reports `backend_ready=true`.
+
+Browser OS, full workflow orchestration, MCP, and broad fingerprint dimensions are roadmap areas. They are not documented here as generally available public features.
+
+## Suggested reading order
+
+1. [Quickstart](/en/quickstart)
+2. [Session Layer](/en/concepts/session-layer)
+3. [Authentication](/en/api/authentication)
+4. [Session API](/en/api/sessions)
+5. [Telemetry and Health](/en/api/telemetry-health)
+

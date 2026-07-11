@@ -1,0 +1,40 @@
+---
+title: Billing
+description: Read balance, create recharge orders, and list transactions.
+---
+
+# Billing
+
+NexaLayer exposes billing endpoints so agents can check resource readiness before provisioning.
+
+## Balance
+
+```bash
+curl "https://api.nexalayer.net/v1/billing/balance" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+## Recharge
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -H "Idempotency-Key: recharge-001" \
+  -d '{ "amount": 10 }'
+```
+
+## Transactions
+
+```bash
+curl "https://api.nexalayer.net/v1/billing/transactions" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+## Integration guidance
+
+- read balance before creating paid sessions
+- send `Idempotency-Key` on write operations
+- validate real provisioning with low balance or controlled test accounts
+- keep recharge, paid provisioning, and cleanup steps recoverable
+

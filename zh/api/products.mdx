@@ -1,0 +1,40 @@
+---
+title: 产品
+description: 查询动态和静态网络资源产品，并选择适合 Session 的 product_no。
+---
+
+# 产品
+
+产品列表用于选择创建 Session 时的 `product_no`。
+
+```bash
+curl "https://api.nexalayer.net/v1/products?type=all" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+## 查询参数
+
+| 参数 | 说明 |
+| --- | --- |
+| `type` | `all`、`dynamic`、`static` |
+| `country_code` | 可选，按国家过滤 |
+
+## 响应字段
+
+常用字段包括：
+
+| 字段 | 说明 |
+| --- | --- |
+| `product_no` | 创建 Session 时使用 |
+| `type` | `dynamic` 或 `static` |
+| `country_code` / `city_code` | 国家和城市代码 |
+| `protocols` | 支持的协议 |
+| `inventory` | 当前库存或可用量 |
+| `project_required` | 静态共享产品是否需要项目 |
+
+## 产品选择建议
+
+- 批量抓取、失败后可换出口：选 `dynamic`
+- 账号登录、长期保活、固定地区：选 `static`
+- 不确定时先从低额度 dynamic Session 开始，配合遥测和 health 判断效果
+

@@ -1,0 +1,55 @@
+---
+title: Examples
+description: Python, Playwright, and browser automation examples for NexaLayer.
+---
+
+# Examples
+
+The repository includes runnable examples for API key auth, product listing, session creation, `proxy.full_url`, telemetry reporting, and cleanup.
+
+## Python
+
+```bash
+cd agent/examples/python-quickstart
+python3 -m venv .venv
+. .venv/bin/activate
+pip install requests
+
+export NEXALAYER_BASE_URL=https://api.nexalayer.net/v1
+export NEXALAYER_API_KEY=agk_your_key
+python main.py
+```
+
+To register an Agent from the example:
+
+```bash
+export NEXALAYER_REGISTER=1
+export NEXALAYER_AGENT_NAME=quickstart-demo
+python main.py
+```
+
+## Playwright
+
+```bash
+cd agent/examples/playwright-session-demo
+npm install
+export NEXALAYER_API_KEY=agk_your_key
+node index.mjs
+```
+
+The script creates a dynamic session, waits for `active`, launches Chromium against `https://httpbin.org/ip`, reports telemetry, and terminates the session during cleanup.
+
+## Playwright proxy shape
+
+NexaLayer returns `proxy.full_url`, but Playwright commonly expects:
+
+```ts
+proxy: {
+  server: "socks5://proxy.example.net:6666",
+  username: "user",
+  password: "pass"
+}
+```
+
+Prefer `host`, `port`, `protocol`, `username`, and `password` when building Playwright config.
+

@@ -1,0 +1,151 @@
+---
+title: 快速开始
+description: 用 API Key 查询产品、创建 Session、获取 proxy.full_url、上报执行结果并清理资源。
+---
+
+# 快速开始
+
+这份 Quick Start 面向第一次接入 NexaLayer 的开发者，目标是跑通最小链路：
+
+```text
+API Key -> 产品列表 -> 创建 Session -> 获取 proxy.full_url -> 上报结果 -> 查询健康 -> 终止 Session
+```
+
+## 1. 注册 Agent 或使用已有 API Key
+
+```bash
+BASE_URL="https://api.nexalayer.net/v1"
+
+curl -X POST "$BASE_URL/account/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "quickstart-demo",
+    "contact_email": "dev@example.com"
+  }'
+```
+
+重点看响应里的 `api_key` 和 `backend_ready`：
+
+```json
+{
+  "data": {
+    "agent_id": 123,
+    "api_key": "agk_xxx",
+    "backend_ready": true,
+    "trial": {
+      "trial_balance": 5
+    }
+  }
+}
+```
+
+`backend_ready` 必须是 `true`，才应该继续创建 Session。它表示 NexaLayer 账号已经和底层资源后端完成同步。
+
+```bash
+export NEXALAYER_API_KEY="agk_xxx"
+```
+
+## 2. 查询产品
+
+```bash
+curl "$BASE_URL/products?type=dynamic" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+产品响应里的 `product_no` 用于创建 Session。动态产品适合短周期、批量、需要按失败原因轮换的任务；静态产品适合账号保活、固定地区、长期会话。
+
+## 3. 创建 Dynamic Session
+
+```bash
+PRODUCT_NO="dynamic_ipweb"
+
+curl -X POST "$BASE_URL/sessions" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -H "Idempotency-Key: create-dynamic-001" \
+  -d "{
+    \"session_type\": \"dynamic\",
+    \"product_no\": \"$PRODUCT_NO\",
+    \"quantity\": 1,
+    \"protocol\": \"socks5\",
+    \"rotation_mode\": \"on_demand\"
+  }"
+```
+
+创建接口是异步的。成功受理后通常返回 `status=creating`，下一步轮询详情。
+
+## 4. 轮询到 active
+
+```bash
+SID="sess_xxx"
+
+curl "$BASE_URL/sessions/$SID" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+当 `status=active` 时，会返回：
+
+```json
+{
+  "data": {
+    "session_id": "sess_xxx",
+    "status": "active",
+    "proxy": {
+      "host": "proxy.example.net",
+      "port": 6666,
+      "username": "user",
+      "password": "pass",
+      "protocol": "socks5",
+      "full_url": "<redacted-proxy-url>"
+    }
+  }
+}
+```
+
+`proxy.full_url` 适合传给 `curl`、Python requests 或支持代理 URL 的工具。Playwright 通常需要拆成 `server`、`username`、`password`。
+
+## 5. 上报执行结果
+
+```bash
+curl -X POST "$BASE_URL/sessions/$SID/report-event" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -d '{
+    "event_type": "success",
+    "status_code": 200,
+    "target_host": "example.com",
+    "latency_ms": 1200
+  }'
+```
+
+这些事件会影响健康评分和轮换建议。
+
+## 6. 查询健康
+
+```bash
+curl "$BASE_URL/sessions/$SID/health" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+典型返回：
+
+```json
+{
+  "data": {
+    "health_score": 100,
+    "risk_level": "low",
+    "success_rate": 1,
+    "consecutive_failures": 0,
+    "recommendation": "ok"
+  }
+}
+```
+
+## 7. 清理 Session
+
+```bash
+curl -X DELETE "$BASE_URL/sessions/$SID" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+自动化脚本应把清理放进 `finally` 或退出钩子，避免留下未终止的资源。

@@ -1,0 +1,58 @@
+---
+title: Authentication
+description: NexaLayer recommends direct X-API-Key authentication for agents and scripts.
+---
+
+# Authentication
+
+NexaLayer supports API key authentication. Agents, scripts, and automation jobs should send `X-API-Key` on each request.
+
+```bash
+curl "https://api.nexalayer.net/v1/account/info" \
+  -H "X-API-Key: agk_your_key"
+```
+
+## Register
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/account/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "my-agent",
+    "contact_email": "dev@example.com",
+    "referral_code": "optional"
+  }'
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "agent_id": 123,
+    "api_key": "agk_xxx",
+    "api_secret": "ags_xxx",
+    "backend_ready": true,
+    "backend_sync_error": null
+  }
+}
+```
+
+## backend_ready
+
+`backend_ready` is the real provisioning gate:
+
+- `true`: the account is synced and can list products, read balance, and create sessions
+- `false`: do not create sessions; surface or retry the backend sync problem
+
+## Idempotency
+
+For write operations such as session creation, rotation, renewal, and recharge, send an `Idempotency-Key`:
+
+```text
+Idempotency-Key: create-session-20260710-001
+```
+
+This lets agents retry safely without duplicating paid operations.
+

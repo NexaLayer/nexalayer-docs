@@ -1,0 +1,54 @@
+---
+title: Telemetry and Health
+description: Report execution outcomes so NexaLayer can score session health and recommend rotation.
+---
+
+# Telemetry and Health
+
+NexaLayer does more than return a proxy address. It accepts execution outcomes from your automation so it can score session health and recommend when to rotate or pause.
+
+## Report an event
+
+```bash
+curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/report-event" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -d '{
+    "event_type": "http_error",
+    "status_code": 403,
+    "target_host": "example.com",
+    "latency_ms": 1800
+  }'
+```
+
+## event_type
+
+| Type | Meaning |
+| --- | --- |
+| `success` | Request or page task succeeded |
+| `http_error` | HTTP error |
+| `captcha` | CAPTCHA encountered |
+| `timeout` | Request or page load timed out |
+| `block` | Clear anti-bot or access block |
+| `rate_limit` | 429 or rate limit |
+| `custom` | Application-specific event |
+
+## Read health
+
+```bash
+curl "https://api.nexalayer.net/v1/sessions/$SID/health" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+Response fields:
+
+| Field | Meaning |
+| --- | --- |
+| `health_score` | 0-100 score |
+| `risk_level` | `low`, `medium`, or `high` |
+| `success_rate` | Success ratio |
+| `consecutive_failures` | Consecutive failure count |
+| `recommendation` | `ok`, `consider_rotate`, `rotate_now`, or `pause` |
+
+`timeout`, `captcha`, and `block` are not neutral noise. They should influence risk and recovery decisions.
+

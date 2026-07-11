@@ -1,6 +1,8 @@
-# ZTProxy API 文档
+# NexaLayer Docs
 
-这是 ZTProxy 对外 API 的 Mintlify 文档站。
+This is the public documentation site for NexaLayer, the session-based Network Execution Layer for AI agents and browser automation.
+
+这是 NexaLayer 的公开文档站。NexaLayer 面向 AI Agent、Playwright、Puppeteer、Browser-use、爬虫和自动化脚本，提供以 Session 为核心的网络执行层。
 
 ## 本地开发
 
@@ -16,7 +18,7 @@ npm i -g mintlify
 mintlify dev
 ```
 
-## 生产 API
+## Production API
 
-- API 基础地址：`https://backend.ztproxy.net/api`
-- 健康检查：`https://api.wanyuagent.com/health`
+- Base URL: `https://api.nexalayer.net/v1`
+- Auth: `X-API-Key`

@@ -1,0 +1,40 @@
+---
+title: Products
+description: List dynamic and static products and choose the product_no for a session.
+---
+
+# Products
+
+Products define which resource should back a session. Use `product_no` when creating a session.
+
+```bash
+curl "https://api.nexalayer.net/v1/products?type=all" \
+  -H "X-API-Key: $NEXALAYER_API_KEY"
+```
+
+## Query parameters
+
+| Parameter | Description |
+| --- | --- |
+| `type` | `all`, `dynamic`, or `static` |
+| `country_code` | Optional country filter |
+
+## Response fields
+
+Common fields:
+
+| Field | Description |
+| --- | --- |
+| `product_no` | Use this value in `POST /sessions` |
+| `type` | `dynamic` or `static` |
+| `country_code` / `city_code` | Country and city codes |
+| `protocols` | Supported protocols |
+| `inventory` | Available stock or capacity |
+| `project_required` | Whether a static shared product needs a project |
+
+## Choosing a product
+
+- choose `dynamic` for high-volume tasks and rotation-friendly jobs
+- choose `static` for account login, long-lived identity, and fixed-region automation
+- when unsure, start with a low-volume dynamic session and use telemetry plus health data to evaluate the fit
+

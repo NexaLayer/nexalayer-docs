@@ -1,0 +1,32 @@
+---
+title: Validation Status
+description: These docs track the validated Phase 0 surface and the controlled boundary for real sessions.
+---
+
+# Validation Status
+
+These docs are written around the currently validated product boundary.
+
+## Safe validated path
+
+`npm run test:phase0` validates the safe path without creating a paid session:
+
+- Agent registration
+- API key authentication
+- dynamic product listing
+- balance reads
+- transaction reads
+- the `backend_ready=true` gate
+
+## Controlled real path
+
+`npm run test:phase0:real` is the real paid-session path. Use it only in controlled environments with low balance. It creates one dynamic session, polls until active, checks `proxy.full_url`, reports telemetry, reads health and billing, then cleans up.
+
+## Stop rule
+
+If the real path fails because the underlying dynamic account is unavailable, supplier inventory is missing, or backend sync failed, stop retrying and investigate the resource backend. Do not repeatedly create paid sessions hoping one succeeds.
+
+## Documentation boundary
+
+This public documentation covers the current API and Session Layer. Browser OS, full Workflow orchestration, MCP, and broader fingerprint dimensions remain roadmap areas, not current public integration commitments.
+
