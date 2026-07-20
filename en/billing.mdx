@@ -7,6 +7,8 @@ description: Read balance, create recharge orders, and list transactions.
 
 IPProxy's backend CNY balance remains the single source of truth. NexaLayer displays balance, prices, and transactions in USD by converting them with IPProxy's current effective USD/CNY rate. NexaLayer does not maintain a second spendable wallet.
 
+All public USD balances, prices, and charge amounts are rounded to two decimal places. Exchange rates retain four decimal places, while the exact USDT payment amount returned by a recharge order must not be rounded because it identifies the transfer.
+
 Current billing policy:
 
 | Item | Price |
