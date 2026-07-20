@@ -1,14 +1,111 @@
 ---
 title: 快速开始
-description: 中文 Quick Start 入口。
+description: 用 Playwright 跑通 NexaLayer Session、Telemetry、Health 与 Cleanup。
 ---
 
 # 快速开始
 
-按照这个流程领取 API Key、选择产品、创建 Session，并在任务结束后清理资源。
+这份 Quick Start 面向第一次接触 NexaLayer 的中文开发者。完成后，你会创建一个 Dynamic Session、通过返回的代理启动 Playwright、上报 Telemetry、查询 Health，并终止 Session。
 
-核心流程：
+完整链路：
 
 ```text
 API Key -> 产品列表 -> 创建 Session -> proxy.full_url -> Telemetry -> Health -> Cleanup
 ```
+
+<Warning>
+运行示例会创建真实 Session，可能产生费用。建议使用开发者试用额度或低额度账号，并确认程序最后输出 `terminated`。
+</Warning>
+
+## 1. 准备环境
+
+需要安装 Git 和 Node.js 20 或更高版本。
+
+```bash
+git --version
+node --version
+npm --version
+```
+
+## 2. 获取 API Key
+
+通过 [开发者试用申请](https://github.com/NexaLayer/.github/issues/new?template=developer_partner.yml) 获取 API Key。API Key 只应保存在本机环境变量或 `.env` 中，不要提交到 Git，也不要粘贴到 Issue、日志或截图里。
+
+## 3. 下载 Playwright Demo
+
+```bash
+git clone https://github.com/NexaLayer/nexalayer-examples.git
+cd nexalayer-examples/playwright/basic-session
+```
+
+示例源码也可以直接在 [GitHub](https://github.com/NexaLayer/nexalayer-examples/tree/main/playwright/basic-session) 查看。
+
+## 4. 安装依赖
+
+```bash
+npm install
+```
+
+## 5. 配置 API Key
+
+```bash
+cp .env.example .env
+```
+
+编辑 `.env`，填入你的 Key：
+
+```dotenv
+NEXALAYER_BASE_URL=https://api.nexalayer.net/v1
+NEXALAYER_API_KEY=ak_xxx
+NEXALAYER_PRODUCT_NO=
+NEXALAYER_TARGET_URL=https://httpbin.org/ip
+```
+
+留空 `NEXALAYER_PRODUCT_NO` 时，示例会查询 `/products?type=dynamic`，并选择第一个可用的 Dynamic 产品。
+
+## 6. 运行完整链路
+
+```bash
+npm start
+```
+
+示例会按顺序执行：
+
+1. 查询可用 Dynamic 产品。
+2. 创建 Session，并轮询到 `active`。
+3. 确认 `proxy.full_url` 已返回。为避免泄露代理凭据，示例只输出是否可用，不打印完整 URL。
+4. 把代理的 `host`、`port`、`username`、`password` 转成 Playwright 配置。
+5. 启动无头 Playwright 并访问 `NEXALAYER_TARGET_URL`。
+6. 上报本次执行的 Telemetry。
+7. 查询并输出 Health。
+8. 在 `finally` 中终止 Session。
+
+成功运行时，你会看到类似输出：
+
+```text
+session_id: sess_xxx
+proxy.full_url available: true
+{"origin":"..."}
+health: { ... }
+terminated: sess_xxx
+```
+
+## 7. 确认资源已清理
+
+最后一行应为 `terminated: sess_xxx`。即使 Playwright 访问失败，示例也会进入 `finally`，尝试上报失败事件、查询 Health 并终止 Session。
+
+如果在创建 Session 之前失败，不会产生需要清理的 Session。若已经看到 `session_id`，但没有看到 `terminated`，请使用 [Session API](/zh/api/sessions) 查询并终止该 Session。
+
+## 常见问题
+
+### 提示 `Set NEXALAYER_API_KEY`
+
+确认 `.env` 位于 `playwright/basic-session` 目录，且 `NEXALAYER_API_KEY` 等号右侧不是空值，然后重新运行 `npm start`。
+
+### 没有可用的 Dynamic 产品
+
+示例会提示 `No dynamic product available`。请确认账号可用状态，或在 `.env` 的 `NEXALAYER_PRODUCT_NO` 中填写账号可用的产品编号。
+
+### Session 未在 120 秒内激活
+
+示例会停止等待并进入 Cleanup。可根据 `session_id` 查询 Session 状态，并参考 [Health](/zh/health) 排查。
