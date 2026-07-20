@@ -36,7 +36,7 @@ curl -X POST "$BASE_URL/account/request-api-key" \
 }
 ```
 
-如果同一个邮箱再次请求，系统会重发已有 API Key。你可以通过 USDT 自助充值（最低 $10）后直接使用；如需试用，请联系 [Telegram 售后](https://t.me/ZTPROXY)（@ztproxy），由售后为对应邮箱账号配置资源。
+如果同一个邮箱再次请求，系统会重发已有 API Key。你可以通过 USDT 自助充值（最低 ¥10）后直接使用；如需试用，请联系 [Telegram 售后](https://t.me/ZTPROXY)（@ztproxy），由售后为对应邮箱账号配置资源。
 
 ```bash
 export NEXALAYER_API_KEY="ak_xxx"
@@ -70,7 +70,7 @@ curl -X POST "$BASE_URL/sessions" \
   }"
 ```
 
-`provisioning_mode=existing` 会直接使用售后已配置的账号资源，不重复下单或扣费。自行充值并购买新资源时改为 `purchase`；Dynamic 按 $4 / GB、Static 最低 $10 / 月计费。
+`provisioning_mode=existing` 会直接使用售后已配置的账号资源，不下单或扣费。自行充值并购买新资源时改为 `purchase`；购买价格和余额均以 `/products` 与 `/billing/balance` 返回的实时 CNY 数据为准，NexaLayer 不会再次预扣。
 
 创建接口是异步的。成功受理后通常返回 `status=creating`，下一步轮询详情。
 

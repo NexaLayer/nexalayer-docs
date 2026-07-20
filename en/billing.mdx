@@ -5,16 +5,16 @@ description: Read balance, create recharge orders, and list transactions.
 
 # Billing
 
-NexaLayer is priced in USD. USDT is the current self-service top-up method, and confirmed deposits become USD balance.
+The backend CNY balance is the single source of truth. USDT is the current self-service top-up method, and confirmed deposits become the same CNY account balance. NexaLayer does not maintain a second spendable wallet.
 
-Current fixed pricing:
+Current billing policy:
 
 | Item | Price |
 | --- | --- |
 | Trial | Contact Telegram support @ztproxy for resource setup |
-| Minimum top-up | $10, paid with USDT |
-| Dynamic Session resources | $4 / GB |
-| Static Session resources | from $10 / month |
+| Minimum top-up | ¥10, paid with USDT |
+| Dynamic Session resources | Live CNY price from `/products` |
+| Static Session resources | Live CNY price from `/products` |
 | Session management | Free for now |
 
 ## Pricing
@@ -38,10 +38,10 @@ curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $NEXALAYER_API_KEY" \
   -H "Idempotency-Key: recharge-001" \
-  -d '{ "amount_usd": 10, "currency": "USDT" }'
+  -d '{ "amount_cny": 10, "currency": "USDT" }'
 ```
 
-Recharge requests below $10 are rejected.
+Recharge requests below ¥10 are rejected.
 
 ## Transactions
 
@@ -53,6 +53,7 @@ curl "https://api.nexalayer.net/v1/billing/transactions" \
 ## Integration guidance
 
 - read balance before creating paid sessions
+- balance checks and resource charges happen only in the backend; NexaLayer does not reserve a second wallet
 - send `Idempotency-Key` on write operations
 - after support configures a resource, create the Session with `provisioning_mode=existing` to avoid another order or charge
 - keep recharge, paid provisioning, and cleanup steps recoverable

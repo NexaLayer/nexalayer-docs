@@ -36,7 +36,7 @@ The response does not include the API key. NexaLayer sends it to the mailbox:
 }
 ```
 
-If the same email requests again, NexaLayer resends the existing API key. You can top up with USDT (minimum $10) and use NexaLayer directly. For a trial, contact [Telegram support](https://t.me/ZTPROXY) (@ztproxy), who will configure resources for the matching email account.
+If the same email requests again, NexaLayer resends the existing API key. You can top up with USDT (minimum ¥10) and use NexaLayer directly. For a trial, contact [Telegram support](https://t.me/ZTPROXY) (@ztproxy), who will configure resources for the matching email account.
 
 ```bash
 export NEXALAYER_API_KEY="ak_xxx"
@@ -70,7 +70,7 @@ curl -X POST "$BASE_URL/sessions" \
   }"
 ```
 
-`provisioning_mode=existing` attaches a resource already configured by support without placing another order or charging NexaLayer balance. Use `purchase` after recharging when you want to buy a new resource. Dynamic resources cost $4 / GB and static resources start at $10 / month.
+`provisioning_mode=existing` attaches a resource already configured by support without placing an order or charging balance. Use `purchase` after recharging when you want to buy a new resource. Prices and balance come from the live CNY values returned by `/products` and `/billing/balance`; NexaLayer does not make a second debit.
 
 Session creation is asynchronous. A successful accepted response usually starts with `status=creating`.
 

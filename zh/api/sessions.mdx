@@ -23,7 +23,7 @@ curl -X POST "https://api.nexalayer.net/v1/sessions" \
   }'
 ```
 
-Dynamic Session 的 `quantity` 表示 GB，可以使用小数；当前价格为 $4 / GB。Static Session 的 `quantity` 表示 IP 数量，必须是整数，最低 $10 / 月。
+Dynamic Session 的 `quantity` 表示 GB，可以使用小数；Static Session 的 `quantity` 表示 IP 数量，必须是整数。价格按账号和产品实时计算，请以 `/products` 返回的 CNY 价格为准。
 
 静态 Session 可包含：
 

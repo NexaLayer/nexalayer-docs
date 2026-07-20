@@ -35,7 +35,7 @@ X-API-Key: ak_your_key
 | `GET` | `/sessions/{session_id}/health` | Read health score and recommendation |
 | `GET` | `/sessions/{session_id}/usage` | Read usage for a Session |
 | `GET` | `/billing/balance` | Read account balance |
-| `GET` | `/billing/pricing` | Read current public USD pricing rules |
+| `GET` | `/billing/pricing` | Read pricing currency and source; use `/products` for live prices |
 | `POST` | `/billing/recharge` | Create a recharge order |
 | `GET` | `/billing/transactions` | List transactions |
 | `GET` | `/stats/overview` | Read account-level stats |
@@ -86,7 +86,7 @@ X-API-Key: ak_your_key
 
 ```json
 {
-  "currency": "USD",
+  "currency": "CNY",
   "cash_balance": 10,
   "available_balance": 10,
   "balance": 10
@@ -97,11 +97,9 @@ X-API-Key: ak_your_key
 
 ```json
 {
-  "currency": "USD",
-  "min_recharge_usd": 10,
-  "dynamic_usd_per_gb": 4,
-  "static_min_usd_per_month": 10,
-  "session_management_fee_usd": 0
+  "currency": "CNY",
+  "source": "backend",
+  "message": "Prices are account-specific. Read GET /products for current product prices."
 }
 ```
 

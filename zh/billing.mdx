@@ -5,16 +5,16 @@ description: 查询余额、创建充值订单、读取交易记录。
 
 # 计费与余额
 
-NexaLayer 对外统一使用 USD 计价。USDT 是当前自助充值方式，确认到账后会进入 USD 余额。
+NexaLayer 使用 IPProxy 后端的 CNY 余额作为唯一资金事实源。USDT 是当前自助充值方式，确认到账后会进入同一个 CNY 账户余额；NexaLayer 不维护第二套可消费余额。
 
-当前固定价格：
+当前计费规则：
 
 | 项目 | 价格 |
 | --- | --- |
 | 试用 | 联系 Telegram 售后 @ztproxy 配置资源 |
-| 最低充值 | $10，USDT 自助充值 |
-| Dynamic Session 资源 | $4 / GB |
-| Static Session 资源 | 最低 $10 / 月 |
+| 最低充值 | ¥10，USDT 自助充值 |
+| Dynamic Session 资源 | 以 `/products` 实时 CNY 价格为准 |
+| Static Session 资源 | 以 `/products` 实时 CNY 价格为准 |
 | Session 管理 | 暂时免费 |
 
 ## 查询价格
@@ -38,10 +38,10 @@ curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $NEXALAYER_API_KEY" \
   -H "Idempotency-Key: recharge-001" \
-  -d '{ "amount_usd": 10, "currency": "USDT" }'
+  -d '{ "amount_cny": 10, "currency": "USDT" }'
 ```
 
-低于 $10 的充值请求会被拒绝。
+低于 ¥10 的充值请求会被拒绝。
 
 ## 查询交易记录
 
@@ -53,6 +53,7 @@ curl "https://api.nexalayer.net/v1/billing/transactions" \
 ## 接入建议
 
 - 创建付费 Session 前先读取余额
+- 余额和实际资源扣款均由后端负责，NexaLayer 不执行本地预扣
 - 写操作携带 `Idempotency-Key`
 - 售后配置资源后，创建 Session 时使用 `provisioning_mode=existing`，避免重复下单或扣费
 - 不要把充值、扣费和清理动作混在一个不可恢复的脚本里
