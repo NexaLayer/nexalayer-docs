@@ -23,21 +23,20 @@ curl -X POST "$BASE_URL/account/request-api-key" \
   }'
 ```
 
-The response does not include the API key. NexaLayer sends it to the mailbox. The first claim for an email address receives $1 trial credit:
+The response does not include the API key. NexaLayer sends it to the mailbox:
 
 ```json
 {
   "data": {
     "status": "email_sent",
-    "claim_status": "granted",
-    "trial_balance": 1,
+    "balance": 0,
     "backend_ready": true,
     "message": "If the email address is valid, the API key has been sent."
   }
 }
 ```
 
-If the same email requests again, NexaLayer resends the existing API key and does not grant trial credit again. Trial credit is enough for a small dynamic session; production use can top up with USDT, with a $10 minimum.
+If the same email requests again, NexaLayer resends the existing API key. You can top up with USDT (minimum $10) and use NexaLayer directly. For a trial, contact [Telegram support](https://t.me/ZTPROXY) (@ztproxy), who will configure resources for the matching email account.
 
 ```bash
 export NEXALAYER_API_KEY="ak_xxx"
@@ -64,13 +63,14 @@ curl -X POST "$BASE_URL/sessions" \
   -d "{
     \"session_type\": \"dynamic\",
     \"product_no\": \"$PRODUCT_NO\",
+    \"provisioning_mode\": \"existing\",
     \"quantity\": 0.25,
     \"protocol\": \"socks5\",
     \"rotation_mode\": \"on_demand\"
   }"
 ```
 
-Dynamic sessions are billed at $4 / GB, so `quantity=0.25` reserves $1. Static sessions start at $10 / month. Session lifecycle management is free for now.
+`provisioning_mode=existing` attaches a resource already configured by support without placing another order or charging NexaLayer balance. Use `purchase` after recharging when you want to buy a new resource. Dynamic resources cost $4 / GB and static resources start at $10 / month.
 
 Session creation is asynchronous. A successful accepted response usually starts with `status=creating`.
 

@@ -23,21 +23,20 @@ curl -X POST "$BASE_URL/account/request-api-key" \
   }'
 ```
 
-响应不会直接返回 API Key。系统会把 API Key 发送到邮箱，邮箱首次领取时会自动获得 $1 试用额度：
+响应不会直接返回 API Key。系统会把 API Key 发送到邮箱：
 
 ```json
 {
   "data": {
     "status": "email_sent",
-    "claim_status": "granted",
-    "trial_balance": 1,
+    "balance": 0,
     "backend_ready": true,
     "message": "If the email address is valid, the API key has been sent."
   }
 }
 ```
 
-如果同一个邮箱再次请求，系统只会重发已有 API Key，不会重复发放试用额度。试用额度适合创建小流量 Dynamic Session 验证链路；正式使用前可通过 USDT 自助充值，最低充值 $10。
+如果同一个邮箱再次请求，系统会重发已有 API Key。你可以通过 USDT 自助充值（最低 $10）后直接使用；如需试用，请联系 [Telegram 售后](https://t.me/ZTPROXY)（@ztproxy），由售后为对应邮箱账号配置资源。
 
 ```bash
 export NEXALAYER_API_KEY="ak_xxx"
@@ -64,13 +63,14 @@ curl -X POST "$BASE_URL/sessions" \
   -d "{
     \"session_type\": \"dynamic\",
     \"product_no\": \"$PRODUCT_NO\",
+    \"provisioning_mode\": \"existing\",
     \"quantity\": 0.25,
     \"protocol\": \"socks5\",
     \"rotation_mode\": \"on_demand\"
   }"
 ```
 
-Dynamic Session 按 $4 / GB 扣费，因此 `quantity=0.25` 会预扣 $1。Static Session 最低 $10 / 月。Session 创建、查询、遥测、健康和终止管理暂时不收平台费。
+`provisioning_mode=existing` 会直接使用售后已配置的账号资源，不重复下单或扣费。自行充值并购买新资源时改为 `purchase`；Dynamic 按 $4 / GB、Static 最低 $10 / 月计费。
 
 创建接口是异步的。成功受理后通常返回 `status=creating`，下一步轮询详情。
 

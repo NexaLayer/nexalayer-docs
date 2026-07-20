@@ -11,7 +11,7 @@ Current fixed pricing:
 
 | Item | Price |
 | --- | --- |
-| Trial credit | $1, one claim per email address |
+| Trial | Contact Telegram support @ztproxy for resource setup |
 | Minimum top-up | $10, paid with USDT |
 | Dynamic Session resources | $4 / GB |
 | Static Session resources | from $10 / month |
@@ -54,6 +54,6 @@ curl "https://api.nexalayer.net/v1/billing/transactions" \
 
 - read balance before creating paid sessions
 - send `Idempotency-Key` on write operations
-- use the $1 trial credit for a small `quantity=0.25` dynamic session
+- after support configures a resource, create the Session with `provisioning_mode=existing` to avoid another order or charge
 - keep recharge, paid provisioning, and cleanup steps recoverable
-- trial credit is non-withdrawable and only for NexaLayer resource testing
+- for a trial, contact https://t.me/ZTPROXY (@ztproxy); you can also recharge and use NexaLayer directly

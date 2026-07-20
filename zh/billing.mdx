@@ -11,7 +11,7 @@ NexaLayer 对外统一使用 USD 计价。USDT 是当前自助充值方式，确
 
 | 项目 | 价格 |
 | --- | --- |
-| 试用额度 | $1，同一个邮箱地址只能领取一次 |
+| 试用 | 联系 Telegram 售后 @ztproxy 配置资源 |
 | 最低充值 | $10，USDT 自助充值 |
 | Dynamic Session 资源 | $4 / GB |
 | Static Session 资源 | 最低 $10 / 月 |
@@ -54,6 +54,6 @@ curl "https://api.nexalayer.net/v1/billing/transactions" \
 
 - 创建付费 Session 前先读取余额
 - 写操作携带 `Idempotency-Key`
-- $1 试用额度适合创建 `quantity=0.25` 的小流量 Dynamic Session
+- 售后配置资源后，创建 Session 时使用 `provisioning_mode=existing`，避免重复下单或扣费
 - 不要把充值、扣费和清理动作混在一个不可恢复的脚本里
-- 试用额度不可提现，仅用于 NexaLayer 资源测试
+- 如需试用，请联系 https://t.me/ZTPROXY（@ztproxy）；也可以自行充值后直接使用

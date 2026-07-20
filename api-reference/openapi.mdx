@@ -21,7 +21,7 @@ X-API-Key: ak_your_key
 
 | Method | Path | Description |
 | --- | --- | --- |
-| `POST` | `/account/request-api-key` | Request an API Key by email and claim trial credit once per email |
+| `POST` | `/account/request-api-key` | Request an API Key by email |
 | `POST` | `/account/register` | Legacy direct Agent registration |
 | `GET` | `/account/info` | Read Agent account state |
 | `GET` | `/products` | List dynamic and static products |
@@ -34,7 +34,7 @@ X-API-Key: ak_your_key
 | `POST` | `/sessions/{session_id}/report-event` | Report automation telemetry |
 | `GET` | `/sessions/{session_id}/health` | Read health score and recommendation |
 | `GET` | `/sessions/{session_id}/usage` | Read usage for a Session |
-| `GET` | `/billing/balance` | Read balance and trial credit |
+| `GET` | `/billing/balance` | Read account balance |
 | `GET` | `/billing/pricing` | Read current public USD pricing rules |
 | `POST` | `/billing/recharge` | Create a recharge order |
 | `GET` | `/billing/transactions` | List transactions |
@@ -58,12 +58,7 @@ X-API-Key: ak_your_key
     "api_key": "ak_xxx",
     "api_secret": "sk_xxx",
     "backend_ready": true,
-    "backend_sync_error": null,
-    "trial": {
-      "is_trial": true,
-      "trial_balance": 1,
-      "claim_status": "granted"
-    }
+    "backend_sync_error": null
   }
 }
 ```
@@ -74,6 +69,8 @@ X-API-Key: ak_your_key
 {
   "session_type": "dynamic",
   "product_no": "dynamic_dyn3",
+  "provisioning_mode": "existing",
+  "resource_id": "optional-static-order-number",
   "quantity": 0.25,
   "duration": 30,
   "protocol": "socks5",
@@ -91,9 +88,8 @@ X-API-Key: ak_your_key
 {
   "currency": "USD",
   "cash_balance": 10,
-  "trial_balance": 1,
-  "available_balance": 11,
-  "balance": 11
+  "available_balance": 10,
+  "balance": 10
 }
 ```
 
@@ -102,7 +98,6 @@ X-API-Key: ak_your_key
 ```json
 {
   "currency": "USD",
-  "trial_credit_usd": 1,
   "min_recharge_usd": 10,
   "dynamic_usd_per_gb": 4,
   "static_min_usd_per_month": 10,

@@ -14,7 +14,7 @@ API Key -> 产品列表 -> 创建 Session -> proxy.full_url -> Telemetry -> Heal
 ```
 
 <Warning>
-运行示例会创建真实 Session，可能产生费用。建议使用开发者试用额度或低额度账号，并确认程序最后输出 `terminated`。
+运行示例会创建真实 Session。你可以自行充值使用；如需试用，请联系 [Telegram 售后](https://t.me/ZTPROXY)（@ztproxy），由售后为对应邮箱账号配置资源。无论采用哪种方式，都应确认程序最后输出 `terminated`。
 </Warning>
 
 ## 1. 准备环境
@@ -29,7 +29,9 @@ npm --version
 
 ## 2. 获取 API Key
 
-通过 [开发者试用申请](https://github.com/NexaLayer/.github/issues/new?template=developer_partner.yml) 获取 API Key。API Key 只应保存在本机环境变量或 `.env` 中，不要提交到 Git，也不要粘贴到 Issue、日志或截图里。
+在 [NexaLayer 首页](https://nexalayer.net) 输入邮箱获取 API Key。API Key 只应保存在本机环境变量或 `.env` 中，不要提交到 Git，也不要粘贴到 Issue、日志或截图里。
+
+你可以在 Dashboard 自行充值后使用。需要试用时，请联系 [Telegram 售后](https://t.me/ZTPROXY)（@ztproxy）；售后配置完成后，Dashboard 会显示对应账号状态，无需调用额外的赠送状态接口。
 
 ## 3. 下载 Playwright Demo
 
@@ -58,10 +60,13 @@ cp .env.example .env
 NEXALAYER_BASE_URL=https://api.nexalayer.net/v1
 NEXALAYER_API_KEY=ak_xxx
 NEXALAYER_PRODUCT_NO=
+NEXALAYER_PROVISIONING_MODE=existing
 NEXALAYER_TARGET_URL=https://httpbin.org/ip
 ```
 
 留空 `NEXALAYER_PRODUCT_NO` 时，示例会查询 `/products?type=dynamic`，并选择第一个可用的 Dynamic 产品。
+
+售后已配置试用资源时使用 `existing`，NexaLayer 会直接挂载账号已有资源，不重复下单或扣费。自行充值并希望购买新资源时改为 `purchase`。
 
 ## 6. 运行完整链路
 

@@ -30,15 +30,14 @@ curl -X POST "https://api.nexalayer.net/v1/account/request-api-key" \
   "success": true,
   "data": {
     "status": "email_sent",
-    "claim_status": "granted",
-    "trial_balance": 1,
+    "balance": 0,
     "backend_ready": true,
     "message": "If the email address is valid, the API key has been sent."
   }
 }
 ```
 
-同一个邮箱只能领取一次试用额度；再次请求只会重发已有 API Key。
+再次请求会重发已有 API Key。你可以自行充值后直接使用；如需试用，请联系 [Telegram 售后](https://t.me/ZTPROXY)（@ztproxy）。
 
 ## backend_ready
 
