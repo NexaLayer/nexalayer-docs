@@ -5,16 +5,16 @@ description: Read balance, create recharge orders, and list transactions.
 
 # Billing
 
-The backend CNY balance is the single source of truth. USDT is the current self-service top-up method, and confirmed deposits become the same CNY account balance. NexaLayer does not maintain a second spendable wallet.
+IPProxy's backend CNY balance remains the single source of truth. NexaLayer displays balance, prices, and transactions in USD by converting them with IPProxy's current effective USD/CNY rate. NexaLayer does not maintain a second spendable wallet.
 
 Current billing policy:
 
 | Item | Price |
 | --- | --- |
 | Trial | Contact Telegram support @ztproxy for resource setup |
-| Minimum top-up | ¥10, paid with USDT |
-| Dynamic Session resources | Live CNY price from `/products` |
-| Static Session resources | Live CNY price from `/products` |
+| Minimum top-up | $10, paid with USDT TRC20 |
+| Dynamic Session resources | Live USD conversion from `/products` |
+| Static Session resources | Live USD conversion from `/products` |
 | Session management | Free for now |
 
 ## Pricing
@@ -38,10 +38,10 @@ curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $NEXALAYER_API_KEY" \
   -H "Idempotency-Key: recharge-001" \
-  -d '{ "amount_cny": 10, "currency": "USDT" }'
+  -d '{ "amount_usd": 10, "currency": "USDT" }'
 ```
 
-Recharge requests below ¥10 are rejected.
+Recharge requests below $10 are rejected. The response contains the exact `amount_usdt`, `wallet_address`, `network`, and order exchange rate needed to render the TRC20 payment QR code.
 
 ## Transactions
 

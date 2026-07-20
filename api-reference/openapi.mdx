@@ -86,10 +86,12 @@ X-API-Key: ak_your_key
 
 ```json
 {
-  "currency": "CNY",
+  "currency": "USD",
   "cash_balance": 10,
   "available_balance": 10,
-  "balance": 10
+  "balance": 10,
+  "exchange_rate": 6.98,
+  "exchange_rate_pair": "USD/CNY"
 }
 ```
 
@@ -97,9 +99,10 @@ X-API-Key: ak_your_key
 
 ```json
 {
-  "currency": "CNY",
+  "currency": "USD",
   "source": "backend",
-  "message": "Prices are account-specific. Read GET /products for current product prices."
+  "exchange_rate": 6.98,
+  "exchange_rate_pair": "USD/CNY"
 }
 ```
 

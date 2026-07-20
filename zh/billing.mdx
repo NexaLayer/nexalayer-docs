@@ -5,16 +5,16 @@ description: 查询余额、创建充值订单、读取交易记录。
 
 # 计费与余额
 
-NexaLayer 使用 IPProxy 后端的 CNY 余额作为唯一资金事实源。USDT 是当前自助充值方式，确认到账后会进入同一个 CNY 账户余额；NexaLayer 不维护第二套可消费余额。
+IPProxy 后端 CNY 余额仍是唯一资金事实源。NexaLayer 使用 IPProxy 当前有效 USD/CNY 汇率，将余额、产品价格和交易流水换算为 USD 展示，不维护第二套可消费余额。
 
 当前计费规则：
 
 | 项目 | 价格 |
 | --- | --- |
 | 试用 | 联系 Telegram 售后 @ztproxy 配置资源 |
-| 最低充值 | ¥10，USDT 自助充值 |
-| Dynamic Session 资源 | 以 `/products` 实时 CNY 价格为准 |
-| Static Session 资源 | 以 `/products` 实时 CNY 价格为准 |
+| 最低充值 | $10，USDT TRC20 自助充值 |
+| Dynamic Session 资源 | 以 `/products` 实时 USD 换算价格为准 |
+| Static Session 资源 | 以 `/products` 实时 USD 换算价格为准 |
 | Session 管理 | 暂时免费 |
 
 ## 查询价格
@@ -38,10 +38,10 @@ curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $NEXALAYER_API_KEY" \
   -H "Idempotency-Key: recharge-001" \
-  -d '{ "amount_cny": 10, "currency": "USDT" }'
+  -d '{ "amount_usd": 10, "currency": "USDT" }'
 ```
 
-低于 ¥10 的充值请求会被拒绝。
+低于 $10 的充值请求会被拒绝。响应包含二维码所需的准确 `amount_usdt`、`wallet_address`、`network` 和订单汇率。
 
 ## 查询交易记录
 
