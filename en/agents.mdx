@@ -1,0 +1,36 @@
+---
+title: NexaLayer for AI Agents
+description: Give AI agents installable, observable proxy sessions with budget controls and a one-time trial credit.
+---
+
+# NexaLayer for AI Agents
+
+NexaLayer is a managed network Session layer for AI agents and browser automation. It lets an agent discover current proxy products and prices, create a bounded Session, read health and usage, rotate when needed, and clean up through an API or MCP server.
+
+## Install in one command
+
+```bash
+npx -y @nexalayer/mcp
+```
+
+Set `NEXALAYER_API_KEY`, then connect the command as a stdio MCP server. [Request an API key and one-time trial credit](https://nexalayer.net/agents?source=agents-docs).
+
+## Safe agent flow
+
+1. Call `nexalayer_list_products` to read a current price.
+2. Call `nexalayer_get_budget` to verify the spend boundary.
+3. Ask the owner to approve the quoted purchase.
+4. Call `nexalayer_create_session` with a unique idempotency key.
+5. Monitor health and usage; rotate only when indicated.
+6. Clean up the Session when the task finishes.
+
+Discovery and health calls are read-only. Creating a Session can spend money, and changing a budget changes policy; keep human approval enabled for both.
+
+## Other integrations
+
+- [Proxy rotation for Playwright AI agents](/en/playwright)
+- [Proxy sessions for Puppeteer AI agents](/en/puppeteer)
+- [Proxy sessions for Browser Use agents](/en/browser-use)
+- [MCP server setup](/en/mcp)
+- [Products and current prices](/en/api/products)
+- [Spend limits](/en/budgets)

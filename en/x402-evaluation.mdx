@@ -1,0 +1,19 @@
+---
+title: x402 payment evaluation
+description: Current payment boundary and criteria for a future agent-native x402 flow.
+---
+
+# x402 payment evaluation
+
+NexaLayer's current API can create a USDT TRC20 order and poll its chain-confirmation status, but the caller must already control a compatible wallet. This is API-complete payment orchestration, not autonomous payment for an agent without a wallet.
+
+x402 is a strong candidate for pay-per-call or prepaid-credit acquisition because an HTTP `402 Payment Required` challenge can carry machine-readable payment requirements. It should not be advertised as available until all of these are implemented and tested:
+
+- supported network, asset, facilitator, fees, and settlement-finality policy
+- owner-signed wallet authority with per-transaction and daily limits
+- replay protection binding payment proof to method, path, amount, expiry, and idempotency key
+- atomic crediting or fulfillment after verified settlement, with duplicate-proof reconciliation
+- refund and dispute handling, sanctions screening, accounting records, and key compromise response
+- SDK and MCP behavior for `402`, approval, payment, retry, and receipt verification
+
+The first production pilot should be capped, allowlisted, and separate from the existing TRC20 recharge path. No code in this release silently gives an agent custody of a wallet or authority to spend.

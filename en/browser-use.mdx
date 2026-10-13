@@ -1,0 +1,19 @@
+---
+title: Proxy Sessions for Browser Use AI Agents
+description: Supply Browser Use agents with NexaLayer proxy sessions, health signals, and spend guardrails.
+---
+
+# Proxy Sessions for Browser Use AI Agents
+
+Use NexaLayer to create a bounded network Session before starting a Browser Use task. Map the active Session's `proxy.host`, `proxy.port`, `proxy.username`, and `proxy.password` into the browser profile or browser-session proxy configuration supported by your installed Browser Use version.
+
+Keep network lifecycle outside the browsing prompt:
+
+1. Read the current product price and budget.
+2. Obtain owner approval for any paid Session.
+3. Create and poll the NexaLayer Session until active.
+4. Start Browser Use with the returned proxy credentials.
+5. Report Telemetry and check Health between retries.
+6. Terminate the Session in cleanup.
+
+This avoids giving an agent unbounded purchasing authority and prevents silent direct-connect fallback. See [NexaLayer for AI Agents](/en/agents) and [MCP setup](/en/mcp).

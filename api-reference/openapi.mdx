@@ -22,7 +22,10 @@ X-API-Key: ak_your_key
 | Method | Path | Description |
 | --- | --- | --- |
 | `POST` | `/account/request-api-key` | Request an API Key by email |
-| `POST` | `/account/register` | Legacy direct Agent registration |
+| `POST` | `/account/register` | Direct Agent registration (advanced) |
+| `GET` | `/account/budget` | Read spend limits and current spend |
+| `PUT` | `/account/budget` | Set Key and daily spend limits |
+| `GET` | `/account/usage-alerts` | Read budget threshold alerts |
 | `GET` | `/account/info` | Read Agent account state |
 | `GET` | `/products` | List dynamic and static products |
 | `POST` | `/products/recommend` | Recommend products for a target need |
@@ -123,10 +126,8 @@ X-API-Key: ak_your_key
 
 ## Source of truth
 
-The working OpenAPI spec for the Agent service lives in:
+Download the machine-readable specification: [raw openapi.json](https://docs.nexalayer.net/api-reference/openapi.json).
 
-```text
-agent/openapi/openapi.yaml
-```
+The maintained source is [`nexalayer-agent/openapi/openapi.yaml`](https://github.com/NexaLayer/nexalayer-agent/blob/main/openapi/openapi.yaml).
 
 Keep this public reference aligned with that file when request or response shapes change.

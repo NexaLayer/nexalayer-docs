@@ -1,0 +1,18 @@
+---
+title: Proxy Sessions for Puppeteer AI Agents
+description: Create a NexaLayer Session, pass its proxy to Puppeteer, monitor health, and clean up safely.
+---
+
+# Proxy Sessions for Puppeteer AI Agents
+
+Create a Session only after reading the current product price and obtaining approval. When the Session is active, launch Chrome with the returned proxy endpoint:
+
+```js
+const browser = await puppeteer.launch({
+  args: [`--proxy-server=${proxy.protocol}://${proxy.host}:${proxy.port}`],
+});
+const page = await browser.newPage();
+await page.authenticate({ username: proxy.username, password: proxy.password });
+```
+
+Report execution Telemetry, use Session Health to decide whether to rotate, and terminate the Session in a `finally` block. See the [Quickstart](/en/quickstart) for the API lifecycle and [MCP setup](/en/mcp) for agent-native tool calls.

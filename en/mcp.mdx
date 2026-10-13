@@ -1,0 +1,30 @@
+---
+title: NexaLayer MCP Server for AI Agents
+description: Install NexaLayer in Claude, Cursor, Codex, and other MCP clients with one npx command.
+---
+
+# MCP Server
+
+Install the official package in one command:
+
+```bash
+npx -y @nexalayer/mcp
+```
+
+First, [request an API key and one-time trial credit](https://nexalayer.net/agents?source=mcp-docs). Then add the server to your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "nexalayer": {
+      "command": "npx",
+      "args": ["-y", "@nexalayer/mcp"],
+      "env": { "NEXALAYER_API_KEY": "agk_your_key" }
+    }
+  }
+}
+```
+
+Tools cover product discovery, Session creation and rotation, health, usage, budgets, and alerts. Session creation and budget changes are consequential writes: keep client-side owner approval enabled and use a unique idempotency key.
+
+The tool catalog separates read operations from paid or policy-changing actions. Read products, prices, health, usage, and current budget before requesting human approval for session creation or budget changes.

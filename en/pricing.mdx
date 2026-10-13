@@ -1,0 +1,18 @@
+---
+title: Public pricing model
+description: Pricing units, trial, top-up minimum, and pre-purchase price discovery.
+---
+
+# Public pricing model
+
+| Item | Price model |
+| --- | --- |
+| New-account trial | Small one-time credit, automatically granted |
+| Dynamic Session | USD per GB; exact unit price returned by `GET /products` |
+| Static Session | USD per resource-month; exact unit price returned by `GET /products` |
+| Session management, telemetry, and health | No separate platform fee currently |
+| Minimum USDT top-up | $10 |
+
+NexaLayer returns the numeric `price`, `currency: "USD"`, and `unit` for every product before a purchase. Prices can vary by product, location, stock, and account tier; an agent must read and present the exact current quote before owner approval. The accepted Session response also includes `estimated_charge_usd`.
+
+This page describes the pricing contract without inventing a universal rate that does not apply to every country and resource. Use the Products API for the binding pre-purchase quote.

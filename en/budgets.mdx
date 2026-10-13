@@ -1,0 +1,20 @@
+---
+title: Spend limits and alerts
+description: Bound autonomous agent spend by API Key and UTC day.
+---
+
+# Spend limits and alerts
+
+Configure guardrails before allowing an agent to create paid Sessions.
+
+```bash
+curl -X PUT "https://api.nexalayer.net/v1/account/budget" \
+  -H "X-API-Key: $NEXALAYER_API_KEY" \
+  -H "Idempotency-Key: budget-2026-10-13" \
+  -H "Content-Type: application/json" \
+  -d '{"key_limit_usd":50,"daily_limit_usd":10,"pause_on_exceed":true,"alert_thresholds":[50,80,100]}'
+```
+
+`GET /account/budget` returns limits, estimated accepted spend, pause state, and the next UTC daily reset. `GET /account/usage-alerts` returns crossed thresholds. A purchase that would exceed a configured limit is rejected before provisioning; when `pause_on_exceed` is true the Key is paused for paid creation until its policy is updated with `paused: false`.
+
+Limits are safety controls, not a replacement for the billing ledger. Owners should still require approval for large or unusual purchases.

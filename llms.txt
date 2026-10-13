@@ -1,0 +1,23 @@
+# NexaLayer
+
+NexaLayer is a managed network Session layer for AI agents and browser automation.
+
+- [Quick start](https://docs.nexalayer.net/en/quick-start.md)
+- [Authentication](https://docs.nexalayer.net/en/api/authentication.md)
+- [Products and pre-purchase prices](https://docs.nexalayer.net/en/api/products.md)
+- [Pricing model](https://docs.nexalayer.net/en/pricing.md)
+- [Sessions](https://docs.nexalayer.net/en/api/sessions.md)
+- [Telemetry and health](https://docs.nexalayer.net/en/api/telemetry-health.md)
+- [Billing](https://docs.nexalayer.net/en/billing.md)
+- [Spend limits](https://docs.nexalayer.net/en/budgets.md)
+- [MCP server](https://docs.nexalayer.net/en/mcp.md)
+- [For AI agents](https://docs.nexalayer.net/en/agents.md)
+- [Playwright AI agents](https://docs.nexalayer.net/en/playwright.md)
+- [Puppeteer AI agents](https://docs.nexalayer.net/en/puppeteer.md)
+- [Browser Use AI agents](https://docs.nexalayer.net/en/browser-use.md)
+- [Raw OpenAPI](https://docs.nexalayer.net/api-reference/openapi.json)
+- [Terms](https://nexalayer.net/terms.html)
+- [Privacy and logging](https://nexalayer.net/privacy.html)
+- [SLA](https://nexalayer.net/sla.html)
+- [Refund policy](https://nexalayer.net/refund.html)
+- [Status](https://nexalayer.net/status.html)

@@ -14,7 +14,7 @@ API Key -> 产品列表 -> 创建 Session -> proxy.full_url -> Telemetry -> Heal
 ```
 
 <Warning>
-运行示例会创建真实 Session。你可以自行充值使用；如需试用，请联系 [Telegram 售后](https://t.me/ZTPROXY)（@ztproxy），由售后为对应邮箱账号配置资源。无论采用哪种方式，都应确认程序最后输出 `terminated`。
+运行示例会创建真实 Session。新邮箱申请 API Key 后会自动获得一次性小额试用金，也可以自行充值使用。应确认程序最后输出 `terminated`。
 </Warning>
 
 ## 1. 准备环境
@@ -31,7 +31,7 @@ npm --version
 
 在 [NexaLayer 首页](https://nexalayer.net) 输入邮箱获取 API Key。API Key 只应保存在本机环境变量或 `.env` 中，不要提交到 Git，也不要粘贴到 Issue、日志或截图里。
 
-你可以在 Dashboard 自行充值后使用。需要试用时，请联系 [Telegram 售后](https://t.me/ZTPROXY)（@ztproxy）；售后配置完成后，Dashboard 会显示对应账号状态，无需调用额外的赠送状态接口。
+新邮箱的试用金由 `request-api-key` 自动发放，同一邮箱重试只会重发 Key，不会重复赠送。你也可以在 Dashboard 自行充值后使用。
 
 ## 3. 下载 Playwright Demo
 

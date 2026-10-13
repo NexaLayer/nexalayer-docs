@@ -13,7 +13,7 @@ Current billing policy:
 
 | Item | Price |
 | --- | --- |
-| Trial | Contact Telegram support @ztproxy for resource setup |
+| Trial | One-time small credit granted automatically with a new email API Key |
 | Minimum top-up | $10, paid with USDT TRC20 |
 | Dynamic Session resources | Live USD conversion from `/products` |
 | Static Session resources | Live USD conversion from `/products` |
@@ -59,4 +59,4 @@ curl "https://api.nexalayer.net/v1/billing/transactions" \
 - send `Idempotency-Key` on write operations
 - after support configures a resource, create the Session with `provisioning_mode=existing` to avoid another order or charge
 - keep recharge, paid provisioning, and cleanup steps recoverable
-- for a trial, contact https://t.me/ZTPROXY (@ztproxy); you can also recharge and use NexaLayer directly
+- a new email receives one automatic trial credit; retries never grant it twice

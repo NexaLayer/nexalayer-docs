@@ -1,0 +1,15 @@
+# NexaLayer agent integration summary
+
+Base URL: `https://api.nexalayer.net/v1`
+
+Authentication uses `X-API-Key`; no refresh token is required. A new email can request a Key at `POST /account/request-api-key` and receives one small automatic trial credit. Repeated requests resend the same Key and do not grant another trial.
+
+Before spending, call `GET /products` and read each product's numeric USD `price` and `unit`. Configure `PUT /account/budget` with Key and daily limits. Use `GET /account/usage-alerts` for threshold events. All writes should carry an `Idempotency-Key`.
+
+The core lifecycle is: list products, create a Session, poll its status, use the returned proxy credentials without logging them, report telemetry, read health and usage, rotate only when appropriate, and terminate resources when finished.
+
+MCP clients can run `npx -y @nexalayer/mcp` with `NEXALAYER_API_KEY` in the process environment. Paid creation and budget changes should remain owner-approved.
+
+USDT TRC20 recharge is exposed through API order creation and status polling, but an agent still needs an authorized wallet. x402 is under evaluation and is not currently advertised as live.
+
+NexaLayer processes operational metadata and optional telemetry, not page payload bodies by design. Do not put cookies, credentials, page content, personal data, or proxy URLs in telemetry or logs.
