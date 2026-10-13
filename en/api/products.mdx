@@ -7,6 +7,14 @@ description: List dynamic and static products and choose the product_no for a se
 
 Products define which resource should back a session. Use `product_no` when creating a session.
 
+For evaluation before signup, read the public starting-price view without an API key:
+
+```bash
+curl "https://api.nexalayer.net/v1/public/products"
+```
+
+It reports dynamic proxies from **$4/GB** and static proxies from **$10/month**. These are public starting prices; use the authenticated endpoint below for the exact product quote before purchase.
+
 ```bash
 curl "https://api.nexalayer.net/v1/products?type=all" \
   -H "X-API-Key: $NEXALAYER_API_KEY"
@@ -37,4 +45,3 @@ Common fields:
 - choose `dynamic` for high-volume tasks and rotation-friendly jobs
 - choose `static` for account login, long-lived identity, and fixed-region automation
 - when unsure, start with a low-volume dynamic session and use telemetry plus health data to evaluate the fit
-
