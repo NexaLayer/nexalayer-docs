@@ -8,10 +8,10 @@ description: Pricing units, trial, top-up minimum, and pre-purchase price discov
 | Item | Price model |
 | --- | --- |
 | New-account trial | Small one-time credit, automatically granted |
-| Dynamic Session | From $4/GB; exact unit price returned by `GET /products` |
-| Static Session | From $10/resource-month; exact unit price returned by `GET /products` |
+| Dynamic Session | From USD 4/GB; exact unit price returned by `GET /products` |
+| Static Session | From USD 10/resource-month; exact unit price returned by `GET /products` |
 | Session management, telemetry, and health | No separate platform fee currently |
-| Minimum USDT top-up | $10 |
+| Minimum USDT top-up | USD 10 |
 
 `GET /public/products` exposes these starting prices without authentication. NexaLayer returns the numeric `price`, `currency: "USD"`, and `unit` for every product from authenticated `GET /products` before a purchase. Prices can vary by product, location, stock, and account tier; an agent must read and present the exact current quote before owner approval. The accepted Session response also includes `estimated_charge_usd`.
 

@@ -14,7 +14,7 @@ Current billing policy:
 | Item | Price |
 | --- | --- |
 | Trial | One-time small credit granted automatically with a new email API Key |
-| Minimum top-up | $10, paid with USDT TRC20 |
+| Minimum top-up | USD 10, paid with USDT TRC20 |
 | Dynamic Session resources | Live USD conversion from `/products` |
 | Static Session resources | Live USD conversion from `/products` |
 | Session management | Free for now |
@@ -43,7 +43,7 @@ curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
   -d '{ "amount_usd": 10, "currency": "USDT" }'
 ```
 
-Recharge requests below $10 are rejected. The response contains the exact `amount_usdt`, `wallet_address`, `network`, and order exchange rate needed to render the TRC20 payment QR code.
+Recharge requests below USD 10 are rejected. The response contains the exact `amount_usdt`, `wallet_address`, `network`, `status`, and order exchange rate needed to render the TRC20 payment QR code. Poll `GET /billing/recharge/{order_id}/status`; the account balance is credited automatically after the transfer reaches the required on-chain confirmation state.
 
 ## Transactions
 
