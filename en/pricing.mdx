@@ -8,11 +8,12 @@ description: Pricing units, trial, top-up minimum, and pre-purchase price discov
 | Item | Price model |
 | --- | --- |
 | New-account trial | Small one-time credit, automatically granted |
-| Dynamic Session | Current unit price returned by `GET /public/products` or authenticated `GET /products` |
-| Static Session | Current resource-month price returned by `GET /public/products` or authenticated `GET /products` |
+| Dynamic Session | Currently **$0.23/GB** |
+| Shared static Session | Currently **from $0.75/resource-month** |
+| Other static Sessions | Current resource-month price returned by `GET /public/products` or authenticated `GET /products` |
 | Session management, telemetry, and health | No separate platform fee currently |
 | Minimum USDT top-up | USD 10 |
 
-`GET /public/products` exposes openAgent's current prices without authentication and caches them for no more than 60 seconds. NexaLayer returns the numeric `price`, `currency: "USD"`, and `unit` for every product before a purchase. Prices can vary by product, location, and stock; an agent must read and present the exact current quote before owner approval. The accepted Session response also includes `estimated_charge_usd`.
+The reference prices above reflect the current USD/CNY exchange rate. `GET /public/products` exposes current prices without authentication and caches them for no more than 60 seconds. NexaLayer returns the numeric `price`, `currency: "USD"`, and `unit` for every product before a purchase. Prices can vary by exchange rate, product, location, and stock; an agent must read and present the exact current quote before owner approval. The accepted Session response also includes `estimated_charge_usd`.
 
-The website renders pricing from `GET /public/products`; there is no hard-coded proxy price table. Use the authenticated Products API for the binding pre-purchase quote.
+The website shows these reference figures and refreshes pricing from `GET /public/products`. Use the authenticated Products API for the binding pre-purchase quote.

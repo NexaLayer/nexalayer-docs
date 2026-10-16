@@ -5,6 +5,8 @@ description: 查询动态和静态网络资源产品，并选择适合 Session �
 
 # 产品
 
+当前参考价为：动态代理 **$0.23/GB**，共享静态代理 **$0.75/月**。USD 价格会随有效汇率变化，购买前应以 `/public/products` 或登录后的 `/products` 返回值为准。
+
 产品列表用于选择创建 Session 时的 `product_no`。
 
 ```bash
@@ -31,7 +33,7 @@ curl "https://api.nexalayer.net/v1/products?type=all" \
 | `product_no` | 创建 Session 时使用 |
 | `type` | `dynamic` 或 `static` |
 | `sharing` | `exclusive` 或 `shared` |
-| `available` | 当前是否可购买；动态产品无流量时为 `false` |
+| `available` | 当前是否可购买；动态产品不使用静态库存判断 |
 | `country` / `city` | 国家和城市代码 |
 | `price` / `currency` / `unit` | openAgent 当前价格 |
 | `stock` | 静态产品库存（适用时） |

@@ -15,6 +15,8 @@ curl "https://api.nexalayer.net/v1/public/products"
 
 It reports openAgent's current product prices and availability with a cache TTL of no more than 60 seconds. Use the authenticated endpoint below for the binding product quote before purchase.
 
+Current reference prices are **$0.23/GB** for the dynamic proxy and **$0.75/month** for the shared static proxy. Because USD prices follow the effective exchange rate, the API response is authoritative.
+
 ```bash
 curl "https://api.nexalayer.net/v1/products?type=all" \
   -H "X-API-Key: $NEXALAYER_API_KEY"
@@ -39,7 +41,7 @@ Common fields:
 | `product_no` | Use this value in `POST /sessions` |
 | `type` | `dynamic` or `static` |
 | `sharing` | `exclusive` or `shared` |
-| `available` | Whether the product can currently be purchased; zero-flow dynamic products return `false` |
+| `available` | Whether the product can currently be purchased; dynamic products do not use static inventory checks |
 | `country` / `city` | Country and city codes |
 | `price`, `currency`, `unit` | Current openAgent-backed quote |
 | `stock` | Current static inventory when applicable |
