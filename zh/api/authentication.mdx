@@ -12,6 +12,8 @@ curl "https://api.nexalayer.net/v1/account/info" \
   -H "X-API-Key: ak_your_key"
 ```
 
+`GET /account/info` 只通过 `api_key_prefix`（例如 `nx_abcd…wxyz`）标识当前凭证，不会返回明文 API Key。
+
 ## 邮箱领取 API Key
 
 ```bash

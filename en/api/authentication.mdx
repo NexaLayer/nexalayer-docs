@@ -12,6 +12,8 @@ curl "https://api.nexalayer.net/v1/account/info" \
   -H "X-API-Key: ak_your_key"
 ```
 
+`GET /account/info` identifies the credential only through `api_key_prefix` (for example, `nx_abcd…wxyz`); it never returns the plaintext API key.
+
 ## Request an API key by email
 
 ```bash

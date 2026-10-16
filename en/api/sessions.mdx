@@ -23,7 +23,7 @@ curl -X POST "https://api.nexalayer.net/v1/sessions" \
   }'
 ```
 
-For dynamic sessions, `quantity` means GB and can be fractional; the public starting price is USD 4/GB. For static sessions, `quantity` means IP count and must be an integer, with a USD 10/month starting price.
+For dynamic sessions, `quantity` means GB and can be fractional. For static sessions, `quantity` means IP count and must be an integer. Always read the current price from `/public/products` or `/products` immediately before purchase.
 
 A static session may include:
 

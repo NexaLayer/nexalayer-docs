@@ -13,7 +13,7 @@ For evaluation before signup, read the public starting-price view without an API
 curl "https://api.nexalayer.net/v1/public/products"
 ```
 
-It reports dynamic proxies from **USD 4/GB** and static proxies from **USD 10/month**. These are public starting prices; use the authenticated endpoint below for the exact product quote before purchase.
+It reports openAgent's current product prices and availability with a cache TTL of no more than 60 seconds. Use the authenticated endpoint below for the binding product quote before purchase.
 
 ```bash
 curl "https://api.nexalayer.net/v1/products?type=all" \
@@ -25,7 +25,10 @@ curl "https://api.nexalayer.net/v1/products?type=all" \
 | Parameter | Description |
 | --- | --- |
 | `type` | `all`, `dynamic`, or `static` |
-| `country_code` | Optional country filter |
+| `country` | Optional country or city-code filter |
+| `in_stock` | Defaults to `true`; set `false` to include unavailable products |
+| `limit` | Page size, defaults to `20`, maximum `100` |
+| `cursor` | Opaque cursor returned as `next_cursor` |
 
 ## Response fields
 
@@ -35,10 +38,12 @@ Common fields:
 | --- | --- |
 | `product_no` | Use this value in `POST /sessions` |
 | `type` | `dynamic` or `static` |
-| `country_code` / `city_code` | Country and city codes |
-| `protocols` | Supported protocols |
-| `inventory` | Available stock or capacity |
-| `project_required` | Whether a static shared product needs a project |
+| `sharing` | `exclusive` or `shared` |
+| `available` | Whether the product can currently be purchased; zero-flow dynamic products return `false` |
+| `country` / `city` | Country and city codes |
+| `price`, `currency`, `unit` | Current openAgent-backed quote |
+| `stock` | Current static inventory when applicable |
+| `project_required` | Whether a static product needs a project |
 
 ## Choosing a product
 

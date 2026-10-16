@@ -17,7 +17,10 @@ curl "https://api.nexalayer.net/v1/products?type=all" \
 | 参数 | 说明 |
 | --- | --- |
 | `type` | `all`、`dynamic`、`static` |
-| `country_code` | 可选，按国家过滤 |
+| `country` | 可选，按国家或城市代码过滤 |
+| `in_stock` | 默认 `true`，传 `false` 可包含暂不可用产品 |
+| `limit` | 每页数量，默认 `20`，最大 `100` |
+| `cursor` | 上一页返回的 `next_cursor` |
 
 ## 响应字段
 
@@ -27,9 +30,11 @@ curl "https://api.nexalayer.net/v1/products?type=all" \
 | --- | --- |
 | `product_no` | 创建 Session 时使用 |
 | `type` | `dynamic` 或 `static` |
-| `country_code` / `city_code` | 国家和城市代码 |
-| `protocols` | 支持的协议 |
-| `inventory` | 当前库存或可用量 |
+| `sharing` | `exclusive` 或 `shared` |
+| `available` | 当前是否可购买；动态产品无流量时为 `false` |
+| `country` / `city` | 国家和城市代码 |
+| `price` / `currency` / `unit` | openAgent 当前价格 |
+| `stock` | 静态产品库存（适用时） |
 | `project_required` | 静态共享产品是否需要项目 |
 
 ## 产品选择建议
@@ -37,4 +42,3 @@ curl "https://api.nexalayer.net/v1/products?type=all" \
 - 批量抓取、失败后可换出口：选 `dynamic`
 - 账号登录、长期保活、固定地区：选 `static`
 - 不确定时先从低额度 dynamic Session 开始，配合遥测和 health 判断效果
-

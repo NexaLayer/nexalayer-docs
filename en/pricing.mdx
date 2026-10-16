@@ -8,11 +8,11 @@ description: Pricing units, trial, top-up minimum, and pre-purchase price discov
 | Item | Price model |
 | --- | --- |
 | New-account trial | Small one-time credit, automatically granted |
-| Dynamic Session | From USD 4/GB; exact unit price returned by `GET /products` |
-| Static Session | From USD 10/resource-month; exact unit price returned by `GET /products` |
+| Dynamic Session | Current unit price returned by `GET /public/products` or authenticated `GET /products` |
+| Static Session | Current resource-month price returned by `GET /public/products` or authenticated `GET /products` |
 | Session management, telemetry, and health | No separate platform fee currently |
 | Minimum USDT top-up | USD 10 |
 
-`GET /public/products` exposes these starting prices without authentication. NexaLayer returns the numeric `price`, `currency: "USD"`, and `unit` for every product from authenticated `GET /products` before a purchase. Prices can vary by product, location, stock, and account tier; an agent must read and present the exact current quote before owner approval. The accepted Session response also includes `estimated_charge_usd`.
+`GET /public/products` exposes openAgent's current prices without authentication and caches them for no more than 60 seconds. NexaLayer returns the numeric `price`, `currency: "USD"`, and `unit` for every product before a purchase. Prices can vary by product, location, and stock; an agent must read and present the exact current quote before owner approval. The accepted Session response also includes `estimated_charge_usd`.
 
-Starting prices are generated from `public-pricing.json`. Use the authenticated Products API for the binding pre-purchase quote.
+The website renders pricing from `GET /public/products`; there is no hard-coded proxy price table. Use the authenticated Products API for the binding pre-purchase quote.
