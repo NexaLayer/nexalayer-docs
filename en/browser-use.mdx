@@ -11,7 +11,7 @@ Keep network lifecycle outside the browsing prompt:
 
 1. Read the current product price and budget.
 2. Obtain owner approval for any paid Session.
-3. Create and poll the NexaLayer Session until active.
+3. Create and poll the NexaLayer Session until active. Pass `include_credentials=true` on the session read that supplies the browser.
 4. Start Browser Use with the returned proxy credentials.
 5. Report Telemetry and check Health between retries.
 6. Terminate the Session in cleanup.

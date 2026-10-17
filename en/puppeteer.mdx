@@ -5,7 +5,7 @@ description: Create a NexaLayer Session, pass its proxy to Puppeteer, monitor he
 
 # Proxy Sessions for Puppeteer AI Agents
 
-Create a Session only after reading the current product price and obtaining approval. When the Session is active, launch Chrome with the returned proxy endpoint:
+Create a Session only after reading the current product price and obtaining approval. Poll `GET /sessions/{session_id}?include_credentials=true` once the Session is active, then launch Chrome with the returned proxy endpoint:
 
 ```js
 const browser = await puppeteer.launch({

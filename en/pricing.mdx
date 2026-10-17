@@ -1,19 +1,21 @@
 ---
 title: Public pricing model
-description: Pricing units, trial, top-up minimum, and pre-purchase price discovery.
+description: Launch pricing, trial, top-up minimum, and pre-purchase price discovery.
 ---
 
 # Public pricing model
 
+The figures below are **launch pricing** and are subject to change. The live API is authoritative.
+
 | Item | Price model |
 | --- | --- |
 | New-account trial | Small one-time credit, automatically granted |
-| Dynamic Session | Currently **$0.23/GB** |
-| Shared static Session | Currently **from $0.75/resource-month** |
-| Other static Sessions | Current resource-month price returned by `GET /public/products` or authenticated `GET /products` |
+| Dynamic Session | Launch price **$0.23/GB** |
+| Shared static Session | Launch price **from $1.05/month** |
+| Exclusive static Session | Launch price **$1.43–$5.86/month** |
 | Session management, telemetry, and health | No separate platform fee currently |
 | Minimum USDT top-up | USD 10 |
 
-The reference prices above reflect the current USD/CNY exchange rate. `GET /public/products` exposes current prices without authentication and caches them for no more than 60 seconds. NexaLayer returns the numeric `price`, `currency: "USD"`, and `unit` for every product before a purchase. Prices can vary by exchange rate, product, location, and stock; an agent must read and present the exact current quote before owner approval. The accepted Session response also includes `estimated_charge_usd`.
+`GET /public/products` exposes current prices without authentication and caches them for no more than 60 seconds. NexaLayer returns the numeric `price`, `currency: "USD"`, and `unit` for every product before a purchase. Prices can vary by exchange rate, product, location, and stock; an agent must read and present the exact current quote before owner approval. The accepted Session response also includes `estimated_charge_usd`. A purchase whose quote no longer matches the supplier price fails with HTTP 409 [`PRICE_MISMATCH`](/en/errors) and does not place an order.
 
 The website shows these reference figures and refreshes pricing from `GET /public/products`. Use the authenticated Products API for the binding pre-purchase quote.

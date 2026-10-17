@@ -44,7 +44,7 @@ Static sessions normally do not rotate. Renew, terminate, or create a new static
 | Status | Meaning |
 | --- | --- |
 | `creating` | Accepted and provisioning with the resource backend |
-| `active` | Ready; `proxy.full_url` is available |
+| `active` | Ready. `host`, `port`, and `protocol` are available. `proxy.full_url` is included only when `include_credentials=true` |
 | `failed` | Provisioning failed; inspect the error before retrying |
 | `terminated` | Session has been terminated or released |
 

@@ -112,6 +112,8 @@ X-API-Key: ak_your_key
 
 ## Session proxy
 
+`GET /sessions/{session_id}` and `POST /sessions/{session_id}/rotate` omit `username`, `password`, and `full_url` unless the query parameter `include_credentials=true`. `POST /sessions` does not accept that parameter. The shape below is the credential-bearing response:
+
 ```json
 {
   "proxy": {
@@ -124,6 +126,8 @@ X-API-Key: ak_your_key
   }
 }
 ```
+
+Error `code` values, HTTP statuses, and retry actions are listed at [/en/errors](/en/errors).
 
 ## Source of truth
 

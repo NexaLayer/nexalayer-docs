@@ -1,0 +1,38 @@
+---
+title: Error codes
+description: HTTP status, meaning, retry guidance, and the suggested agent action for each NexaLayer API error code.
+---
+
+# Error codes
+
+Failed responses use `success: false` and `error.code`. The HTTP status is determined by the code. Read `error.message` and `error.details` for the specific failure, and send `meta.request_id` when reporting a problem.
+
+A completed write stores its response for that `Idempotency-Key` for 24 hours. Sending the same key and the same request again replays the stored response, including an error. Use a new key when the operation should run again. Reuse the original key only while `IDEMPOTENCY_CONFLICT` says the original request is still in progress, or when you want the original success response.
+
+| Code | HTTP | Meaning | Retryable | Suggested agent action |
+| --- | --- | --- | --- | --- |
+| `AUTH_INVALID_KEY` | 401 | The `X-API-Key` header is missing or does not match an active key. | No | Stop. Set a valid `X-API-Key` before calling again. |
+| `AUTH_EXPIRED_TOKEN` | 401 | A bearer token is invalid, expired, or belongs to an inactive account. | Yes | Re-authenticate, then retry. API-key calls do not use this code. |
+| `AUTH_INSUFFICIENT_PERMISSION` | 403 | The authenticated account is missing the permission this route requires. | No | Stop. Do not retry until the account is granted that permission. |
+| `ACCOUNT_DISABLED` | 403 | The agent account is not active. | No | Stop. Do not create sessions or spend until the account is active again. |
+| `INVALID_REQUEST` | 400 | The path, query, header, or body failed validation, or a protocol or `project_id` is not valid for the product. | No | Fix the request. A blind retry will fail the same way. |
+| `INVALID_REFERRAL_CODE` | 400 | `referral_code` could not be decoded. | No | Omit the code or send a valid one. Do not retry the same value. |
+| `ROUTE_NOT_FOUND` | 404 | The method and path are not an API route. | No | Fix the path. Check `error.details.method` and `error.details.path`. |
+| `INSUFFICIENT_BALANCE` | 402 | The account balance cannot cover the charge. | No | Recharge, then retry the paid call with a new idempotency key. Do not retry until the balance covers the quote. |
+| `BUDGET_EXCEEDED` | 402 | The key is paused, or the charge would pass the key or daily spend limit. No session is reserved. | No | Ask the owner to raise the limit, unpause the key, or lower the purchase. Then retry with a new idempotency key. |
+| `IDEMPOTENCY_CONFLICT` | 409 | This `Idempotency-Key` was already used for a different request, or that request is still in progress. | Conditional | If the message says the key is in progress, wait and send the same request with the same key. If it was used for a different path or body, choose a new key. Do not change the body and keep the old key. |
+| `RATE_LIMIT_EXCEEDED` | 429 | The caller exceeded the per-minute limit. | Yes | Wait for `error.details.retry_after` or the `Retry-After` header, then retry the same request. |
+| `TRIAL_NOT_ELIGIBLE` | 429 | This email, network, or installation cannot receive another automatic trial credit. | No | Stop requesting a trial. Use the existing API key or recharge. |
+| `PRODUCT_NOT_FOUND` | 404 | `product_no` is not a current dynamic or static product. | No | Call `GET /public/products` or `GET /products` and send a `product_no` from that response. |
+| `PRODUCT_OUT_OF_STOCK` | 409 | The static product exists but is not available to purchase. | No | Re-read products and choose an in-stock `product_no`. Do not keep ordering the same product. |
+| `PRICE_MISMATCH` | 409 | The supplier price changed after the quote was read. No order was placed. | Yes | Re-read `GET /products` or `GET /public/products`, present the new price, and retry with a new idempotency key. Do not send the stale quote again. |
+| `SESSION_NOT_FOUND` | 404 | This account has no session with that id. | No | Check `session_id`. Do not retry a deleted or unknown id. |
+| `SESSION_EXPIRED` | 410 | The session exists but its status does not allow this operation. Rotate requires `active`. Renew requires `active` or `expired`. | No | Read `GET /sessions/{session_id}`. Poll while status is `creating`. Do not rotate or renew until the status allows it. |
+| `SESSION_LIMIT_REACHED` | 429 | The account is at its active session limit, including sessions still in `creating`. | Yes | Terminate a session that is no longer needed, then retry with a new idempotency key. |
+| `BACKEND_ERROR` | 502 | The resource backend failed, or the account is not ready to provision (`backend_ready` is false). | Yes | If `backend_ready` is false, wait until account sync succeeds. Otherwise retry later with a new idempotency key. The original key replays this error. |
+| `BACKEND_TIMEOUT` | 504 | The resource backend timed out. | Yes | Retry later with a new idempotency key. The original key replays this error. |
+| `INTERNAL_ERROR` | 500 | The API hit an unexpected failure. | Yes | Retry later with a new idempotency key. If it continues, report `meta.request_id`. |
+
+`PRICE_MISMATCH` details include `displayed_price_cny` and `upstream_price_cny` when the gateway compared those amounts. Treat either difference as a stale quote.
+
+For the full field list, use the [API reference](/api-reference/openapi).

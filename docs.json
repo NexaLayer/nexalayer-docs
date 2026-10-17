@@ -50,6 +50,7 @@
           "en/api/products",
           "en/api/sessions",
           "en/api/telemetry-health",
+          "en/errors",
           "en/pricing",
           "en/billing",
           "en/budgets",

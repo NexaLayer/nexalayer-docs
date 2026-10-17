@@ -79,11 +79,11 @@ curl -X POST "$BASE_URL/sessions" \
 ```bash
 SID="sess_xxx"
 
-curl "$BASE_URL/sessions/$SID" \
+curl "$BASE_URL/sessions/$SID?include_credentials=true" \
   -H "X-API-Key: $NEXALAYER_API_KEY"
 ```
 
-当 `status=active` 时，会返回：
+`include_credentials` 默认是 `false`。不传时，`active` Session 仍返回 `host`、`port` 和 `protocol`，但不返回 `username`、`password` 和 `full_url`。传 `include_credentials=true` 时会返回：
 
 ```json
 {

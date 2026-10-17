@@ -25,6 +25,8 @@ curl -X POST "https://api.nexalayer.net/v1/sessions" \
 
 For dynamic sessions, `quantity` means GB and can be fractional. For static sessions, `quantity` means IP count and must be an integer. Always read the current price from `/public/products` or `/products` immediately before purchase.
 
+If the supplier price changed since that read, create returns HTTP 409 [`PRICE_MISMATCH`](/en/errors). No order is placed. Read prices again and retry with the new quote and a new `Idempotency-Key`. `POST /sessions` does not accept `include_credentials`; the accepted response is `status=creating` and does not include proxy credentials.
+
 A static session may include:
 
 ```json
@@ -43,21 +45,23 @@ A static session may include:
 ## Get a session
 
 ```bash
-curl "https://api.nexalayer.net/v1/sessions/$SID" \
+curl "https://api.nexalayer.net/v1/sessions/$SID?include_credentials=true" \
   -H "X-API-Key: $NEXALAYER_API_KEY"
 ```
 
-When `status=active`, the response includes `proxy.full_url` while keeping `host`, `port`, `username`, and `password` for compatibility.
+`include_credentials` is a query parameter and defaults to `false`. When the session is `active`, `host`, `port`, and `protocol` are returned either way. `proxy.username`, `proxy.password`, and `proxy.full_url` are omitted unless `include_credentials=true`. The JSON body is not used for this flag. Request credentials only in the process that will connect, and do not log them.
 
 ## Rotate a dynamic session
 
 ```bash
-curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/rotate" \
+curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/rotate?include_credentials=true" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $NEXALAYER_API_KEY" \
   -H "Idempotency-Key: rotate-timeout-001" \
   -d '{ "reason": "timeout" }'
 ```
+
+Rotate reads `include_credentials` from the query string, not the JSON body. The default is `false`, which omits `proxy.username`, `proxy.password`, and `proxy.full_url` from the rotated session.
 
 Supported reasons:
 
@@ -74,6 +78,8 @@ curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/renew" \
   -H "Idempotency-Key: renew-static-001" \
   -d '{ "duration": 30 }'
 ```
+
+Renew does not accept `include_credentials`. When the renewed session is active, the response includes proxy credentials.
 
 ## Terminate a session
 
