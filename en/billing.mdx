@@ -7,7 +7,7 @@ description: Read balance, create recharge orders, and list transactions.
 
 IPProxy's backend CNY balance remains the single source of truth. NexaLayer displays balance, prices, and transactions in USD by converting them with IPProxy's current effective USD/CNY rate. NexaLayer does not maintain a second spendable wallet.
 
-Launch pricing, subject to change: **$0.23/GB** for the dynamic proxy, shared static **from $1.05/month**, and exclusive static **$1.43–$5.86/month**. The live API is authoritative. Read `/public/products` immediately before purchase because the converted USD amount can change with the exchange rate.
+Launch pricing, subject to change: **\$0.23/GB** for the dynamic proxy, shared static **from \$1.05/month**, and exclusive static **\$1.43–\$5.86/month**. The live API is authoritative. Read `/public/products` immediately before purchase because the converted USD amount can change with the exchange rate.
 
 All public USD balances, prices, and charge amounts are rounded to two decimal places. Exchange rates retain four decimal places, while the exact USDT payment amount returned by a recharge order must not be rounded because it identifies the transfer.
 

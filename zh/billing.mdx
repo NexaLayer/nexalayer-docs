@@ -7,7 +7,7 @@ description: 查询余额、创建充值订单、读取交易记录。
 
 IPProxy 后端 CNY 余额仍是唯一资金事实源。NexaLayer 使用 IPProxy 当前有效 USD/CNY 汇率，将余额、产品价格和交易流水换算为 USD 展示，不维护第二套可消费余额。
 
-以下为发布期价格，可能调整，以线上 API 为准：动态代理 **$0.23/GB**，共享静态代理 **$1.05/月起**，独享静态代理 **$1.43–$5.86/月**。换算后的 USD 金额会随汇率变化，购买前请读取 `/public/products` 获取当前报价。
+以下为发布期价格，可能调整，以线上 API 为准：动态代理 **\$0.23/GB**，共享静态代理 **\$1.05/月起**，独享静态代理 **\$1.43–\$5.86/月**。换算后的 USD 金额会随汇率变化，购买前请读取 `/public/products` 获取当前报价。
 
 所有对外 USD 余额、单价和扣费金额统一保留两位小数。汇率保留四位；充值订单返回的准确 USDT 支付金额用于识别转账，不得自行四舍五入。
 
@@ -16,7 +16,7 @@ IPProxy 后端 CNY 余额仍是唯一资金事实源。NexaLayer 使用 IPProxy 
 | 项目 | 价格 |
 | --- | --- |
 | 试用 | 新邮箱申请 API Key 时自动赠送一次性小额试用金 |
-| 最低充值 | $10，USDT TRC20 自助充值 |
+| 最低充值 | \$10，USDT TRC20 自助充值 |
 | Dynamic Session 资源 | 以 `/products` 实时 USD 换算价格为准 |
 | Static Session 资源 | 以 `/products` 实时 USD 换算价格为准 |
 | Session 管理 | 暂时免费 |
@@ -45,7 +45,7 @@ curl -X POST "https://api.nexalayer.net/v1/billing/recharge" \
   -d '{ "amount_usd": 10, "currency": "USDT" }'
 ```
 
-低于 $10 的充值请求会被拒绝。响应包含二维码所需的准确 `amount_usdt`、`wallet_address`、`network` 和订单汇率。
+低于 \$10 的充值请求会被拒绝。响应包含二维码所需的准确 `amount_usdt`、`wallet_address`、`network` 和订单汇率。
 
 ## 查询交易记录
 
