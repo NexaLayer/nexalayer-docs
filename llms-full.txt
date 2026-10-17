@@ -6,7 +6,9 @@ Authentication uses `X-API-Key`; no refresh token is required. A new email can r
 
 Before signup, call unauthenticated `GET /public/products` and read each product's current numeric USD `price` and `unit`. Before spending, call authenticated `GET /products`. Configure `PUT /account/budget` with key and daily limits. Use `GET /account/usage-alerts` for threshold events. All writes should carry an `Idempotency-Key`.
 
-The core lifecycle is: list products, create a Session, poll its status, use the returned proxy credentials without logging them, report telemetry, read health and usage, rotate only when appropriate, and terminate resources when finished.
+The core lifecycle is: list products, create a Session, poll its status, request proxy credentials with `include_credentials=true` only in the process that will connect, report telemetry, read health and usage, rotate only when appropriate, and terminate resources when finished. `GET /sessions/{session_id}` and rotate omit `proxy.username`, `proxy.password`, and `proxy.full_url` unless that query flag is true. Create does not accept the flag.
+
+Launch pricing, subject to change and not a quote: dynamic `$0.23/GB`, shared static from `$1.05/month`, exclusive static `$1.43–$5.86/month`. The live products API is authoritative. HTTP 409 `PRICE_MISMATCH` means the price changed since the read, no order was placed, and the agent must re-read prices before retrying. Other codes, HTTP statuses, and retry actions: https://docs.nexalayer.net/en/errors.
 
 MCP clients can run `npx -y @nexalayer/mcp` with `NEXALAYER_API_KEY` in the process environment. Paid creation and budget changes should remain owner-approved.
 

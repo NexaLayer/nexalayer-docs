@@ -78,7 +78,7 @@ npm start
 
 1. 查询可用 Dynamic 产品。
 2. 创建 Session，并轮询到 `active`。
-3. 确认 `proxy.full_url` 已返回。为避免泄露代理凭据，示例只输出是否可用，不打印完整 URL。
+3. 确认 `proxy.full_url` 已返回。当前 API 只有在轮询时带上 `include_credentials=true` 才会返回该字段；默认会省略用户名、密码和 `full_url`。为避免泄露代理凭据，示例只输出是否可用，不打印完整 URL。
 4. 把代理的 `host`、`port`、`username`、`password` 转成 Playwright 配置。
 5. 启动无头 Playwright 并访问 `NEXALAYER_TARGET_URL`。
 6. 上报本次执行的 Telemetry。

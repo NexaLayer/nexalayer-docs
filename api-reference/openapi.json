@@ -3,7 +3,11 @@
   "info": {
     "title": "NexaLayer Agent API",
     "version": "1.0.0",
-    "description": "Session-based Network Execution Layer API for AI agents and browser automation."
+    "description": "Session-based Network Execution Layer API for AI agents and browser automation. Error codes: https://docs.nexalayer.net/en/errors.",
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/NexaLayer/nexalayer-docs/blob/main/LICENSE"
+    }
   },
   "servers": [
     {
@@ -367,7 +371,7 @@
         },
         "responses": {
           "202": {
-            "description": "Session creation accepted. Poll GET /sessions/{session_id}.",
+            "description": "Session creation accepted. Poll GET /sessions/{session_id}. POST /sessions does not accept include_credentials; this response has no proxy credentials because the session is still being created.",
             "content": {
               "application/json": {
                 "schema": {
@@ -397,11 +401,14 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/SessionId"
+          },
+          {
+            "$ref": "#/components/parameters/IncludeCredentials"
           }
         ],
         "responses": {
           "200": {
-            "description": "Session detail.",
+            "description": "Session detail. proxy.username, proxy.password, and proxy.full_url are omitted unless include_credentials=true.",
             "content": {
               "application/json": {
                 "schema": {
@@ -447,6 +454,9 @@
           },
           {
             "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/IncludeCredentials"
           }
         ],
         "requestBody": {
@@ -474,7 +484,7 @@
         },
         "responses": {
           "200": {
-            "description": "Rotated session."
+            "description": "Rotated session. proxy.username, proxy.password, and proxy.full_url are omitted unless the include_credentials query parameter is true."
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -687,6 +697,16 @@
           "type": "string",
           "maxLength": 64
         }
+      },
+      "IncludeCredentials": {
+        "in": "query",
+        "name": "include_credentials",
+        "required": false,
+        "description": "Query parameter, default false. When true, an active session response includes proxy.username, proxy.password, and proxy.full_url. When omitted or false, those credential fields are omitted; host, port, and protocol are still returned. Accepted query values are true and false. The JSON body is not read for this flag. POST /sessions does not accept it.",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
       }
     },
     "responses": {
@@ -711,7 +731,7 @@
         }
       },
       "NotFound": {
-        "description": "The requested route, product, or session was not found.",
+        "description": "The requested route (ROUTE_NOT_FOUND), product (PRODUCT_NOT_FOUND), or session (SESSION_NOT_FOUND) was not found. See https://docs.nexalayer.net/en/errors.",
         "content": {
           "application/json": {
             "schema": {
@@ -721,7 +741,7 @@
         }
       },
       "InsufficientBalance": {
-        "description": "Account balance is insufficient for the requested operation.",
+        "description": "HTTP 402. INSUFFICIENT_BALANCE means the account balance cannot cover the charge. BUDGET_EXCEEDED means a key or daily spend limit, or a paused key, blocked the charge. See https://docs.nexalayer.net/en/errors.",
         "content": {
           "application/json": {
             "schema": {
@@ -731,7 +751,7 @@
         }
       },
       "Conflict": {
-        "description": "Product state or idempotency key conflicts with the request.",
+        "description": "HTTP 409. PRICE_MISMATCH means the price changed since it was read; no order was placed, so re-read prices and retry. Also used for PRODUCT_OUT_OF_STOCK and IDEMPOTENCY_CONFLICT. See https://docs.nexalayer.net/en/errors.",
         "content": {
           "application/json": {
             "schema": {
@@ -763,6 +783,7 @@
     },
     "schemas": {
       "Error": {
+        "description": "Machine-readable API error. HTTP status, retry guidance, and the suggested agent action for each code are listed at https://docs.nexalayer.net/en/errors.",
         "type": "object",
         "required": [
           "code",
@@ -770,6 +791,7 @@
         ],
         "properties": {
           "code": {
+            "description": "Stable error code. See https://docs.nexalayer.net/en/errors for the HTTP status, whether to retry, and the suggested agent action. PRICE_MISMATCH is HTTP 409: the price changed since it was read, no order was placed, and the agent should re-read prices and retry.",
             "type": "string",
             "enum": [
               "AUTH_INVALID_KEY",
@@ -777,6 +799,7 @@
               "AUTH_INSUFFICIENT_PERMISSION",
               "ACCOUNT_DISABLED",
               "INVALID_REQUEST",
+              "INVALID_REFERRAL_CODE",
               "ROUTE_NOT_FOUND",
               "INSUFFICIENT_BALANCE",
               "BUDGET_EXCEEDED",
@@ -785,6 +808,7 @@
               "TRIAL_NOT_ELIGIBLE",
               "PRODUCT_NOT_FOUND",
               "PRODUCT_OUT_OF_STOCK",
+              "PRICE_MISMATCH",
               "SESSION_NOT_FOUND",
               "SESSION_EXPIRED",
               "SESSION_LIMIT_REACHED",
@@ -818,7 +842,9 @@
             ]
           },
           "data": {
-            "nullable": true
+            "type": "object",
+            "nullable": true,
+            "description": "Always null when success is false."
           },
           "error": {
             "$ref": "#/components/schemas/Error"
@@ -1087,8 +1113,10 @@
           },
           "quantity": {
             "type": "number",
-            "exclusiveMinimum": 0,
-            "default": 1
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "default": 1,
+            "description": "Greater than 0. Dynamic sessions use GB and may be fractional. Static sessions use IP count and must be an integer."
           },
           "duration": {
             "type": "integer",
@@ -1193,10 +1221,12 @@
                     "type": "integer"
                   },
                   "username": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Omitted unless the request set include_credentials=true. Present on GET session detail and rotate only when that query flag is true, and on renew responses for an active session."
                   },
                   "password": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Omitted unless the request set include_credentials=true. Present on GET session detail and rotate only when that query flag is true, and on renew responses for an active session."
                   },
                   "protocol": {
                     "type": "string"
@@ -1204,7 +1234,8 @@
                   "full_url": {
                     "type": "string",
                     "nullable": true,
-                    "example": "socks5://user:pass@proxy.example.com:1080"
+                    "example": "socks5://user:pass@proxy.example.com:1080",
+                    "description": "Omitted unless the request set include_credentials=true. Present on GET session detail and rotate only when that query flag is true, and on renew responses for an active session. Do not log this value."
                   }
                 }
               },

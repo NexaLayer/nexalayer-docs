@@ -28,3 +28,5 @@ First, [request an API key and one-time trial credit](https://nexalayer.net/agen
 Tools cover product discovery, Session creation and rotation, health, usage, budgets, and alerts. Session creation and budget changes are consequential writes: keep client-side owner approval enabled and use a unique idempotency key.
 
 The tool catalog separates read operations from paid or policy-changing actions. Read products, prices, health, usage, and current budget before requesting human approval for session creation or budget changes.
+
+`nexalayer_rotate_session` sends `include_credentials` as a query parameter (default `false`). Proxy username, password, and `full_url` are omitted unless it is `true`. Session creation does not take that flag. If create fails with `PRICE_MISMATCH`, re-read products and retry; no order was placed. See [Error codes](/en/errors).

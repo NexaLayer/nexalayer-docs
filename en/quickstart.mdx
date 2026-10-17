@@ -79,11 +79,11 @@ Session creation is asynchronous. A successful accepted response usually starts 
 ```bash
 SID="sess_xxx"
 
-curl "$BASE_URL/sessions/$SID" \
+curl "$BASE_URL/sessions/$SID?include_credentials=true" \
   -H "X-API-Key: $NEXALAYER_API_KEY"
 ```
 
-When the session becomes `active`, the response includes proxy details:
+`include_credentials` defaults to `false`. Without it, an active session still returns `host`, `port`, and `protocol`, and omits `username`, `password`, and `full_url`. With `include_credentials=true`, the response includes proxy details:
 
 ```json
 {
@@ -102,7 +102,7 @@ When the session becomes `active`, the response includes proxy details:
 }
 ```
 
-`proxy.full_url` can be used by tools that accept proxy URLs. Playwright usually needs `server`, `username`, and `password` separately.
+`proxy.full_url` can be used by tools that accept proxy URLs. Playwright usually needs `server`, `username`, and `password` separately. Do not log the credential fields. See [Error codes](/en/errors) if create returns `PRICE_MISMATCH`: re-read prices and retry; no order was placed.
 
 ## 5. Report execution telemetry
 

@@ -44,7 +44,7 @@ Session 把这些行为放到一个生命周期里。
 | 状态 | 含义 |
 | --- | --- |
 | `creating` | 已受理，正在向底层资源后端申请 |
-| `active` | 可用，`proxy.full_url` 已返回 |
+| `active` | 可用。会返回 `host`、`port` 和 `protocol`。只有 `include_credentials=true` 时才包含 `proxy.full_url` |
 | `failed` | 创建失败，查看错误信息后决定是否重试 |
 | `terminated` | 已终止或释放 |
 

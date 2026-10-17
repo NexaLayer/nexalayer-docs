@@ -43,21 +43,25 @@ Dynamic Session 的 `quantity` 表示 GB，可以使用小数；Static Session �
 ## 查询 Session
 
 ```bash
-curl "https://api.nexalayer.net/v1/sessions/$SID" \
+curl "https://api.nexalayer.net/v1/sessions/$SID?include_credentials=true" \
   -H "X-API-Key: $NEXALAYER_API_KEY"
 ```
 
-`active` 状态会返回 `proxy.full_url`，同时保留 `host`、`port`、`username`、`password` 兼容字段。
+`include_credentials` 是查询参数，默认 `false`。`active` 状态下总会返回 `host`、`port` 和 `protocol`。只有 `include_credentials=true` 时才会返回 `proxy.username`、`proxy.password` 和 `proxy.full_url`。该参数不从 JSON body 读取。`POST /sessions` 不接受此参数，受理响应为 `status=creating`，不含代理凭据。
+
+若读取价格后供应商价格已变化，创建会返回 HTTP 409 `PRICE_MISMATCH`，不会下单。请重新读取价格后再试。错误码说明见 [Error codes](/en/errors)。
 
 ## 轮换 Dynamic Session
 
 ```bash
-curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/rotate" \
+curl -X POST "https://api.nexalayer.net/v1/sessions/$SID/rotate?include_credentials=true" \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $NEXALAYER_API_KEY" \
   -H "Idempotency-Key: rotate-timeout-001" \
   -d '{ "reason": "timeout" }'
 ```
+
+轮换同样只从查询参数读取 `include_credentials`，默认不返回用户名、密码和 `full_url`。续费接口不接受该参数；续费成功且 Session 为 active 时，响应会包含代理凭据。
 
 支持原因：
 

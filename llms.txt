@@ -7,6 +7,7 @@ NexaLayer is a managed network Session layer for AI agents and browser automatio
 - [Products and pre-purchase prices](https://docs.nexalayer.net/en/api/products.md)
 - [Pricing model](https://docs.nexalayer.net/en/pricing.md)
 - [Sessions](https://docs.nexalayer.net/en/api/sessions.md)
+- [Error codes](https://docs.nexalayer.net/en/errors.md)
 - [Telemetry and health](https://docs.nexalayer.net/en/api/telemetry-health.md)
 - [Billing](https://docs.nexalayer.net/en/billing.md)
 - [Spend limits](https://docs.nexalayer.net/en/budgets.md)

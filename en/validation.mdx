@@ -20,7 +20,7 @@ These docs are written around the currently validated product boundary.
 
 ## Controlled real path
 
-`npm run test:phase0:real` is the real paid-session path. Use it only in controlled environments with low balance. It creates one dynamic session, polls until active, checks `proxy.full_url`, reports telemetry, reads health and billing, then cleans up.
+`npm run test:phase0:real` is the real paid-session path. Use it only in controlled environments with low balance. It creates one dynamic session, polls until active, checks `proxy.full_url`, reports telemetry, reads health and billing, then cleans up. The API includes `proxy.full_url` only when that poll sets `include_credentials=true`.
 
 ## Stop rule
 

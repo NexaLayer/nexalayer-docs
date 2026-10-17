@@ -20,7 +20,7 @@ description: 当前文档按 Phase 0 已验证能力书写，并明确真实 Ses
 
 ## 受控真实链路
 
-`npm run test:phase0:real` 是真实付费 Session 路径，只有在受控环境和低额度账号下使用。它会创建一个 dynamic Session，轮询到 active，检查 `proxy.full_url`，上报遥测，读取健康和计费，然后清理。
+`npm run test:phase0:real` 是真实付费 Session 路径，只有在受控环境和低额度账号下使用。它会创建一个 dynamic Session，轮询到 active，检查 `proxy.full_url`，上报遥测，读取健康和计费，然后清理。API 只有在轮询带上 `include_credentials=true` 时才会返回 `proxy.full_url`。
 
 ## 停止规则
 
