@@ -13,6 +13,7 @@ NexaLayer is a managed network Session layer for AI agents and browser automatio
 - [Spend limits](https://docs.nexalayer.net/en/budgets.md)
 - [MCP server](https://docs.nexalayer.net/en/mcp.md)
 - [For AI agents](https://docs.nexalayer.net/en/agents.md)
+- [Optional: x402 payment track](https://docs.nexalayer.net/en/x402-evaluation.md)
 - [Playwright AI agents](https://docs.nexalayer.net/en/playwright.md)
 - [Puppeteer AI agents](https://docs.nexalayer.net/en/puppeteer.md)
 - [Browser Use AI agents](https://docs.nexalayer.net/en/browser-use.md)

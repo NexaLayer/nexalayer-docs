@@ -1,13 +1,24 @@
 ---
-title: x402 payment evaluation
-description: Current payment boundary and criteria for a future agent-native x402 flow.
+title: Optional x402 payment track
+description: Optional agent-native HTTP 402 payment path — not the default. Route-A human top-up remains the primary funding model.
 ---
 
-# x402 payment evaluation
+# Optional x402 payment track
 
-NexaLayer's current API can create a USDT TRC20 order and poll its chain-confirmation status, but the caller must already control a compatible wallet. This is API-complete payment orchestration, not autonomous payment for an agent without a wallet.
+NexaLayer's **default** funding model is route-A: a human funds the account, then agents spend inside owner-defined budget guardrails. This page describes an **optional** future (or pilot) track that uses HTTP `402 Payment Required` for machine-readable settlement. It is not required for MCP or REST Session usage, and it should not be treated as the primary product story.
 
-x402 is a strong candidate for pay-per-call or prepaid-credit acquisition because an HTTP `402 Payment Required` challenge can carry machine-readable payment requirements. It should not be advertised as available until all of these are implemented and tested:
+## How this differs from human top-up
+
+| | Route-A (default) | x402 (optional) |
+| --- | --- | --- |
+| Who funds | Owner tops up (e.g. USDT TRC20 order + confirm) | Compatible wallet settles a `402` challenge |
+| When to use | Signup, trial, MCP, day-to-day agent spend | Teams that explicitly want pay-per-call or prepaid credit via HTTP 402 |
+| Fallback | N/A — this is the supported path today | If wallet, facilitator, or settlement fails, fall back to route-A top-up and continue under budgets |
+| Status | Live production model | Evaluation / capped pilot only until criteria below are met |
+
+## Prerequisites before advertising x402 as available
+
+Do not market x402 as a live NexaLayer payment feature until all of the following are implemented and tested:
 
 - supported network, asset, facilitator, fees, and settlement-finality policy
 - owner-signed wallet authority with per-transaction and daily limits
@@ -16,4 +27,12 @@ x402 is a strong candidate for pay-per-call or prepaid-credit acquisition becaus
 - refund and dispute handling, sanctions screening, accounting records, and key compromise response
 - SDK and MCP behavior for `402`, approval, payment, retry, and receipt verification
 
-The first production pilot should be capped, allowlisted, and separate from the existing TRC20 recharge path. No code in this release silently gives an agent custody of a wallet or authority to spend.
+## Current API boundary
+
+Today's API can create a USDT TRC20 recharge order and poll chain-confirmation status, but the caller must already control a compatible wallet. That is API-complete **order orchestration for human-funded recharge**, not a substitute for the optional x402 track above.
+
+## Pilot rules
+
+Any first production x402 pilot should be capped, allowlisted, and kept separate from the existing TRC20 recharge path. No release should silently give an agent custody of a wallet or unlimited authority to spend. Prefer owner approval and hard budget ceilings even when a `402` flow is enabled.
+
+For the default agent path, see [NexaLayer for AI Agents](/en/agents) and [Spend limits](/en/budgets).

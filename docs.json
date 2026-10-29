@@ -55,10 +55,15 @@
           "en/billing",
           "en/budgets",
           "en/mcp",
-          "en/x402-evaluation",
           "en/nl-agent",
           "en/examples",
           "en/validation"
+        ]
+      },
+      {
+        "group": "Optional / Advanced",
+        "pages": [
+          "en/x402-evaluation"
         ]
       },
       {

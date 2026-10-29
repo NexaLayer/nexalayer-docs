@@ -1,11 +1,11 @@
 ---
 title: NexaLayer for AI Agents
-description: Give AI agents installable, observable proxy sessions with budget controls and a one-time trial credit.
+description: Human-funded accounts with budget guardrails so agents can discover, buy, and clean up proxy sessions without rewriting payment flows.
 ---
 
 # NexaLayer for AI Agents
 
-NexaLayer is a managed network Session layer for AI agents and browser automation. It lets an agent discover current proxy products and prices, create a bounded Session, read health and usage, rotate when needed, and clean up through an API or MCP server.
+NexaLayer is a managed network Session layer for AI agents and browser automation. The **default production model is route-A: human-funded, agent spends within budget guardrails**. An owner funds the account and sets Key / daily limits; the agent discovers current products and prices, creates a bounded Session, reads health and usage, rotates when needed, and cleans up through an API or MCP server.
 
 ## Install in one command
 
@@ -13,20 +13,23 @@ NexaLayer is a managed network Session layer for AI agents and browser automatio
 npx -y @nexalayer/mcp
 ```
 
-Set `NEXALAYER_API_KEY`, then connect the command as a stdio MCP server. [Request an API key and one-time trial credit](https://nexalayer.net/agents?source=agents-docs).
+Set `NEXALAYER_API_KEY`, then connect the command as a stdio MCP server. [Request an API key and one-time trial credit](https://nexalayer.net/agents?source=agents-docs) (no card required for the trial).
 
-## Safe agent flow
+## Safe agent flow (route-A)
 
 1. Call `nexalayer_list_products` to read a current price.
 2. Call `nexalayer_get_budget` to verify the spend boundary.
-3. Ask the owner to approve the quoted purchase.
+3. Ask the owner to approve the quoted purchase when policy requires it.
 4. Call `nexalayer_create_session` with a unique idempotency key.
 5. Monitor health and usage; rotate only when indicated.
 6. Clean up the Session when the task finishes.
 
-Discovery and health calls are read-only. Creating a Session can spend money, and changing a budget changes policy; keep human approval enabled for both.
+Discovery and health calls are read-only. Creating a Session can spend money, and changing a budget changes policy; keep human approval enabled for both. Prices come from the live products API — do not hard-code them in prompts or scripts.
 
-NexaLayer currently follows a **human-funded, agent-controlled** model: the owner funds the account, then the agent can operate inside explicit Key and daily limits. NexaLayer does not claim that a walletless agent can autonomously fund itself; x402 remains an evaluation track rather than a live payment feature.
+## Funding model
+
+- **Default (route-A):** the owner tops up (for example USDT TRC20 recharge through the API) and configures spend limits; the agent operates only inside those limits.
+- **Optional track:** [x402 as an optional payment path](/en/x402-evaluation) is documented separately for teams that want agent-native HTTP `402` settlement later. It is not the default onboarding or MCP path, and it is not required to use NexaLayer Sessions.
 
 ## Other integrations
 
@@ -36,3 +39,4 @@ NexaLayer currently follows a **human-funded, agent-controlled** model: the owne
 - [MCP server setup](/en/mcp)
 - [Products and current prices](/en/api/products)
 - [Spend limits](/en/budgets)
+- [Optional: x402 payment track](/en/x402-evaluation)
